@@ -1,0 +1,188 @@
+	<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <link rel="stylesheet" th:href="@{/css/select2.min.css}">
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> </head>
+
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+	
+             <div class="col-12 grid-margin">
+				<div class="card">
+					<div class="card-body">
+						<div class="row">
+						<div class="col-sm-12 col-md-8">
+						<h4>Acuerdos</h4><br></div>
+							<div class="col-sm-12 col-md-4">
+							
+							<form action="#" method="post">
+								<div class="input-group col-xs-12">
+									<label class="col-sm-3 col-form-label">Area:</label>
+									<select id="filtro" name="filtro" class="form-control border-primary col-sm-9" onchange="filtrar()">
+										<option th:value="6">Todos</option>
+										<option th:value="1">Servicio de liquidaciones</option>
+										<option th:value="2">Operaciones TI</option>
+										<option th:value="3">Gestión Activos</option>
+										<option th:value="4">Servicio de participantes</option>
+										<option th:value="5">Facturas Negociables</option>
+										<option th:value="5">Otros</option>
+										
+									</select>
+									<span class="input-group-append">
+										
+									</span>
+								</div>
+							</form>							
+							</div>	
+						</div>			
+						<div>
+						<div class="box_leyenda">
+						<ul class="leyenda flex">													
+							<li><i  title="Jira" style="font-size: 18px; color: #128bfc;" class="mdi mdi-jira"></i> Con JIRA</li>						
+							<li><i  title="Otros" style="font-size: 18px; color: #19d895;" class="mdi mdi-comment-processing-outline"></i> Otros</li>						
+						</ul>								
+					</div>
+					
+					<div class="contenedor_tabla">
+						<table id="tabla" class="table table-striped">	
+							<thead>
+						  		<tr>
+						  			<th>Tipo</th>
+						  			<th>Fecha Registro</th>
+						  			<th>Area</th>
+						  			<th>Acuerdo</th>
+						  			<th>Responsable</th>						  			
+						  			<th>Estado</th>	
+						  			
+						  				
+						  			<th>Jira</th>	
+									<th>Fecha Entrega</th>
+									<th>Fecha Cierre</th>
+									<th>Comentario de cierre</th>
+																						
+						  		</tr>					  		
+						  	</thead>				
+						  	<tbody>
+						  		<tr th:each="acuerdo:${listaAcuerdos}">
+						  			<td>
+							  			<div th:if="${acuerdo.tipo == 'Jira'}">
+							  				<i  title="Jira" style="font-size: 18px; color: #128bfc;" class="mdi mdi-jira"></i>
+							  			</div>
+							  			<div th:if="${acuerdo.tipo == 'Otros'}">
+							  				<i  title="Otros" style="font-size: 18px; color: #19d895;" class="mdi mdi-comment-processing-outline"></i>
+							  			</div>
+						  			</td>
+						  			<td class="td_monto">
+						  				<span th:text="${acuerdo.fecha_registro}" class="fechas_plomo"></span>
+						  			</td>
+						  			<td th:text="${acuerdo.area}"></td>	
+						  			<td class="ancho-comentario" th:text="${acuerdo.observaciones}"></td>
+						  			<td th:text="${acuerdo.responsable}"></td>
+
+						  				
+						  			<td class="td_monto"> <span th:class="${acuerdo.clase}" th:text="${acuerdo.estado}"></span> </td>	
+						  			
+						  			
+						  				
+						  				
+						  					
+						  			<td th:text="${acuerdo.jira}"></td>							  			
+						  			<td class="td_monto"> <span th:if="${acuerdo.fecha_entrega != null}" class="fechas_rojo"  th:text="${acuerdo.fecha_entrega}"></span> </td>	
+						  			<td class="td_monto"> <span th:if="${acuerdo.fecha_cierre != null}" class="fechas_verde"  th:text="${acuerdo.fecha_cierre}"></span> </td>	
+						  			<td class="ancho-comentario" th:text="${acuerdo.observacion}"></td>							  			
+						  			
+						  		</tr>
+						  	</tbody>
+					  	</table>
+					</div>
+				  	</div>
+			  	</div>
+			  </div>
+		   </div>
+<!----------------------------------------------------------------------- 	FIN	 ------------------------------------------------------->
+          
+          <footer th:replace="fragments/shared :: header"></footer>         
+        </div>
+      </div>
+   	</div>
+   	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>
+    
+    <script th:src="@{/js/select2.min.js}"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/shared/data-table.js}"></script>
+    <script type="text/javascript">
+    function filtrar() {
+    	  // Declare variables 
+    	  var input, filter, table, tr, td, i;
+    	  input = document.getElementById("filtro");
+    	  filter = input.options[input.selectedIndex].innerHTML;
+    	  table = document.getElementById("tabla");
+    	  tr = table.getElementsByTagName("tr");
+    	  
+    	  if (filter === "Servicio de liquidaciones")
+    		  filter = "LIQ";
+    	  else if (filter === "Operaciones TI")
+    		  filter = "OTI";
+    	  else if (filter === "Gestión Activos")
+    		  filter = "GA";
+    	  else if (filter === "Servicio de participantes")
+    		  filter = "PAR";
+    	  else if (filter === "Facturas Negociables")
+    		  filter = "FT";
+    	  else if (filter === "Otros")
+    		  filter = "Otros";
+    	  else 
+    		  filter = "Todos";
+    	  
+    	  for (i = 1; i < tr.length; i++) {
+    	  	td = tr[i].getElementsByTagName("td")[2];   	  	
+    		if (td) {
+    				
+    	         if (td.innerHTML === filter || filter ==='Todos') {
+    	           tr[i].style.display = "";
+    	         } else {
+    	           tr[i].style.display = "none";
+    	      	 }
+    	    }
+    		
+    	  }
+    	}
+   
+    </script>
+</body>
+</html>

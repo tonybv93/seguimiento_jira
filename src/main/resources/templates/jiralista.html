@@ -1,0 +1,224 @@
+	<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject --->
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- ícono navegador --> 
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> </head>
+    
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+			<div class="card">
+				<div class="card-body">
+				<div class="row">
+					<div class="col-sm-12 col-md-8">
+						<h4 id="titulo_lista">Jiras Totales (<span th:text="${count}"></span>)</h4>
+					</div>
+					<div class="col-sm-12 col-md-4 texto_derecha">
+						<button class="btn btn-outline-primary" onclick="actualizarjiras(this)">
+	            			<i class="mdi mdi-refresh"></i>Actualizar BD
+	            		</button>
+					</div>				
+				</div>
+				<div class="row">
+					<div class="col-sm-12 col-md-6">
+						<div class="box_leyenda">
+							<ul class="leyenda flex">													
+								<li><i class="mdi mdi-tag et_comp"></i>Compromiso</li>						
+								<li><i class="mdi mdi-tag et_prio"></i>Prioritario</li>
+								<li><i class="mdi mdi-tag et_mbd"></i>Mejora BD</li>
+								<li><i class="mdi mdi-tag et_cri"></i>Crítico</li>							
+							</ul>								
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6 texto-abajo">
+						<div class="input-group col-xs-12 alin_bot">
+							<label class="col-sm-3 col-form-label">Area:</label>
+							<select id="filtro" onchange="filtrar()" name="filtro" class="form-control border-primary col-sm-9">
+								<option th:value="6">Todos</option>
+								<option th:value="1">Servicio de liquidaciones</option>
+								<option th:value="2">Operaciones TI</option>
+								<option th:value="3">Gestión Activos</option>
+								<option th:value="4">Servicio de participantes</option>
+								<option th:value="5">Facturas Negociables</option>
+								
+							</select>
+							<span class="input-group-append">								
+							</span>
+						</div>
+					</div>
+				</div>
+					<div class="contenedor_tabla">
+					<div class="d-flex texto-peque">
+						<label>Buscar en la tabla: </label>
+						<input onkeyup="buscar(this)" class="buscador_sobretabla" type="text">
+					</div>
+					<table id="tabla" class="table table-striped table-hover">	
+						<thead>
+					  		<tr>
+					  			<th>Jira					  				
+					  			</th>
+					  			<th>Área</th>
+					  			
+					  			<th>Tipo</th>
+					  			<!-- <th>Tipo</th>	 -->
+					  			
+					  			<th>Descripcón</th>		
+											
+								<th class="centrado">Estado</th>		
+								<th>Asignado</th>	
+								<th>Responsable</th>								
+								<th>Pruebas Usuario</th>	
+								<th>Pase a producción</th>	
+								<th style="min-width: 120px;">Monto Total (S/)</th>						
+														
+					  		</tr>					  		
+					  	</thead>				
+					  	<tbody>
+					  		<tr th:each="jira:${lstJiras}">	
+					  			<td th:class="${jira.etiqueta.css_class}" ><a th:href="'https://jira.cavali.com.pe:8443/browse/' +${jira.jira}" target=”_blank” th:text="${jira.jira}"></a></td>					  						  			
+					  			<td th:text="${jira.areaSolicitante.nombre}"></td>					  			
+					  			<td class="d-flex"></td>
+					  			<td th:text="${jira.resumen}"></td>		 
+					  			<td class="centrado"><span th:text="${jira.estadoJira.estado}"></span></td> 	
+					  			<td th:text="${jira.asignado}"></td> 	
+					  			<td th:text="${jira.responsable}"></td>	
+					  			<td></td>
+					  			<td></td>
+					  			<td></td>
+
+					  		</tr>
+					  	</tbody>
+				  	</table>
+				  	
+			  	</div>
+			  	</div>
+		  	</div>
+<!----------------------------------------------------------------------- 	FIN	 ------------------------------------------------------->
+          </div>
+          <footer th:replace="fragments/shared :: header"></footer>         
+        </div>
+      </div>
+   	</div>
+   	
+<!----------------------------------------------------------------------- 	MODALES	 ------------------------------------------------------->
+   	
+	<div id="modal_actualizando" class="un_modal">		
+		<div class="contenido_modal">
+			<div class="card-body">		
+				<div class="modal_header2">ACTUALIZANDO...</div>
+				<p class="segundero">Se extraerá la información de <b>JIRA</b>. Esto puede tomar unos segundos, por favor espere.</p>
+				<br><br>
+				<div class="bar-loader">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<div class="segundero">Duración del proceso: <span id="contador_seg"></span> s</div>		  	
+			</div>			
+		</div>
+	</div>
+<!---------------------------------------------------------------------------------------------------->
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>
+    
+    <script th:src="@{/js/shared/data-table.js}"></script>
+    <script th:src="@{/js/shared/tooltips.js}"></script>
+    <script th:src="@{/js/shared/popover.js}"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script type="text/javascript">
+    function buscar(inp){
+    	var buscar = inp.value.toLowerCase();
+    	var table = document.getElementById("tabla");
+    	var tr = table.getElementsByTagName("tr"); 
+    	var nro_filas = 0;
+    	
+    	for (i = 1; i < tr.length; i++) {
+    	  	td = tr[i].getElementsByTagName("td");  
+    	  	
+    		if (td) {    				
+    	         if (td[0].innerHTML.toLowerCase().search(buscar) != -1  ||
+    	        		 td[3].innerHTML.toLowerCase().search(buscar) != -1 ||
+    	        		 td[4].innerHTML.toLowerCase().search(buscar) != -1 ||
+    	        		 td[5].innerHTML.toLowerCase().search(buscar) != -1 ||
+    	        		 td[6].innerHTML.toLowerCase().search(buscar) != -1 ||
+    	        		 buscar ==='') {
+    	           tr[i].style.display = "";
+    	         } else {
+    	           tr[i].style.display = "none";
+    	      	 }
+    	    }
+    		
+    	  }
+    }
+    
+    function filtrar() {
+    	
+    	  // Declare variables 
+    	  var input, filter, table, tr, td, i;
+    	  input = document.getElementById("filtro");
+    	  filter = input.options[input.selectedIndex].innerHTML;
+    	  table = document.getElementById("tabla");
+    	  tr = table.getElementsByTagName("tr");
+    	  var titulo = document.getElementById("titulo_lista");
+    	  var txt_titu = filter;
+    	  
+    	  if (filter === "Servicio de liquidaciones")
+    		  filter = "LIQ";
+    	  else if (filter === "Operaciones TI")
+    		  filter = "OTI";
+    	  else if (filter === "Gestión Activos")
+    		  filter = "GA";
+    	  else if (filter === "Servicio de participantes")
+    		  filter = "PAR";
+    	  else if (filter === "Facturas Negociables")
+    		  filter = "FT";
+    	  else 
+    		  filter = "Todos";
+
+    	  nro_filas = 0;
+    	  
+    	  for (i = 1; i < tr.length; i++) {
+    	  	td = tr[i].getElementsByTagName("td")[1];   	  	
+    		if (td) {
+    				
+    	         if (td.innerHTML === filter || filter ==='Todos') {
+    	           tr[i].style.display = "";
+    	           nro_filas++;
+    	         } else {
+    	           tr[i].style.display = "none";
+    	      	 }
+    	    }
+    		
+    	  }
+    	  titulo.innerHTML = txt_titu + ' (' + nro_filas +')';
+    	}
+    </script>
+</body>
+</html>
