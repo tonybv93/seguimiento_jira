@@ -1,0 +1,266 @@
+	<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> </head>
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+			<div class="col-12 grid-margin">
+			<div class="card">
+			<div class="card-body">
+			<h4>Agregar</h4><br>
+			<label>Cantidad</label>
+			<input class="form-control" id="cant" type="number">
+			<label>Jira</label>
+			<input class="form-control" id="serv" type="text">
+			<br>
+			<button class="btn btn-success mr-2" type="submit" onclick="nuevoServicio()">Agregar</button>
+			<br><br>
+			<table  class="table table-striped" id="tabla">
+				<thead>
+					<tr>
+						<th>Cantidad</th>
+						<th>Jira</th>
+						<th>Descripcion</th>
+						<th>Monto desarrollo</th>
+						<th>Impuesto</th>
+						<th>Total</th>
+						<th>Eliminar</th>
+					</tr>
+				</thead>
+				<tbody id="tabla_body">
+					
+				</tbody>
+			</table>
+			<div>TOTAL: <span id="total_final"></span> </div>
+			<div>Suma: <span id="total_suma"></span> </div>
+			<br>
+			<input onclick="guardar()" id="boton_modal" class="btn btn-success mr-2" type="submit" value="Guardar">
+			
+			<!------------------ The Modal --------------------->
+			<div id="mi_modal" class="un_modal">			
+			  <!-- Modal content -->
+			  <div class="contenido_modal">
+			    <span class="close">&times;</span>
+			    <p>¿Estás seguro?</p>
+			    <input onclick="guardar()" class="btn btn-success mr-2" type="submit" value="Sí">
+				<input id="boton_no" class="btn btn-danger mr-2" value="No">
+			  </div>			
+			</div>
+			<!--------------------------------------------------->
+
+			</div>
+			</div>
+			</div>
+<!----------------------------------------------------------------------- 	FIN	 ------------------------------------------------------->
+          </div>
+          <footer th:replace="fragments/shared :: header"></footer>         
+        </div>
+      </div>
+   	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>
+    
+    <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
+    
+    <script th:src="@{/js/shared/data-table.js}"></script>
+    <script th:src="@{/js/shared/tooltips.js}"></script>
+    <script th:src="@{/js/shared/popover.js}"></script>
+    
+  <script type="text/javascript">
+  var span = document.getElementsByClassName("close")[0];
+  var modal = document.getElementById('mi_modal');
+  var btn = document.getElementById("boton_modal");
+  var btn_no = document.getElementById("boton_no");
+
+  btn.onclick = function() {
+  	if (total != 0)
+		modal.style.display = "block";
+	else
+		alert("No tienes elementos");
+	}
+  
+  span.onclick = function() {
+	  modal.style.display = "none";
+  }
+  
+  btn_no.onclick = function() {
+	  modal.style.display = "none";
+  }
+  
+  window.onclick = function(event) {
+  if (event.target == modal) {
+	  modal.style.display = "none";
+	  }
+  }  
+  //-------------------------------------------------------------
+  var total = 0;	
+  var suma = 0;
+  function crearCampo(nombre,valor1){
+  		td = document.createElement('td');
+  		txt = document.createElement('div');
+  		txt.setAttribute('id',nombre);
+  		txt.innerHTML = valor1;
+  		td.appendChild(txt);
+  		return td;
+  	}
+  	function crearinput(nombre,valor1){
+  		td = document.createElement('td');
+  		txt = document.createElement('input');
+  		txt.type="text";
+  		txt.setAttribute('id',nombre);
+  		txt.setAttribute('value',valor1);
+  		txt.setAttribute('class','form-control');
+  		td.appendChild(txt);
+  		return td;
+  	}
+  	function eliminarfila(btn){
+  		fila = btn.parentNode.parentNode;
+  		fila.parentNode.removeChild(fila);
+  		
+  		var cant = fila.childNodes[0].firstChild.innerHTML;
+  		
+  		suma = suma - parseFloat(cant,2)*1;
+  		
+  		total = total*1.0 - 1;		
+  		console.log(total);
+  		
+  		document.getElementById("total_final").innerHTML = redondear(total,2);
+  		document.getElementById("total_suma").innerHTML = redondear(suma,2);
+  	}
+  	function redondear(num, decimales = 2) {
+  	    var signo = (num >= 0 ? 1 : -1);
+  	    num = num * signo;
+  	    if (decimales === 0) //con 0 decimales
+  	        return signo * Math.round(num);
+  	    // round(x * 10 ^ decimales)
+  	    num = num.toString().split('e');
+  	    num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
+  	    // x * 10 ^ (-decimales)
+  	    num = num.toString().split('e');
+  	    return signo * (num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
+  	}
+  	
+  	
+  	function nuevoServicio(){
+  		var cant=document.getElementById("cant").value;
+  		var serv=document.getElementById("serv");
+  		//var selected = serv.options[serv.selectedIndex].text;
+  		var span_total =document.getElementById("total_final");
+  		var span_suma =document.getElementById("total_suma");
+
+  		document.getElementById("total_suma").innerHTML = redondear(suma,2);
+  		
+  		destino = document.getElementById('tabla_body'); 		 		  		
+  		var requestURL = 'http://localhost:8080/rest/jira/' + serv.value;
+  		var request = new XMLHttpRequest();
+  		request.open('GET',requestURL);
+  		request.responseType = 'json';
+  		request.send();  
+  		
+  		request.onload = function() {
+  			
+	  		var jirabd = request.response;	  		 
+			if (jirabd == null)
+				alert("No existe un Jira con ese código");
+			else {
+				suma = suma + cant*1;
+		  		console.log(suma);
+				
+	  		tr = document.createElement('tr');
+	  		tr.appendChild(crearCampo('cantidad',cant));
+	  		tr.appendChild(crearCampo('jira',jirabd['jira']));
+	  		tr.appendChild(crearCampo('descripcion',jirabd['resumen']));
+	  		tr.appendChild(crearCampo('monto',jirabd['monto_desarollo']));
+	  		
+	  		tr.appendChild(crearCampo('impuesto',jirabd['monto_desarollo']*0.18));
+	  		tr.appendChild(crearCampo('total',jirabd['monto_desarollo']*1.18));
+	  		  		
+	  		total = total*1.0 + 1;
+	  		td = document.createElement('td');
+	  		x = document.createElement('button');
+	  		x.tipe = 'button';
+	  		x.setAttribute('class','btn btn-outline-danger');
+	  		x.innerHTML = 'X';
+	  		x.setAttribute('onclick','eliminarfila(this)');
+	  		td.appendChild(x);
+	  		tr.appendChild(td);
+	  		destino.appendChild(tr);
+	  		span_total.innerHTML = redondear(total,2);
+			}
+  		}
+  	}
+
+  		
+  	function guardar() {
+  		var fields = { fields: [] };
+  		var $th = $('table th');
+  		$('table tbody tr').each(function(i, tr){
+  		    var obj = {}, $tds = $(tr).find('td');
+  		    $th.each(function(index, th){
+  		        obj[$(th).text()] = $tds.eq(index).text();
+  		    });
+  		  fields.fields.push(obj);
+  		});
+  		
+  		var data = JSON.stringify(fields); 		
+  		 	
+  		$.ajax({
+  	        url : 'http://localhost:8080/rest/app',  	        
+  	        contentType:'application/json',
+  	        method : 'post',
+  	      	data : data,
+  	        success : function(respuesta){
+  	        	
+  	            alert("Se guardó la información con éxito");
+  	        	console.log(respuesta);
+  	        },
+  	        error: function(error,sm1,sm2){
+  	        	 alert("Se prodjo un error");
+  	        	console.log(sm2);
+  	            alert(sm1);
+  	        }  	        
+  	    });
+  		window.location.href = "http://localhost:8080/gso/pruebas";
+
+  	}
+  	
+  	 	
+  </script>
+	
+	
+</body>
+</html>
+			

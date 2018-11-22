@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.auth.entity.Jira;
-import com.auth.service.IAcuerdosService;
 import com.auth.service.IJiraService;
 
 @Controller
@@ -17,17 +16,15 @@ public class JiraController {
 
 	@Autowired
 	private IJiraService jiraService;
-	@Autowired
-	private IAcuerdosService acuerdoService;
 	
 	// ACTUALIZAR BD
 	@GetMapping("/actualizar")
 	public String  actualizar(Model model) {	
 		jiraService.actualizarBD();
-		return "redirect:/gso/cavali/lista";
+		return "redirect:/seguimiento/cavali/lista";
 	}
 	
-	//LISTAR JIRAS
+	//LISTAR JIRAS CAVALI
 	@GetMapping("/cavali/lista")
 	public String  detalleCavali(Model model) {		
 		List<Jira> lstJiras = jiraService.listarJiras();		
@@ -35,11 +32,4 @@ public class JiraController {
 		model.addAttribute("lstJiras",lstJiras);
 		return "jiralista";
 	}	
-	
-	//LISTAR ACUERDOS
-	@GetMapping("/cavali/acuerdos")
-	public String listaAcuerdosCavali(Model model) {	
-		model.addAttribute("listaAcuerdos", acuerdoService.listarActivos());
-		return "acuerdoslista";
-	}
 }

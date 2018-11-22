@@ -8,7 +8,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -28,7 +27,9 @@ public class Jira {
 	private double monto_des;
 	private double monto_total;	
 	private Date fecha_creacion;
-	private Date fecha_actualizacion;		
+	private Date fecha_actualizacion;	
+	private Date fecha_pruebas;
+	private Date fecha_produccion;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_etiqueta")
@@ -53,9 +54,6 @@ public class Jira {
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_fabrica")
 	private Fabrica fabrica;
-	
-	@OneToOne(optional=false, mappedBy="jira")
-	private Jira_Detalle detalle_fecha;
 	
 	public int getId() {
 		return id;
@@ -171,15 +169,20 @@ public class Jira {
 	}
 	public void setFabrica(Fabrica fabrica) {
 		this.fabrica = fabrica;
+	}	
+	public Date getFecha_pruebas() {
+		return fecha_pruebas;
+	}
+	public void setFecha_pruebas(Date fecha_pruebas) {
+		this.fecha_pruebas = fecha_pruebas;
+	}
+	public Date getFecha_produccion() {
+		return fecha_produccion;
+	}
+	public void setFecha_produccion(Date fecha_produccion) {
+		this.fecha_produccion = fecha_produccion;
 	}
 	public Jira() {
 		super();
-	}
-	public Jira_Detalle getDetalle_fecha() {
-		return detalle_fecha;
-	}
-	public void setDetalle_fecha(Jira_Detalle detalle_fecha) {
-		this.detalle_fecha = detalle_fecha;
 	}	
-	
 }

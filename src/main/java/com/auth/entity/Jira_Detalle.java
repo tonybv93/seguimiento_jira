@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -18,11 +16,7 @@ public class Jira_Detalle {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "JIRA_DETALLE_SEQ")
 	@SequenceGenerator(sequenceName="JIRA_DETALLE_SEQ", allocationSize=1, name="JIRA_DETALLE_SEQ")
 	private int id;
-	
-	@OneToOne
-	@JoinColumn(name="id_jira",unique=true, updatable=false)
-	private Jira jira;
-	
+	private String jira;	
 	@Column(name="fecha_pr_usuario")
 	private Date fecha_pr_usuario;
 	
@@ -36,15 +30,14 @@ public class Jira_Detalle {
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	public Jira getJira() {
+	
+	public String getJira() {
 		return jira;
 	}
 
-	public void setJira(Jira jira) {
+	public void setJira(String jira) {
 		this.jira = jira;
 	}
-	
 
 	public Date getFecha_pr_usuario() {
 		return fecha_pr_usuario;

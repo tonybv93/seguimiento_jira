@@ -1,0 +1,103 @@
+	<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> </head>
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+			<div class="row">
+				<div class="col-lg-6 grid-margin stretch-card">
+	                <div class="card">
+	                  <div class="card-body">
+	                    <h4 class="card-title">Bar chart</h4>
+	                    <canvas id="barChart" style="height:230px"></canvas>
+	                  </div>
+	                </div>
+              	</div>
+				
+      		</div>
+<!----------------------------------------------------------------------- 	FIN	 ------------------------------------------------------->
+          </div>
+          <footer th:replace="fragments/shared :: header"></footer>         
+        </div>
+      </div>
+   	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>
+    
+    <script th:src="@{/js/shared/data-table.js}"></script>
+    <script th:src="@{/js/shared/tooltips.js}"></script>
+    <script th:src="@{/js/shared/popover.js}"></script>
+   
+    <!-- Custom js for this page-->
+    <script type="text/javascript">
+    function filtrar() {
+    	  // Declare variables 
+    	  var input, filter, table, tr, td, i;
+    	  input = document.getElementById("filtro");
+    	  filter = input.options[input.selectedIndex].innerHTML;
+    	  table = document.getElementById("tabla");
+    	  tr = table.getElementsByTagName("tr");    	  
+    	  
+    	  if (filter === "Servicio de liquidaciones")
+    		  filter = "LIQ";
+    	  else if (filter === "Operaciones TI")
+    		  filter = "OTI";
+    	  else if (filter === "Gestión Activos")
+    		  filter = "GA";
+    	  else if (filter === "Servicio de participantes")
+    		  filter = "PAR";
+    	  else if (filter === "Facturas Negociables")
+    		  filter = "FT";
+    	  else 
+    		  filter = "Todos";    	  
+    	 	
+    	  for (i = 1; i < tr.length; i++) {
+    	  	td = tr[i].getElementsByTagName("td")[9];   	  	
+    		if (td) {
+    				
+    	         if (td.innerHTML === filter || filter ==='Todos') {
+    	           tr[i].style.display = "";
+    	         } else {
+    	           tr[i].style.display = "none";
+    	      	 }
+    	    }    		
+    	  }
+    	}
+    </script>
+   
+    <script th:src="@{/js/shared/chart.js}"></script>
+</body>
+</html>

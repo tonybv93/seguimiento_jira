@@ -26,10 +26,6 @@ public class UserController {
 		model.addAttribute("usurio",usuario);
 		return "vista";
 	}
-	@GetMapping("/xollo")
-	public String pruebaxollo(Model model) {		
-		return "inicio-xollo";
-	}
 	
 	@GetMapping("/login")
 	public String login() {		

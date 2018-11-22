@@ -1,0 +1,337 @@
+	<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> </head>
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+			<div class="card">
+				<div class="card-body">
+				<div class="row">
+					<div class="col-sm-12 col-md-8">
+						<h4 th:text="${titulo} + ' (' + ${count} + ')'"></h4>	
+					</div> 
+					<div class="col-sm-12 col-md-4 texto_derecha">
+						<button class="btn btn-outline-primary" onclick="actualizarjiras(this)">
+	            			<i class="mdi mdi-refresh"></i>Actualizar BD
+	            		</button>	
+					</div>				
+				</div>
+				<div class="row">
+					<div class="col-sm-12 col-md-6">
+						<div class="box_leyenda">
+							<ul class="leyenda flex">													
+								<li><i class="mdi mdi-tag et_comp"></i>Compromiso</li>						
+								<li><i class="mdi mdi-tag et_prio"></i>Prioritario</li>
+								<li><i class="mdi mdi-tag et_mbd"></i>Mejora BD</li>
+								<li><i class="mdi mdi-tag et_cri"></i>Crítico</li>							
+							</ul>								
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6 texto-abajo">
+						<div class="input-group col-xs-12 alin_bot">
+							<label class="col-sm-3 col-form-label">Area:</label>
+							<select id="filtro" onchange="filtrar()" name="filtro" class="form-control border-primary col-sm-9">
+								<option th:value="1">Servicio de liquidaciones</option>
+								<option th:value="2">Operaciones TI</option>
+								<option th:value="3">Gestión Activos</option>
+								<option th:value="4">Servicio de participantes</option>
+								<option th:value="5">Facturas Negociables</option>
+								<option th:value="6">Todos</option>
+							</select>
+							<span class="input-group-append">								
+							</span>
+						</div>
+					</div>
+				</div>		
+					<div class="disable">*Nota: la actualización de fechas es independiente entre filas (Cada botón guarda solo las fechas de su correspondiente fila)</div><br>
+					<div class="contenedor_tabla">
+					
+					<table  id="tabla" class="table table-striped table-hover">	
+						<thead>
+					  		<tr>	
+					  			<th>Área</th>	
+					  			<th>Jira
+					  				<input onkeyup="buscar(this)" class="buscador_entabla" type="text">
+					  			</th>
+					  			<th>Descripcón</th>												
+								<th>Estado</th>												
+								<th>Asignado</th>
+								<th>Responsable</th>
+								<th>Pruebas</th>	
+								<th>Pase a producción</th>									
+								<th></th>						
+					  		</tr>					  		
+					  	</thead>				
+					  	<tbody>
+					  		<tr th:each="jira:${lstJiras}">					  			
+					  			<td th:class="${jira.colorClass}" th:text="${jira.areaSolicitante}"></td>
+					  			<td >
+					  				<a th:href="'https://jira.cavali.com.pe:8443/browse/' +${jira.jira}" target=”_blank” th:text="${jira.jira}"></a>
+					  			</td>
+					  			<td th:text="${jira.resumen}"></td>	 
+					  			<td class="centrado">
+					  				<span th:class="${jira.gestado_class}" th:text="${jira.grupoEstado}"></span>
+					  			</td> 
+					  			<!--<td>
+					  				<div class="d-flex cont_obs">
+					  					<div class="obse1"><span>3</span> </div>
+										<div class="obse2" ><span>2</span> </div>
+										<div class="obse3" ><span>3</span> </div>
+										<div class="obse4" ><span>1</span> </div>
+					  				</div>
+					  				
+					  			</td>-->	
+					  			<td th:text="${jira.nuevoResponsable}"></td>
+					  			<td th:text="${jira.analista_r}"></td>
+					  			<td>
+					  				<input onclick="val_act(this)" onblur="val_new(this)" name="fecha1" th:value="${jira.fecha_pruebas}" type="text" th:class="${jira.fecha_pruebas != null ? 'input_fecha' : 'input_sinfecha'}	" placeholder="aa-mm-yyyy" autocomplete="off">
+					  			</td>
+					  			<td>
+			                        <input onclick="val_act(this)" onblur="val_new(this)" name="fecha2" th:value="${jira.fecha_produccion}" type="text" th:class="${jira.fecha_produccion != null ? 'input_fecha' : 'input_sinfecha'}	" placeholder="aa-mm-yyyy" autocomplete="off">
+					  			</td>						  			
+								<td>
+									<div class="d-flex">
+										<button onclick="guardar(this)" title="Guardar" class="btn btn-icons btn-rounded btn-outline-success">
+						                	<i class="mdi mdi-content-save"></i>
+						                </button>									
+									</div>																	
+								</td>						
+					  		</tr>
+					  	</tbody>
+				  	</table>
+				  	
+			  	</div>
+			  	
+		  	</div>
+<!----------------------------------------------------------------------- 	FIN	 ------------------------------------------------------->
+          </div>
+          <footer th:replace="fragments/shared :: header"></footer>         
+        </div>
+      </div>
+   	</div>
+   	
+<!----------------------------------------------------------------------- 	MODALES	 ------------------------------------------------------->
+   	
+	<div id="modal_actualizando" class="un_modal">		
+		<div class="contenido_modal">
+			<div class="card-body">		
+				<div class="modal_header2">ACTUALIZANDO...</div>
+				<p class="segundero">Se extraerá la información de <b>JIRA</b>. Esto puede tomar unos segundos, por favor espere.</p>
+				<br><br>
+				<div class="bar-loader">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<div class="segundero">Duración del proceso: <span id="contador_seg"></span> s</div>		  	
+			</div>			
+		</div>
+	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>
+    
+    <script th:src="@{/js/shared/data-table.js}"></script>
+    <script th:src="@{/js/shared/formpickers.js}"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script type="text/javascript">
+    var valor_actual="";
+    var valor_nuevo="";
+    
+    function validar_fecha(txt){
+    	var error = "";    	
+    	
+    	if (txt == ""){
+    		error = "";    		
+    	}else if (txt.length < 8 || txt.length > 10){
+    		error = "Longitud erronea";    		
+    	}else if (!/^\d{1,2}\-\d{1,2}\-\d{4}$/.test(txt)){
+    		error = "Formato inválido";    		
+    	}else{
+    		txt = txt.split("-");
+    		dia= parseInt(txt[0]);
+    		mes=parseInt(txt[1]);
+    		anio=parseInt(txt[2]);
+    		
+    		// dias máximos por mes
+    		var lstDias = [31,28,31,30,31,30,31,31,30,31,30,31];
+    		//detectar si es año bisiesto
+    		if (mes === 2){
+    			var bisie = ( (!(anio % 4) && anio % 100) || !(anio % 400) );
+    			if (bisie != false){
+    				lstDias[1] = 29;  				
+    			}
+    		}
+    		if ( dia > lstDias[mes-1] || lstDias[mes-1] === undefined )
+    			error = "Fecha inválida";
+    		if (anio < 2000)
+    			error ="Fecha incoherente";
+    	} 	    	  		
+    	return error;
+    }
+    
+    function val_act(inp){
+    	valor_actual = inp.value;
+    }
+    
+    function val_new(inp){
+    	var txt_corregido="";
+    	var valor_nuevo = inp.value; 
+
+    	//VALIDAR CONTENIDO
+    	var error = validar_fecha(valor_nuevo);     	
+    	if (error != ""){
+    		alert(error);
+    		inp.value = valor_actual;
+    	}
+    	else{
+    		// CORREGIR EL FORMATO (agregar 0 adelante)
+        	if (valor_nuevo !== "" && valor_nuevo != null ){
+        		valor_nuevo = valor_nuevo.split("-");
+        		if (valor_nuevo[0].length === 1)
+        			valor_nuevo[0] = '0' + valor_nuevo[0];
+        		if (valor_nuevo[1].length === 1)
+        			valor_nuevo[1] = '0' + valor_nuevo[1];
+        	
+        	txt_corregido = valor_nuevo[0] + '-' + valor_nuevo[1] + '-' + valor_nuevo[2]; 
+        	}    		
+    		inp.value = txt_corregido;
+    		
+    		// CAMBIAR COLOR DE LETRA SI SE AGREGÓ NUEVO CONTENIDO    		
+    		if ((valor_actual.localeCompare(txt_corregido))){
+        		inp.style.color = "#007bff";
+        	}
+        	else{
+        		inp.style.backgroundColor = "#fff";
+        	}    		
+    	}
+    	valor_actual ="";
+    }
+    
+    function guardar(boton){
+    	var fila = boton.parentNode.parentNode.parentNode;
+    	var jira = fila.children[1].children[0];
+    	var td_fecha1 = fila.children[6].children[0];
+    	var td_fecha2 = fila.children[7].children[0];
+    	var objjson = {};
+    	var data;
+    	
+    	// Construyendo JSON    	
+    	objjson.jira = jira.innerHTML;
+    	objjson.fecha1 = td_fecha1.value;
+    	objjson.fecha2 = td_fecha2.value;
+    	data = JSON.stringify(objjson); 		
+    	
+  		console.log(data);
+  		
+  		// Realizar petición
+  		$.ajax({
+  	        url : 'http://172.16.17.101:8080/rest/fechas',  	        
+  	        contentType:'application/json',
+  	        method : 'post',
+  	      	data : data,
+  	        success : function(respuesta){
+  	        	console.log(respuesta);
+  	        },
+  	        error: function(error,sm1,sm2){
+  	        	 alert("Se prodjo un error");
+  	        	console.log(sm2);
+  	            alert(sm1);
+  	        }  	        
+  	    });
+  		td_fecha1.style.color = "#495057";
+  		td_fecha2.style.color = "#495057";
+    }
+    
+    
+    function buscar(inp){
+    	var buscar = inp.value.toLowerCase();
+    	var table = document.getElementById("tabla");
+    	var tr = table.getElementsByTagName("tr"); 
+    	
+    	for (i = 1; i < tr.length; i++) {
+    	  	td = tr[i].getElementsByTagName("td")[1];   	  	
+    		if (td) {    				
+    	         if (td.innerHTML.toLowerCase().search(buscar) != -1  || buscar ==='') {
+    	           tr[i].style.display = "";
+    	         } else {
+    	           tr[i].style.display = "none";
+    	      	 }
+    	    }
+    		
+    	  }
+    }
+    
+    function filtrar() {
+    	  // Declare variables 
+    	  var input, filter, table, tr, td, i;
+    	  input = document.getElementById("filtro");
+    	  filter = input.options[input.selectedIndex].innerHTML;
+    	  table = document.getElementById("tabla");
+    	  tr = table.getElementsByTagName("tr");
+    	  
+    	  
+    	  if (filter === "Servicio de liquidaciones")
+    		  filter = "LIQ";
+    	  else if (filter === "Operaciones TI")
+    		  filter = "OTI";
+    	  else if (filter === "Gestión Activos")
+    		  filter = "GA";
+    	  else if (filter === "Servicio de participantes")
+    		  filter = "PAR";
+    	  else if (filter === "Facturas Negociables")
+    		  filter = "FT";
+    	  else 
+    		  filter = "Todos";
+    	  
+    	  
+    	  for (i = 1; i < tr.length; i++) {
+    	  	td = tr[i].getElementsByTagName("td")[0];   	  	
+    		if (td) {
+    				
+    	         if (td.innerHTML === filter || filter ==='Todos') {
+    	           tr[i].style.display = "";
+    	         } else {
+    	           tr[i].style.display = "none";
+    	      	 }
+    	    }
+    		
+    	  }
+    	}
+        
+    </script>
+</body>
+</html>
