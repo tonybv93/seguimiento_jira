@@ -1,22 +1,3 @@
-$(document).ready(function() {
-    $('.js-example-basic-single').select2();
-});
-
-
-$( function() {
-    $("#id_categoria").change( function() {
-        if ($(this).val() === "Jira") {
-            $("#id_input").prop("disabled", false);
-            $("#id_input2").prop("disabled", true);
-            $("#id_input2").val("");
-        } else {
-            $("#id_input").prop("disabled", true);            
-            $("#id_input2").prop("disabled", false);
-            $("#id_input2").val("Otros");
-        }
-    });
-});
-
 function actualizarjiras(btn){
 	var n = 0;
 	var l = document.getElementById("contador_seg");

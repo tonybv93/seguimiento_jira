@@ -16,8 +16,8 @@ public class Area_Solicitante {
 	private Integer id;
 	@Column(name="nombre")
 	private String nombre;
-	@Column(name="nombre_visual")
-	private String nombre_visual;
+	@Column(name="nombrecorto")
+	private String nombrecorto;
 	@Column(name="css_class")
 	private String css_class;
 	public Integer getId() {
@@ -32,11 +32,12 @@ public class Area_Solicitante {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	public String getNombre_visual() {
-		return nombre_visual;
+	
+	public String getNombrecorto() {
+		return nombrecorto;
 	}
-	public void setNombre_visual(String nombre_visual) {
-		this.nombre_visual = nombre_visual;
+	public void setNombrecorto(String nombrecorto) {
+		this.nombrecorto = nombrecorto;
 	}
 	public String getCss_class() {
 		return css_class;

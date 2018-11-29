@@ -26,6 +26,8 @@ public class AcuerdosController {
 	public String acuerdosCavali(Model model) {	
 		model.addAttribute("acuerdonuevo",new Acuerdos());
 		model.addAttribute("listaJiras",jiraService.listarJiras());
+		model.addAttribute("listaAreas",acuerdoService.listarAreaSolicitante());
+		model.addAttribute("listaResponsables",acuerdoService.listarUsuarios());
 		model.addAttribute("listaAcuerdos", acuerdoService.listarTodos());
 		return "acuerdos";
 	}
@@ -40,7 +42,7 @@ public class AcuerdosController {
 	//ELIMINAR 
 	@PostMapping("/eliminar")
 	public String eliminar(Model model, @RequestParam(name="id") Integer id) {
-		acuerdoService.eliminar(id);		
+		acuerdoService.eliminar(id);			
 		return "redirect:/acuerdos/cavali";
 	}
 }

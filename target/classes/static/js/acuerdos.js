@@ -1,4 +1,28 @@
- //=============== 
+$(document).ready(function() {
+    $('.js-example-basic-single').select2();
+});
+
+
+$( function() {
+    $("#id_categoria").change( function() {
+        if ($(this).val() === "Jira") {
+        	 $("#jira_selector").show();
+        	 $("#area_selector").hide();
+            $("#id_input").prop("disabled", false);
+            $("#id_input2").prop("disabled", true);
+            $("#id_input2").val("");
+        } else {
+            $("#id_input").prop("disabled", true);     
+            $("#jira_selector").hide();
+            $("#area_selector").show();
+            $("#id_input2").prop("disabled", false);
+            $("#id_input2").val("Otros");
+        }
+    });
+});
+
+
+//=============== 
 	function crearCampo(nombre,valor1){
   		td = document.createElement('td');
   		td.innerHTML = valor1;
@@ -58,8 +82,8 @@
 		  
 		  objjson.area = document.getElementById("id_input2").value;
 		  objjson.tipo = document.getElementById("id_categoria").value;
-		  objjson.jira = document.getElementById("id_input").value;
-		  objjson.responsable = document.getElementById("responsable").value;
+		  objjson.jira = document.getElementById("id_input").value*1;
+		  objjson.responsable = document.getElementById("responsable").value*1;
 		  objjson.fecha_entrega = document.getElementById("fecha_entrega").value;
 		  objjson.observaciones = document.getElementById("exampleTextarea1").value;
 		  
@@ -128,15 +152,15 @@
 			 arfecha = fecha_entrega.split("-");
 			
 			if (hoyyear*1 > arfecha[0]*1){				
-				document.getElementById("alet-fecha").innerHTML = "No se puede regresar años en el tiempo!";
+				document.getElementById("alet-fecha").innerHTML = "NO se puede regresar años en el tiempo!";
 				resultado = resultado*0;
 			}
 			else if(hoymes*1 > arfecha[1]*1){			
-				document.getElementById("alet-fecha").innerHTML = "No se puede regresar meses en el tiempo!";
+				document.getElementById("alet-fecha").innerHTML = "NO se puede regresar meses en el tiempo!";
 				resultado = resultado*0;				
 			}
 			else if(hoydia*1 > arfecha[2]*1){
-				document.getElementById("alet-fecha").innerHTML = "Aún se puede regresar días en el tiempo!";
+				document.getElementById("alet-fecha").innerHTML = "NO se puede regresar días en el tiempo!";
 				resultado = resultado*0;				
 			}
 		 }

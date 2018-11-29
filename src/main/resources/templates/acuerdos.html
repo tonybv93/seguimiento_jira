@@ -51,27 +51,22 @@
                         </div>
                       </div>
                       <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="area_selector" style="display: none;">
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Area:</label>
                             <div class="col-sm-9">                              
-                              <select class="form-control" id="id_input2" disabled="disabled">
-                              	<option value="Servicio de liquidaciones">Servicio de liquidaciones</option>
-                              	<option value="Operaciones TI">Operaciones TI</option>
-                              	<option value="Gestión Activos">Gestión Activos</option>
-                              	<option value="Servicio de participantes">Servicio de participantes</option>
-                              	<option value="Facturas Negociables">Facturas Negociables</option>
-                              	<option value="Otros">Otros</option>
+                              <select class="form-control" id="id_input2" disabled="disabled">                              	
+                              	<option th:each="area:${listaAreas}" th:value="${area.id}" th:text="${area.nombre}"></option>
                               </select>
                           	</div>
                           </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="jira_selector">
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Jira:</label>
                             <div class="col-sm-9">                              
                               <select class="form-control js-example-basic-single" id="id_input">
-                              	<option th:each="jira:${listaJiras}" th:value="${jira.jira}" th:text="${jira.jira} + ' ' + ${jira.resumen}"></option>
+                              	<option th:each="jira:${listaJiras}" th:value="${jira.id}" th:text="${jira.jira} + ' ' + ${jira.resumen}"></option>
                               </select>
                           	</div>
                           </div>
@@ -83,9 +78,7 @@
                             <label class="col-sm-3 col-form-label">Responsable:</label>
                             <div class="col-sm-9">
                               <select id="responsable" class="form-control">
-                                <option>Antony B</option>
-                                <option>Favio F</option>
-                                <option>Otros</option>
+                                <option th:each="usuario:${listaResponsables}" th:value="${usuario.id}" th:text="${usuario.username}"></option>
                               </select>
                             </div>
                           </div>

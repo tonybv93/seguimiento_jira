@@ -32,4 +32,12 @@ public class JiraController {
 		model.addAttribute("lstJiras",lstJiras);
 		return "jiralista";
 	}	
+	//LISTAR JIRAS CAVALI
+	@GetMapping("/cavali/fechas")
+	public String  fechasCavali(Model model) {		
+		List<Jira> lstJiras = jiraService.listarJiras();		
+		model.addAttribute("count",lstJiras.size());
+		model.addAttribute("lstJiras",lstJiras);
+		return "adm_jiralista";
+	}
 }

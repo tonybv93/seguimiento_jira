@@ -28,4 +28,9 @@ public class JiraDetalleService implements IJiraDetalleService {
 	public Jira_Detalle buscarPorId(Integer id) {
 		return repo.findById(id).orElse(null);
 	}
+
+	@Override
+	public Jira_Detalle buscarPorJira(String jira) {		
+		return repo.findByJira(jira);
+	}
 }

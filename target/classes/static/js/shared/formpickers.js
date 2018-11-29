@@ -12,17 +12,18 @@
     $('#datepicker-popup').datepicker({
       enableOnReadonly: true,
       todayHighlight: true,
+      format: 'dd/mm/yyyy'
     });
   }
   if ($("#inline-datepicker").length) {
     $('#inline-datepicker').datepicker({
       enableOnReadonly: true,
-      todayHighlight: true,
+      todayHighlight: true    
     });
   }
   if ($(".datepicker-autoclose").length) {
     $('.datepicker-autoclose').datepicker({
-      autoclose: true
+      autoclose: true          
     });
   }
   if ($('input[name="date-range"]').length) {

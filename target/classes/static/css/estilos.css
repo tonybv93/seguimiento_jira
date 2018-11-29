@@ -70,6 +70,9 @@
 .color_com{
 	border-left: #ffaf00 7px solid;
 }
+.color_ate{
+	border-left: #c32c92 7px solid;
+}
 .color_cri{
 	border-left: #ff6258 7px solid;
 }
@@ -177,6 +180,11 @@
  	color: #ff6258;
  	margin-right: 5px;
  }
+ .et_ate{
+ 	font-size: 17px; 
+ 	color: #c32c92;
+ 	margin-right: 5px;
+ }
  .et_mbd{
  	font-size: 17px; 
  	color: #19d895;
@@ -236,13 +244,26 @@
 	color: #7b7b7b;
 }
 
-.input_fecha{
+.input_fecha_azul{
 	width: 90px;
 	background: transparent;
 	padding: 6px 4px;
 	border-radius: 3px;
 	border: none;
+	color: #2196f3;
+	background-color:rgba(33, 150, 243, 0.2);
 }
+.input_fecha_verde{
+	width: 90px;
+	background: transparent;
+	padding: 6px 4px;
+	border-radius: 3px;
+	border: none;
+	color: #129e6d;
+	background-color:rgba(25, 216, 149, 0.2);
+}
+
+
 
 .input_sinfecha::-webkit-input-placeholder {
     font-size: 10px;
@@ -255,27 +276,37 @@
 	padding: 4px 4px;
 	border-radius: 3px;
 }
-.input_fecha:hover{
-	border: solid 1px #ccc;
+.input_fecha_azul:hover{
+	border: solid 1px #2196f3;
 }
-.input_fecha:focus, .input_sinfecha:focus{
-	border: solid 1px #60bff2;
+.input_fecha_verde:hover{
+	border: solid 1px #129e6d;
+}
+.input_fecha_verde:focus, .input_fecha_azul:focus, .input_sinfecha:focus{
+	border: solid 1px #ccc;
+	color: #323232;
 	background-color: #fff;
 }
 
+
+
 .fechas_azul{	
 	background-color: rgba(33, 150, 243, 0.2);
-	padding: 3px 10px;
+	padding: 3px 5px;
 	border-radius: 3px;
 	color: #2196f3;
+	display: block;
+	width: 90px;
 }
 .fechas_verde{
 	background-color: rgba(25, 216, 149, 0.2);
-	padding: 3px 10px;
+	padding: 3px 5px;
 	border-radius: 3px;
 	color: #129e6d;
+	display: block;
+	width: 90px;
 }
-.fechas_rojo{
+.fechas_azul{
 	background-color: rgba(33, 150, 243, 0.2);
 	padding: 3px 10px;
 	border-radius: 3px;

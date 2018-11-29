@@ -1,5 +1,5 @@
 	<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -10,14 +10,17 @@
     <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
     <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
     <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
-    <!-- endinject --->
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" th:href="@{/css/shared/style.css}">
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
     <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
-    <!-- ícono navegador --> 
+    <!-- End Layout styles -->
     <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> </head>
-    
 <body class="sidebar-toggle-display sidebar-hidden">
 	<div class="container-scroller">	
 	<nav th:replace="fragments/shared :: header"></nav>
@@ -30,12 +33,12 @@
 				<div class="card-body">
 				<div class="row">
 					<div class="col-sm-12 col-md-8">
-						<h4 id="titulo_lista">Jiras Totales (<span th:text="${count}"></span>)</h4>
-					</div>
+						<h4>Administrador de Fechas</h4>	
+					</div> 
 					<div class="col-sm-12 col-md-4 texto_derecha">
-						<a class="btn btn-outline-primary" th:href="@{/seguimiento/cavali/fechas}">
-	            			<i class="mdi mdi-pencil">Editar</i>
-	            		</a>
+						<button class="btn btn-outline-primary" onclick="actualizarjiras(this)">
+	            			<i class="mdi mdi-refresh"></i>Actualizar BD
+	            		</button>	
 					</div>				
 				</div>
 				<div class="row">
@@ -45,8 +48,7 @@
 								<li><i class="mdi mdi-tag et_comp"></i>Compromiso</li>						
 								<li><i class="mdi mdi-tag et_prio"></i>Prioritario</li>
 								<li><i class="mdi mdi-tag et_mbd"></i>Mejora BD</li>
-								<li><i class="mdi mdi-tag et_cri"></i>Crítico</li>	
-								<li><i class="mdi mdi-tag et_ate"></i>Regular</li>						
+								<li><i class="mdi mdi-tag et_cri"></i>Crítico</li>							
 							</ul>								
 						</div>
 					</div>
@@ -54,69 +56,66 @@
 						<div class="input-group col-xs-12 alin_bot">
 							<label class="col-sm-3 col-form-label">Area:</label>
 							<select id="filtro" onchange="filtrar()" name="filtro" class="form-control border-primary col-sm-9">
-								<option th:value="6">Todos</option>
 								<option th:value="1">Servicio de liquidaciones</option>
 								<option th:value="2">Operaciones TI</option>
 								<option th:value="3">Gestión Activos</option>
 								<option th:value="4">Servicio de participantes</option>
 								<option th:value="5">Facturas Negociables</option>
-								
+								<option th:value="6">Todos</option>
 							</select>
 							<span class="input-group-append">								
 							</span>
 						</div>
 					</div>
-				</div>
+				</div>		
 					<div class="contenedor_tabla">
 					<div class="d-flex texto-peque">
-						<label>Buscar en la tabla: </label>
+						<label>Buscar en la tabla: </label>						
 						<input onkeyup="buscar(this)" class="buscador_sobretabla" type="text">
+                        
 					</div>
-					<table id="tabla" class="table table-striped table-hover">	
+					<table  id="tabla" class="table table-striped table-hover">	
 						<thead>
-					  		<tr>
-					  			<th>Jira </th>
+					  		<tr>	
+					  			<th>Jira</th>
 					  			<th>Área</th>					  			
-					  			<th>Tipo</th>					  			
-					  			<th>Descripcón</th>		
-								<th class="centrado">Estado</th>		
-								<th>Asignado</th>	
-								<th>Responsable</th>								
-								<th>Pruebas Usuario</th>	
-								<th>Pase a producción</th>	
-								<th style="min-width: 120px;">Monto Total aprobado (S/)</th>						
-														
+					  			<th>Descripcón</th>												
+								<th>Estado</th>												
+								<th>Asignado</th>
+								<th>Responsable</th>
+								<th>Pruebas</th>	
+								<th>Pase a producción</th>									
+								<th></th>						
 					  		</tr>					  		
 					  	</thead>				
 					  	<tbody>
-					  		<tr th:each="jira:${lstJiras}">	
+					  		<tr th:each="jira:${lstJiras}">					  			
 					  			<td th:class="${jira.etiqueta.css_class}" ><a th:href="'https://jira.cavali.com.pe:8443/browse/' +${jira.jira}" target=”_blank” th:text="${jira.jira}"></a></td>					  						  			
-					  			<td th:text="${jira.areaSolicitante.nombrecorto}"></td>					  			
-					  			<td class="d-flex">
-					  				<span th:class="${jira.indicador.css_class}"><i th:class="${jira.indicador.icon_ind_contable}"></i></span>
-					  				<span th:class="${jira.tipoRequerimiento.css_class}"><i th:class="${jira.tipoRequerimiento.icon_ind_contable}"></i></span>
-					  			</td>
-					  			<td th:text="${jira.resumen}"></td>		 
+					  			<td th:text="${jira.areaSolicitante.nombre}"></td>			
+					  			<td th:text="${jira.resumen}"></td>	 
 					  			<td class="centrado"><span th:if="${jira.estadoJira.grupoEstado != null}" th:class="${jira.estadoJira.grupoEstado.css_class}" th:text="${jira.estadoJira.grupoEstado.grupoEstado}"></span></td> 	
 					  			<td th:text="${jira.asignado}"></td> 	
-					  			<td th:text="${jira.responsable}"></td>	
+					  			<td th:text="${jira.responsable}"></td>						  			
 					  			<td>
-					  				<span th:if="${jira.fecha_pruebas!= null}" class="fechas_azul" th:text="${#dates.format(jira.fecha_pruebas, 'dd-MM-yyyy')}"></span>
-					  				<span th:if="${jira.fecha_pruebas == null}" class="font-gris">Por definir</span>
+					  				<input onclick="val_act(this)" onblur="val_new(this)" name="fecha1" th:value="${#dates.format(jira.fecha_pruebas, 'dd-MM-yyyy')}" type="text" th:class="${jira.fecha_pruebas != null ? 'input_fecha_azul' : 'input_sinfecha'}	" placeholder="aa-mm-yyyy" autocomplete="off">
 					  			</td>
 					  			<td>
-					  				<span th:if="${jira.fecha_produccion!=null}" class="fechas_verde" th:text="${#dates.format(jira.fecha_produccion, 'dd-MM-yyyy')}"></span>
-					  				<span th:if="${jira.fecha_produccion == null}" class="font-gris">Por definir</span>
-					  			</td>
-					  			<td>
-					  				<span th:text="${jira.monto_total != 0} ?  'S/ ' + ${#numbers.formatDecimal(jira.monto_total, 0, 'DEFAULT', 2, 'DEFAULT')} : 'Por estimar'"></span>
-					  			</td>
+			                        <input onclick="val_act(this)" onblur="val_new(this)" name="fecha2" th:value="${#dates.format(jira.fecha_produccion, 'dd-MM-yyyy')}" type="text" th:class="${jira.fecha_produccion != null ? 'input_fecha_verde' : 'input_sinfecha'}	" placeholder="aa-mm-yyyy" autocomplete="off">
+					  			</td>	
+					  								  			
+								<td>
+									<div class="d-flex">
+										<button onclick="guardar_fecha(this)" title="Guardar" class="btn btn-icons btn-rounded btn-outline-success">
+						                	<i class="mdi mdi-content-save"></i>
+						                </button>									
+									</div>																	
+								</td>						
 					  		</tr>
 					  	</tbody>
 				  	</table>
 				  	
 			  	</div>
-			  	</div>
+			  	
 		  	</div>
 <!----------------------------------------------------------------------- 	FIN	 ------------------------------------------------------->
           </div>
@@ -124,7 +123,7 @@
         </div>
       </div>
    	</div>
-   	
+   	</div>
 <!----------------------------------------------------------------------- 	MODALES	 ------------------------------------------------------->
    	
 	<div id="modal_actualizando" class="un_modal">		
@@ -152,10 +151,13 @@
     <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
     <script th:src="@{/js/shared/misc.js}"></script>
     <script th:src="@{/js/shared/settings.js}"></script>
-    <script th:src="@{/js/shared/todolist.js}"></script>    
+    <script th:src="@{/js/shared/todolist.js}"></script>
+    
     <script th:src="@{/js/shared/data-table.js}"></script>
-    <script th:src="@{/js/shared/tooltips.js}"></script>
-    <script th:src="@{/js/shared/popover.js}"></script>
+    <script th:src="@{/js/shared/formpickers.js}"></script>
     <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/actu_fechas.js}"></script>
+     
+    <script th:src="@{/js/shared/formpickers.js}"></script>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package com.auth.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -52,59 +54,83 @@ public class JRestController {
 		return jira;
 	}
 	
-	/*/ Obtener respuesta de ajax : ACTUALIZAR FECHAS JIRA
+	// ACTUALIZAR FECHAS JIRA
 	@PostMapping("/jira/fechas")
 	public String guardarFechas (@RequestBody RespFechas jsonFechas) {		
 		Jira_Detalle jdet = null;	
 		String jira = jsonFechas.getJira();
 		Jira jbd = jiraService.buscarPorJira(jira);
 		
-		if (jdetalleService.buscarPorJira(jira)!= null) 
-			jdet = detalleService.buscarPorJira(jira);
+		Jira_Detalle jira_detalle = jdetalleService.buscarPorJira(jira);
+		if (jira_detalle != null) 
+			jdet = jira_detalle;
 		else {
 			jdet = new Jira_Detalle();
 			jdet.setJira(jira);
 		}
-		jdet.setFecha_produccion(jsonFechas.getFecha2());
-		jdet.setFecha_pruebas(jsonFechas.getFecha1());
+
+		String str_f1 = jsonFechas.getFecha2();
+		String str_f2 = jsonFechas.getFecha1();
+		Date fecha = null;
+		DateFormat formatoFechas = new SimpleDateFormat("dd-MM-yyyy");
 		
-		detalleService.guardarNuevo(jdet);
-		jbd.setFecha_produccion(jsonFechas.getFecha2());
-		jbd.setFecha_pruebas(jsonFechas.getFecha1());
+		if (str_f1 == "")
+			fecha = null;
+		else
+			try {
+				fecha = formatoFechas.parse(str_f1);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		
+		jdet.setFecha_produccion(fecha);
+		jbd.setFecha_produccion(fecha);
+		
+		if (str_f2 == "")
+			fecha = null;
+		else
+			try {
+				fecha = formatoFechas.parse(str_f2);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		jdet.setFecha_pr_usuario(fecha);		
+		jbd.setFecha_pruebas(fecha);
+		
+		jdetalleService.guardarNuevo(jdet);			
 		jiraService.guardar(jbd);
 		return "Actualización exitosa";
-	}*/
+	}
 	
 // -------------------------------------------------------- ACUERDOS--------------------------------------
 	// Obtener respuesta de ajax : NUEVO ACUERDO
-	@PostMapping("/acuerdos/nuevo")
+	@PostMapping("/acuerdo/nuevo")
 	public Acuerdos nuevoAcuerdo (@RequestBody Acuerdos jsonAcuerdo) {	
 		jsonAcuerdo = acuerdoService.guardar(jsonAcuerdo);
 		return jsonAcuerdo;
 	}
 	
 	// Obtener respuesta de ajax: TERMINAR ACUERDO
-		@PostMapping("/acuerdos/terminar")
-		public Acuerdos terminarAcuerdo (@RequestBody RespAcuerdoTerminado jsonAcuerdo) {
-			Acuerdos acuerdo = acuerdoService.buscarPorId(jsonAcuerdo.getId());
-			
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-			String strDate = dateFormat.format(new Date());
-			acuerdo.setTerminado(1);
-			if (jsonAcuerdo.getTipo() == 1) {
-				acuerdo.setEstado("Terminado");
-				acuerdo.setClase("est_pospro");
-			}
-			else if (jsonAcuerdo.getTipo() == 2) {
-				acuerdo.setEstado("Cancelado");
-				acuerdo.setClase("est_");
-			}
-				
-			acuerdo.setFecha_cierre(strDate);
-			acuerdo.setObservacion(jsonAcuerdo.getObservacion());
-			acuerdo = acuerdoService.actualizar(acuerdo);
-				
-			return acuerdo;
+	@PostMapping("/acuerdos/terminar")
+	public Acuerdos terminarAcuerdo (@RequestBody RespAcuerdoTerminado jsonAcuerdo) {
+		Acuerdos acuerdo = acuerdoService.buscarPorId(jsonAcuerdo.getId());
+		
+		Date hoy = (new Date());
+		acuerdo.setFlagterminado(true);
+		if (jsonAcuerdo.getTipo() == 1) {
+			//acuerdo.setEstado("Terminado");
 		}
+		else if (jsonAcuerdo.getTipo() == 2) {
+			//acuerdo.setEstado("Cancelado");
+		}
+			
+		acuerdo.setFecha_cierre(hoy);
+		acuerdo.setObservacion(jsonAcuerdo.getObservacion());
+		acuerdo = acuerdoService.actualizar(acuerdo);				
+		return acuerdo;
+	}
 
 }

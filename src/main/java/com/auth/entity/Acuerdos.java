@@ -1,10 +1,15 @@
 package com.auth.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -16,150 +21,152 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Acuerdos implements Comparable<Acuerdos> {
+public class Acuerdos {
 	@Id
 	@Column(name="ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GSOACUERDOS_SEQ")
 	@SequenceGenerator(sequenceName="gsoacuerdos_seq", allocationSize=1, name="GSOACUERDOS_SEQ")
 	private Integer id;
 	
-	@Column(name="jira")
-	private String jira;
+	@Column(name="id_jira")
+	private String id_jira;	
 	
-	@Column(name="resumen")
-	private String jiraDesc;
+	@Column(name="acuerdo")
+	private String acuerdo;	
 	
-	@Column(name="tipo")
-	private String tipo;
+	@Column(name="observacion")
+	private String observacion;	
 	
-	@Column(name="responsable")
-	private String responsable;
+	@Column(name="flagterminado")
+	boolean flagterminado;
 
-	@Column(name="estado")
-	private String estado;
-
-	@Column(name="fecha_registro")
-	private String fecha_registro;
+	@Column(name="fecha_creacion")
+	private Date fecha_creacion;
 	
 	@Column(name="fecha_limite")
-	private String fecha_entrega;
+	private Date fecha_limite;	
 	
 	@Column(name="fecha_cierre")
-	private String fecha_cierre;
+	private Date fecha_cierre;
 	
-	@Column(name="observaciones")
-	private String observaciones;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_tipo_acuerdo")
+	private Tipo_Acuerdo tipo;
 	
-	@Column(name="flag_terminado")
-	private Integer terminado;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_usuario_responsable")
+	private Usuario responsable;
 	
-	@Column(name="area")
-	private String area;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_estado_acuerdo")
+	private Estado_Acuerdo estado;
 	
-	@Column(name="clase")
-	private String clase;
-	
-	@Column(name="coment_final")
-	private String observacion;
-	
-	
-	public String getObservacion() {
-		return observacion;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_area_solicitante")
+	private Area_Solicitante areaSolicitante;
+
+	/**
+	 * 
+	 */
+	public Acuerdos() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
-	public void setObservacion(String observacion) {
-		this.observacion = observacion;
-	}
-	public String getClase() {
-		return clase;
-	}
-	public void setClase(String clase) {
-		this.clase = clase;
-	}
-	public String getArea() {
-		return area;
-	}
-	public void setArea(String area) {
-		this.area = area;
-	}
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getJira() {
-		return jira;
-	}
-	public void setJira(String jira) {
-		this.jira = jira;
-	}
-	public String getJiraDesc() {
-		return jiraDesc;
-	}
-	public void setJiraDesc(String jiraDesc) {
-		this.jiraDesc = jiraDesc;
-	}
-	public String getTipo() {
-		return tipo;
-	}
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-	public String getResponsable() {
-		return responsable;
-	}
-	public void setResponsable(String responsable) {
-		this.responsable = responsable;
-	}
-	public String getEstado() {
-		return estado;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-	public String getFecha_registro() {
-		return fecha_registro;
-	}
-	public void setFecha_registro(String fecha_registro) {
-		this.fecha_registro = fecha_registro;
-	}
-	public String getFecha_entrega() {
-		return fecha_entrega;
-	}
-	public void setFecha_entrega(String fecha_entrega) {
-		this.fecha_entrega = fecha_entrega;
-	}
-	public String getObservaciones() {
-		return observaciones;
-	}
-	public void setObservaciones(String observaciones) {
-		this.observaciones = observaciones;
-	}
-	
-	public Integer getTerminado() {
-		return terminado;
-	}
-	public void setTerminado(Integer terminado) {
-		this.terminado = terminado;
-	}
-	public String getFecha_cierre() {
-		return fecha_cierre;
-	}
-	public void setFecha_cierre(String fecha_cierre) {
-		this.fecha_cierre = fecha_cierre;
-	}
-	public Acuerdos() {
-		super();
-	}
-	@Override
-	public int compareTo(Acuerdos o) {
-		if (id < o.id)
-			return -1;
-		if (id > o.id)
-			return 1;				
-		return 0;
+
+	public String getId_jira() {
+		return id_jira;
 	}
 
-	
+	public void setId_jira(String id_jira) {
+		this.id_jira = id_jira;
+	}
+
+	public String getAcuerdo() {
+		return acuerdo;
+	}
+
+	public void setAcuerdo(String acuerdo) {
+		this.acuerdo = acuerdo;
+	}
+
+	public String getObservacion() {
+		return observacion;
+	}
+
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
+	}
+
+	public boolean isFlagterminado() {
+		return flagterminado;
+	}
+
+	public void setFlagterminado(boolean flagterminado) {
+		this.flagterminado = flagterminado;
+	}
+
+	public Date getFecha_creacion() {
+		return fecha_creacion;
+	}
+
+	public void setFecha_creacion(Date fecha_creacion) {
+		this.fecha_creacion = fecha_creacion;
+	}
+
+	public Date getFecha_limite() {
+		return fecha_limite;
+	}
+
+	public void setFecha_limite(Date fecha_limite) {
+		this.fecha_limite = fecha_limite;
+	}
+
+	public Date getFecha_cierre() {
+		return fecha_cierre;
+	}
+
+	public void setFecha_cierre(Date fecha_cierre) {
+		this.fecha_cierre = fecha_cierre;
+	}
+
+	public Tipo_Acuerdo getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Tipo_Acuerdo tipo) {
+		this.tipo = tipo;
+	}
+
+	public Usuario getResponsable() {
+		return responsable;
+	}
+
+	public void setResponsable(Usuario responsable) {
+		this.responsable = responsable;
+	}
+
+	public Estado_Acuerdo getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Estado_Acuerdo estado) {
+		this.estado = estado;
+	}
+
+	public Area_Solicitante getAreaSolicitante() {
+		return areaSolicitante;
+	}
+
+	public void setAreaSolicitante(Area_Solicitante areaSolicitante) {
+		this.areaSolicitante = areaSolicitante;
+	}
 	
 }

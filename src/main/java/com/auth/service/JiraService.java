@@ -13,6 +13,7 @@ import com.auth.entity.Etiqueta;
 import com.auth.entity.Fabrica;
 import com.auth.entity.Indicador_Contable;
 import com.auth.entity.Jira;
+import com.auth.entity.Jira_Detalle;
 import com.auth.entity.JsoJira;
 import com.auth.entity.JsoPersonalizado;
 import com.auth.entity.Tipo_Requerimiento;
@@ -68,7 +69,7 @@ public class JiraService implements IJiraService {
 
 	@Override
 	public void actualizarBD() {			
-		List<JsoJira> lstJsoJira = getListaJsonJiraActualizada("labels+in+(GSOCompromiso,GSOCritico,GSOMejoraBD,GSOPrio)+and+status+not+in(Terminado,Anulado)+ORDER+BY+labels+DESC");
+		List<JsoJira> lstJsoJira = getListaJsonJiraActualizada("labels+in+(GSOCompromiso,GSOCritico,GSOMejoraBD,GSOPrio,BVLCompromiso,BVLCritico,BVLMejoraBD,BVLPrio)+and+status+not+in(Terminado,Anulado)+ORDER+BY+labels+DESC");
 		//Limpiar tabla y reiniciar id (PK)
 		jiraRepo.deleteAll(); 
 		int id = 1;
@@ -111,19 +112,29 @@ public class JiraService implements IJiraService {
 				Fabrica fabrica = fabricaExisteOnuevo(jsonJira.getFields().getCustomfield_11016().getValue());				
 				bdJira.setFabrica(fabrica);				
 			}
-			/*/ MONTOS 
+				
 			if (bdJira.getHoras_des() != 0 && bdJira.getFabrica() != null )
 				bdJira.setMonto_des(bdJira.getHoras_des()*bdJira.getFabrica().getTarifa());
 			else 
 				bdJira.setMonto_des(0);
+			
 			if (bdJira.getHoras_cert() != 0 && bdJira.getFabrica() != null )
 				bdJira.setMonto_cert(bdJira.getHoras_cert()*bdJira.getFabrica().getTarifa());
 			else
 				bdJira.setMonto_cert(0);
+			
 			bdJira.setMonto_total(bdJira.getMonto_cert() + bdJira.getMonto_des());
+			
 			// FECHAS*/
 			bdJira.setFecha_actualizacion(jsonJira.getFields().getUpdated());
 			bdJira.setFecha_creacion(jsonJira.getFields().getCreated());
+			
+			Jira_Detalle detalle_jira = detalleRepo.findByJira(bdJira.getJira());
+			if (detalle_jira != null) {
+				bdJira.setFecha_pruebas(detalle_jira.getFecha_pr_usuario());
+				bdJira.setFecha_produccion(detalle_jira.getFecha_produccion());
+			}
+			
 			// ETIQUETAS
 			Etiqueta etiqueta = etiquetaExisteOnuevo(jsonJira.getFields().getEtiqueta());
 			bdJira.setEtiqueta(etiqueta);
@@ -198,14 +209,16 @@ public class JiraService implements IJiraService {
 	}
 	//Elegir una etiqueta de la lista
 	private JsoJira actualizarTipo(JsoJira j) {
-		if (j.getFields().getLabels().contains("GSOCompromiso")) 
+		if (j.getFields().getLabels().contains("GSOCompromiso") || j.getFields().getLabels().contains("BVLCompromiso")) 
 			j.getFields().setEtiqueta("Compromiso");
-		else if (j.getFields().getLabels().contains("GSOCritico")) 
+		else if (j.getFields().getLabels().contains("GSOCritico") || j.getFields().getLabels().contains("BVLCritico")) 
 			j.getFields().setEtiqueta("Crítico");
-		else if (j.getFields().getLabels().contains("GSOMejoraBD")) 
+		else if (j.getFields().getLabels().contains("GSOMejoraBD") || j.getFields().getLabels().contains("BVLMejoraBD")) 
 			j.getFields().setEtiqueta("Mejora BD");
-		else if (j.getFields().getLabels().contains("GSOPrio")) 
+		else if (j.getFields().getLabels().contains("GSOPrio") || j.getFields().getLabels().contains("BVLPrio")) 
 			j.getFields().setEtiqueta("Prioritario");	
+		else if (j.getFields().getLabels().contains("GSORegular") || j.getFields().getLabels().contains("BVLRegular")) 
+			j.getFields().setEtiqueta("Regular");	
 		else 
 			j.getFields().setEtiqueta("No definido");
 		return j;
@@ -249,8 +262,7 @@ public class JiraService implements IJiraService {
 				j.getFields().getCustomfield_10800().getValue().equals("GERENCIA DE NEGOCIOS TRANSACCIONALES")) 
 			j.getFields().getCustomfield_10800().setValue("FT");
 		else 
-			j.getFields().getCustomfield_10800().setValue("Otros");
-		
+			j.getFields().getCustomfield_10800().setValue("Otros");		
 		
 		return j;
 	}
@@ -281,6 +293,27 @@ public class JiraService implements IJiraService {
 	        grupoEstado = "Análisis";
 	        clase_estado="est_ana";
 	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
+	        
+	        JsoJira ultimoHijo = hijoMasReciente(j);
+	    	if (noEsNuloOVacio(ultimoHijo)) {
+	    		if (ultimoHijo.getFields().getIssuetype().getName().equals("Análisis")){
+		        	strEstadoNuevo = "En análisis";
+                    grupoEstado = "Análisis";
+                    clase_estado="est_ana";
+	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance Funcional")){
+		        	strEstadoNuevo = "En preparación de alcance";
+                    grupoEstado = "Inicial";
+                    clase_estado="est_ini";
+	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance")){
+		        	strEstadoNuevo = "En preparación de alcance";
+                    grupoEstado = "Inicial";
+                    clase_estado="est_ini";
+	    		}else {
+	    			strEstadoNuevo = "?";
+                    grupoEstado = "?";
+                    clase_estado="est_";
+	    		}	
+	    	}
 	    }else if(strEstadoAnterior.equals("En Aprobación")){
 	         strEstadoNuevo = "En aprobación de horas";
 	         grupoEstado = "Aprobación";
@@ -331,6 +364,10 @@ public class JiraService implements IJiraService {
                     grupoEstado = "Análisis";
                     clase_estado="est_ana";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance Funcional")){
+		        	strEstadoNuevo = "En preparación de alcance";
+                    grupoEstado = "Inicial";
+                    clase_estado="est_ini";
+	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance")){
 		        	strEstadoNuevo = "En preparación de alcance";
                     grupoEstado = "Inicial";
                     clase_estado="est_ini";
@@ -517,10 +554,10 @@ public class JiraService implements IJiraService {
 		return indicador;
 	}
 	private Area_Solicitante areaExisteOnuevo(String str) {
-		Area_Solicitante area = areaRepo.findByNombre(str);
+		Area_Solicitante area = areaRepo.findByNombrecorto(str);
 		if (area == null) {
 			area = new Area_Solicitante();
-			area.setNombre(str);
+			area.setNombrecorto(str);
 			area = areaRepo.save(area);			
 		}
 		return area;

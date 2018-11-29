@@ -10,5 +10,5 @@ import com.auth.entity.Acuerdos;
 public interface IAcuerdosRepository extends CrudRepository<Acuerdos, Integer> {
 	public List<Acuerdos> findAll();
 	public List<Acuerdos> findAllByOrderByIdDesc();
-	public List<Acuerdos> findAllByTerminado(Integer i);
+	public List<Acuerdos> findAllByFlagterminado(Integer i);
 }
