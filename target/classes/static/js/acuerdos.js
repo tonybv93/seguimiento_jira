@@ -106,16 +106,22 @@ $( function() {
 	  	        	console.log(respuesta);
 	  	        	
 	  	        	var tr = document.createElement('tr');
-		  	      	var destino = document.getElementById('cuerpo');
+		  	      	var destino = document.getElementById('cuerpo');		  	      	
 		  	      	
 		  	      	tr.appendChild(crearCampo('id',respuesta.id));
-		  	      	tr.appendChild(crearCampo('tipo',respuesta.tipo));
-		  	      	tr.appendChild(crearCampo('responsable',respuesta.responsable));
-		  	      	tr.appendChild(crearCampo('acuerdo',respuesta.observaciones));
-		  	    	tr.appendChild(crearCampo('area',respuesta.area));
-			  	 	tr.appendChild(crearCampo('jira',respuesta.jira));
-				  	tr.appendChild(crearFecha('fechas_plomo',respuesta.fecha_registro));
-				  	tr.appendChild(crearFecha('fechas_rojo',respuesta.fecha_entrega));
+		  	      	tr.appendChild(crearCampo('tipo',respuesta.tipo.nombre));
+		  	      	tr.appendChild(crearCampo('responsable',respuesta.responsable.username));
+		  	      	tr.appendChild(crearCampo('acuerdo',respuesta.acuerdo));
+		  	    	tr.appendChild(crearCampo('area',respuesta.areaSolicitante.nombrecorto));
+			  	 	tr.appendChild(crearCampo('jira',respuesta.id_jira));
+			  	 	
+			  	 	var strfecha = respuesta.fecha_creacion;
+			  	 	strfecha = strfecha.substring(8, 10) + '-' + strfecha.substring(6, 8) + '-' + strfecha.substring(1, 5);
+				  	tr.appendChild(crearFecha('fechas_plomo',strfecha));
+				  	strfecha = respuesta.fecha_limite;
+				  	strfecha = strfecha.substring(8, 10) + '-' + strfecha.substring(6, 8) + '-' + strfecha.substring(1, 5);
+				  	tr.appendChild(crearFecha('fechas_azul',strfecha));
+				  	
 				  	tr.appendChild(crearCampo('cierre',''));
 				  	tr.appendChild(crearCampo('comentcierre',''));
 				  	tr.appendChild(crearEstado('estado','En proceso'));
