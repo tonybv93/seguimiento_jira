@@ -20,6 +20,7 @@ import com.auth.entity.Jira;
 import com.auth.entity.Jira_Detalle;
 import com.auth.rest.RespAcuerdoTerminado;
 import com.auth.rest.RespFechas;
+import com.auth.rest.RespGenerica;
 import com.auth.service.IAcuerdosService;
 import com.auth.service.IJiraDetalleService;
 import com.auth.service.IJiraService;
@@ -108,9 +109,29 @@ public class JRestController {
 // -------------------------------------------------------- ACUERDOS--------------------------------------
 	// Obtener respuesta de ajax : NUEVO ACUERDO
 	@PostMapping("/acuerdo/nuevo")
-	public Acuerdos nuevoAcuerdo (@RequestBody Acuerdos jsonAcuerdo) {	
-		jsonAcuerdo = acuerdoService.guardar(jsonAcuerdo);
-		return jsonAcuerdo;
+	public Acuerdos nuevoAcuerdo (@RequestBody RespGenerica jsonAcuerdo) {	
+		Acuerdos acuerdo = new Acuerdos();
+		
+		acuerdo.setAcuerdo(jsonAcuerdo.getTexto2());	
+		DateFormat formatoFechas = new SimpleDateFormat("yyyy-MM-dd");
+		Date fecha;
+		try {
+			fecha = formatoFechas.parse(jsonAcuerdo.getTexto1());			
+			acuerdo.setFecha_limite(fecha);		
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		acuerdo.setTipo(acuerdoService.buscarTipoAcuerdoPorId(jsonAcuerdo.getNumero1()));
+		if (jsonAcuerdo.getNumero1() == 1)
+			acuerdo.setId_jira(jiraService.buscarPorId(jsonAcuerdo.getNumero4()).getJira());
+		else
+			acuerdo.setAreaSolicitante(acuerdoService.buscarAreaPorId(jsonAcuerdo.getNumero2()));	
+			
+		acuerdo.setResponsable(acuerdoService.buscarUsuarioPorId(jsonAcuerdo.getNumero3()));
+		acuerdo.setEstado(acuerdoService.buscarEstadoPorId(1)); //Estado por defecto: 1-En proceso
+		acuerdo = acuerdoService.guardar(acuerdo);			
+		return acuerdo;
 	}
 	
 	// Obtener respuesta de ajax: TERMINAR ACUERDO
@@ -129,7 +150,7 @@ public class JRestController {
 			
 		acuerdo.setFecha_cierre(hoy);
 		acuerdo.setObservacion(jsonAcuerdo.getObservacion());
-		acuerdo = acuerdoService.actualizar(acuerdo);				
+		acuerdo = acuerdoService.actualizar(acuerdo);			
 		return acuerdo;
 	}
 

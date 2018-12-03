@@ -135,34 +135,29 @@
 						  	<tbody id="cuerpo">
 						  		<tr th:each="acuerdo:${listaAcuerdos}">
 						  			<td th:text="${acuerdo.id}"></td>						  			
-						  			<td>
-							  			<div th:if="${acuerdo.tipo == 'Jira'}">
-							  				<i  title="Jira" style="font-size: 18px; color: #128bfc;" class="mdi mdi-jira"></i>
-							  			</div>
-							  			<div th:if="${acuerdo.tipo == 'Otros'}">
-							  				<i  title="Otros" style="font-size: 18px; color: #19d895;" class="mdi mdi-comment-processing-outline"></i>
-							  			</div>
+						  			<td>							  		
+							  			<i style="font-size: 18px; color: #128bfc;" th:class="${acuerdo.tipo.icon_ind_contable}"></i>							  			
 						  			</td>	
-						  			<td th:text="${acuerdo.responsable}"></td>	
-						  			<td class="ancho-comentario" th:text="${acuerdo.observaciones}"></td>	
-						  			<td th:text="${acuerdo.area}"></td>			
-						  			<td th:text="${acuerdo.jira}"></td>	
+						  			<td th:text="${acuerdo.responsable.username}"></td>	
+						  			<td class="ancho-comentario" th:text="${acuerdo.acuerdo}"></td>	
+						  			<td th:text="${acuerdo.areaSolicitante.nombrecorto}"></td>			
+						  			<td th:text="${acuerdo.id_jira}"></td>	
 						  			
-						  			<td class="td_monto" > <span class="fechas_plomo" th:text="${acuerdo.fecha_registro}"></span> </td>	
-						  			<td class="td_monto"> <span th:if="${acuerdo.fecha_entrega != null}" class="fechas_rojo" th:text="${acuerdo.fecha_entrega}"></span> </td>	
-						  			<td class="td_monto"> <span th:if="${acuerdo.fecha_cierre != null}" class="fechas_verde"  th:text="${acuerdo.fecha_cierre}"></span> </td>	
+						  			<td class="td_monto" > <span class="fechas_plomo" th:text="${#dates.format(acuerdo.fecha_creacion, 'dd-MM-yyyy')}"></span> </td>	
+						  			<td class="td_monto"> <span class="fechas_azul" th:text="${#dates.format(acuerdo.fecha_limite, 'dd-MM-yyyy')}"></span> </td>	
+						  			<td class="td_monto"> <span th:if="${acuerdo.fecha_cierre != null}" class="fechas_verde"  th:text="${#dates.format(acuerdo.fecha_cierre, 'dd-MM-yyyy')}"></span> </td>	
 						  			<td class="ancho-comentario" th:text="${acuerdo.observacion}"></td>	
-						  			<td class="td_monto"> <span th:class="${acuerdo.clase}" th:text="${acuerdo.estado}"></span> </td>
+						  			<td class="td_monto"> <span th:class="${acuerdo.estado.css_clase}" th:text="${acuerdo.estado.nombre}"></span> </td>
 						  							  			
 									<td>
-										<div class="d-flex ico_centrado texto_derecha">
+										<!--div class="d-flex ico_centrado texto_derecha">
 											<button th:if="${acuerdo.terminado != 1}"  onclick="confirm_terminar(this,1)" class="btn btn-icons btn-inverse-success" id="1" title="Terminar">
 						                        <i class="mdi mdi-check"></i>					                     
 						                    </button>
 						                    <button th:if="${acuerdo.terminado != 1}"  onclick="confirm_terminar(this,2)" class="btn btn-icons btn-inverse-warning" id="2" title="Cancelar">
 						                        <i class="mdi mdi-close"></i>					                     
 						                    </button>						                   										
-										</div>
+										</div-->
 									</td>
 						  		</tr>
 						  	</tbody>

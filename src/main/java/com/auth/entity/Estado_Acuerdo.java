@@ -10,7 +10,7 @@ public class Estado_Acuerdo {
 	@Column(name="ID")
 	private int id;
 	private String nombre;
-	private String css_class;
+	private String css_clase;
 
 	public Estado_Acuerdo() {
 		super();
@@ -27,10 +27,11 @@ public class Estado_Acuerdo {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	public String getCss_class() {
-		return css_class;
+	public String getCss_clase() {
+		return css_clase;
 	}
-	public void setCss_class(String css_class) {
-		this.css_class = css_class;
+	public void setCss_clase(String css_clase) {
+		this.css_clase = css_clase;
 	}
+	
 }

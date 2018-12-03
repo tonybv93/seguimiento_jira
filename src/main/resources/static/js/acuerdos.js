@@ -8,13 +8,15 @@ $( function() {
         if ($(this).val() == 1) {        	
         	 $("#jira_selector").show();
         	 $("#area_selector").hide();
+        	 
             $("#id_input").prop("disabled", false);
             $("#id_input2").prop("disabled", true);
             $("#id_input2").val("");
-        } else {
-            $("#id_input").prop("disabled", true);     
+        } else {              
             $("#jira_selector").hide();
             $("#area_selector").show();
+            
+            $("#id_input").prop("disabled", true);  
             $("#id_input2").prop("disabled", false);
             $("#id_input2").val("Otros");
         }
@@ -79,13 +81,12 @@ $( function() {
 	  function agregar_acuerdo(){
 		  if (validar_nuevo_acuerdo() == 1){
 			  
-		  
-		  objjson.area = document.getElementById("id_input2").value;
-		  objjson.tipo = document.getElementById("id_categoria").value;
-		  objjson.jira = document.getElementById("id_input").value*1;
-		  objjson.responsable = document.getElementById("responsable").value*1;
-		  objjson.fecha_entrega = document.getElementById("fecha_entrega").value;
-		  objjson.observaciones = document.getElementById("exampleTextarea1").value;
+		objjson.numero1 = document.getElementById("id_categoria").value;	//Tipo
+		objjson.numero2 = document.getElementById("id_input2").value;		//Area		
+		objjson.numero3 = document.getElementById("responsable").value;		//Responsable
+		objjson.numero4 = document.getElementById("id_input").value;		//Jira
+		objjson.texto1 = document.getElementById("fecha_entrega").value;	//Fecha
+		objjson.texto2 = document.getElementById("exampleTextarea1").value; 	//Acuerdo
 		  
 		  if (objjson.tipo == "Otros")
 			  objjson.jira = null;
@@ -177,9 +178,13 @@ $( function() {
 	  
 	  
 	  
-	  function terminar_acuerdo(ind){
-		objjson.observacion = document.getElementById("txar_terminar").value;
-		objjson.tipo = tipo_btn;
+	  function terminar_acuerdo(ind){		
+		objjson.numero1 = document.getElementById("id_categoria").value;	//Tipo
+		objjson.numero2 = document.getElementById("id_input2").value;		//Area		
+		objjson.numero3 = document.getElementById("responsable").value;		//Responsable
+		objjson.numero4 = document.getElementById("id_input").innerHTML;	//Jira
+		objjson.texto1 = document.getElementById("fecha_entrega").value;	//Fecha
+		objjson.texto2 = document.getElementById("exampleTextarea1").value; 	//Acuerdo
 		data = JSON.stringify(objjson); 	
 	  	console.log(data);
 	  	objjson = {};
