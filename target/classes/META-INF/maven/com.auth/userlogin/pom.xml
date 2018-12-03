@@ -51,14 +51,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>		
+		</dependency>	
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>1.0</version>
+		</dependency>	
 		  <dependency>
 		   <groupId>net.sourceforge.nekohtml</groupId>
 		   <artifactId>nekohtml</artifactId>
-		  </dependency>
-		  <dependency>
-		  	<groupId>mysql</groupId>
-		  	<artifactId>mysql-connector-java</artifactId>
 		  </dependency>
 	</dependencies>
 
