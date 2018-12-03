@@ -98,7 +98,7 @@ $( function() {
 		  objjson = {};
 		//REALIZAR PETICION
 		  	$.ajax({
-	  	        url : 'http://172.16.17.101:8080/rest/acuerdo/nuevo',  	        
+	  	        url : '/rest/acuerdo/nuevo',  	        
 	  	        contentType:'application/json',
 	  	        method : 'post',
 	  	      	data : data,
@@ -191,7 +191,7 @@ $( function() {
 	  	
 	  	// REALIZAR PETICION
 	  	$.ajax({
-  	        url : 'http://172.16.17.101:8080/rest/acuerdo/terminado',  	        
+  	        url : '/rest/acuerdo/terminado',  	        
   	        contentType:'application/json',
   	        method : 'post',
   	      	data : data,

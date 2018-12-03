@@ -4,7 +4,7 @@ function actualizarjiras(btn){
 	btn.disabled=true;
 	document.getElementById("modal_actualizando").style.display="block";	
 	l.innerHTML = n;
-	window.location.href = "http://172.16.17.101:8080/seguimiento/actualizar";
+	window.location.href = "/seguimiento/actualizar";
 	window.setInterval(function(){
 		  l.innerHTML = n;
 		  n++;

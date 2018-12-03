@@ -101,7 +101,7 @@ var valor_nuevo="";
   		
   		// Realizar petición
   		$.ajax({
-  	        url : 'http://172.16.17.101:8080/rest/jira/fechas',  	        
+  	        url : '/rest/jira/fechas',  	        
   	        contentType:'application/json',
   	        method : 'post',
   	      	data : data,
