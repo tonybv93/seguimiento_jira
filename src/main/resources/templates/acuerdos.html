@@ -136,7 +136,7 @@
 						  		<tr th:each="acuerdo:${listaAcuerdos}">
 						  			<td th:text="${acuerdo.id}"></td>						  			
 						  			<td>							  		
-							  			<i style="font-size: 18px; color: #128bfc;" th:class="${acuerdo.tipo.icon_ind_contable}"></i>							  			
+							  			<i th:class="${acuerdo.tipo.icon_ind_contable} + ' icon_acu_col' "></i>							  			
 						  			</td>	
 						  			<td th:text="${acuerdo.responsable.username}"></td>	
 						  			<td class="ancho-comentario" th:text="${acuerdo.acuerdo}"></td>	

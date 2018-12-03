@@ -30,6 +30,13 @@ $( function() {
   		td.innerHTML = valor1;
   		return td;
   	}
+	function crearIcono(valor1){
+  		td = document.createElement('td');
+  		i = document.createElement('i');
+  		i.setAttribute('class',valor1 + ' icon_acu_col');
+  		td.appendChild(i);  		
+  		return td;
+  	}
     function crearEstado(nombre,valor1){
   		td = document.createElement('td');
   		spn = document.createElement('span');
@@ -109,17 +116,17 @@ $( function() {
 		  	      	var destino = document.getElementById('cuerpo');		  	      	
 		  	      	
 		  	      	tr.appendChild(crearCampo('id',respuesta.id));
-		  	      	tr.appendChild(crearCampo('tipo',respuesta.tipo.nombre));
+		  	      	tr.appendChild(crearIcono(respuesta.tipo.icon_ind_contable));
 		  	      	tr.appendChild(crearCampo('responsable',respuesta.responsable.username));
 		  	      	tr.appendChild(crearCampo('acuerdo',respuesta.acuerdo));
 		  	    	tr.appendChild(crearCampo('area',respuesta.areaSolicitante.nombrecorto));
 			  	 	tr.appendChild(crearCampo('jira',respuesta.id_jira));
 			  	 	
 			  	 	var strfecha = respuesta.fecha_creacion;
-			  	 	strfecha = strfecha.substring(8, 10) + '-' + strfecha.substring(6, 8) + '-' + strfecha.substring(1, 5);
+			  	 	strfecha = strfecha.substring(8, 10) + '-' + strfecha.substring(5, 7) + '-' + strfecha.substring(0, 4);
 				  	tr.appendChild(crearFecha('fechas_plomo',strfecha));
 				  	strfecha = respuesta.fecha_limite;
-				  	strfecha = strfecha.substring(8, 10) + '-' + strfecha.substring(6, 8) + '-' + strfecha.substring(1, 5);
+				  	strfecha = strfecha.substring(8, 10) + '-' + strfecha.substring(5, 7) + '-' + strfecha.substring(0, 4);
 				  	tr.appendChild(crearFecha('fechas_azul',strfecha));
 				  	
 				  	tr.appendChild(crearCampo('cierre',''));

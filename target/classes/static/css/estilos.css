@@ -293,7 +293,9 @@
 }
 
 
-
+.icon_acu_col{
+	font-size: 18px; color: #128bfc;
+}
 .fechas_azul{	
 	background-color: rgba(33, 150, 243, 0.2);
 	padding: 3px 5px;
