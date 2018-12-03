@@ -310,12 +310,6 @@
 	display: block;
 	width: 90px;
 }
-.fechas_azul{
-	background-color: rgba(33, 150, 243, 0.2);
-	padding: 3px 10px;
-	border-radius: 3px;
-	color: #2196f3;
-}
 .fechas_plomo{
 	background-color: rgba(162, 177, 188, 0.2);
 	padding: 3px 10px;
