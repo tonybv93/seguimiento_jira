@@ -47,16 +47,18 @@ function filtrar() {
 	  var titulo = document.getElementById("titulo_lista");
 	  var txt_titu = filter;
 	  
-	  if (filter === "Servicio de liquidaciones")
+	  if (filter === "Liquidaciones")
 		  filter = "LIQ";
 	  else if (filter === "Operaciones TI")
 		  filter = "OTI";
-	  else if (filter === "Gestión Activos")
+	  else if (filter === "Gestión de activos")
 		  filter = "GA";
-	  else if (filter === "Servicio de participantes")
+	  else if (filter === "Participantes")
 		  filter = "PAR";
-	  else if (filter === "Facturas Negociables")
+	  else if (filter === "Factura Negociable")
 		  filter = "FT";
+	  else if (filter === "Otros")
+		  filter = "Otros";
 	  else 
 		  filter = "Todos";
 
@@ -77,3 +79,47 @@ function filtrar() {
 	  }
 	  titulo.innerHTML = txt_titu + ' (' + nro_filas +')';
 	}
+
+function filtrar_etiqueta(etiqueta){
+	
+	input = document.getElementById("filtro");
+	filtroArea = input.options[input.selectedIndex].innerHTML;	
+	filtro = etiqueta.innerHTML;
+	var titulo = document.getElementById("titulo_lista");
+	var txt_titu = filtroArea + ' - ' + filtro;
+	
+	table = document.getElementById("tabla");
+	tr = table.getElementsByTagName("tr");
+	
+	if (filtroArea === "Liquidaciones")
+		filtroArea = "LIQ";
+	  else if (filtroArea === "Operaciones TI")
+		  filtroArea = "OTI";
+	  else if (filtroArea === "Gestión de activos")
+		  filtroArea = "GA";
+	  else if (filtroArea === "Participantes")
+		  filtroArea = "PAR";
+	  else if (filtroArea === "Factura Negociable")
+		  filtroArea = "FT";
+	  else if (filtroArea === "Otros")
+		  filtroArea = "Otros";
+	  else 
+		  filtroArea = "Todos";	
+	console.log("filtro = ",filtro, " - FiltroArea = ",filtroArea)
+	
+	nro_filas = 0;
+	for (i = 1; i < tr.length; i++) {
+		tdarea = tr[i].getElementsByTagName("td")[1]; 
+	  	td = tr[i].getElementsByTagName("td")[10];  
+	  	
+		if (td) {				
+	         if ((td.innerHTML === filtro && filtroArea === tdarea.innerHTML) || (td.innerHTML === filtro && filtroArea === 'Todos')) {
+	           tr[i].style.display = "";
+	           nro_filas++;
+	         } else {
+	           tr[i].style.display = "none";
+	      	 }
+	    }
+		titulo.innerHTML = txt_titu + ' (' + nro_filas +')';
+	  }
+}

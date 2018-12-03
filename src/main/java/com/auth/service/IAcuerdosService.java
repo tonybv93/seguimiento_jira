@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.auth.entity.Acuerdos;
 import com.auth.entity.Area_Solicitante;
+import com.auth.entity.Tipo_Acuerdo;
 import com.auth.entity.Usuario;
 
 public interface IAcuerdosService {
@@ -16,4 +17,5 @@ public interface IAcuerdosService {
 	
 	public List<Area_Solicitante> listarAreaSolicitante();
 	public List<Usuario> listarUsuarios();
+	public List<Tipo_Acuerdo> listarTiposAcuerdo();
 }

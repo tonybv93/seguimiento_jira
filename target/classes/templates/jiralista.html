@@ -33,45 +33,52 @@
 						<h4 id="titulo_lista">Jiras Totales (<span th:text="${count}"></span>)</h4>
 					</div>
 					<div class="col-sm-12 col-md-4 texto_derecha">
-						<a class="btn btn-outline-primary" th:href="@{/seguimiento/cavali/fechas}">
+						<a class="btn btn-outline-primary" th:href="@{/seguimiento/fechas}">
 	            			<i class="mdi mdi-pencil">Editar</i>
 	            		</a>
 					</div>				
 				</div>
 				<div class="row">
-					<div class="col-sm-12 col-md-6">
+					<div class="col-sm-12 col-md-3">
 						<div class="box_leyenda">
 							<ul class="leyenda flex">													
-								<li><i class="mdi mdi-tag et_comp"></i>Compromiso</li>						
-								<li><i class="mdi mdi-tag et_prio"></i>Prioritario</li>
-								<li><i class="mdi mdi-tag et_mbd"></i>Mejora BD</li>
-								<li><i class="mdi mdi-tag et_cri"></i>Crítico</li>	
-								<li><i class="mdi mdi-tag et_ate"></i>Regular</li>						
+								<li><i class="mdi mdi-tag et_comp"></i> <span onclick="filtrar_etiqueta(this)" class="link_etiqueta_com">Compromiso</span> </li>						
+								<li><i class="mdi mdi-tag et_prio"></i> <span onclick="filtrar_etiqueta(this)" class="link_etiqueta_pri">Prioritario</span> </li>
+								<li><i class="mdi mdi-tag et_mbd"></i> <span onclick="filtrar_etiqueta(this)" class="link_etiqueta_mdb"> Mejora BD</span></li>
+								<li><i class="mdi mdi-tag et_cri"></i> <span onclick="filtrar_etiqueta(this)" class="link_etiqueta_cri">Crítico</span> </li>	
+								<li><i class="mdi mdi-tag et_ate"></i> <span onclick="filtrar_etiqueta(this)" class="link_etiqueta_reg">Regular</span> </li>						
 							</ul>								
 						</div>
 					</div>
-					<div class="col-sm-12 col-md-6 texto-abajo">
-						<div class="input-group col-xs-12 alin_bot">
-							<label class="col-sm-3 col-form-label">Area:</label>
-							<select id="filtro" onchange="filtrar()" name="filtro" class="form-control border-primary col-sm-9">
+					<div class="col-sm-12 col-md-6">
+						<div class="jiras_grafico">
+														
+						</div>						
+					</div>
+					<div class="col-sm-12 col-md-3">											
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12 col-md-6">
+						<div class="d-flex texto-peque">
+							<label>Buscar en la tabla: </label>
+							<input onkeyup="buscar(this)" class="buscador_sobretabla" type="text">
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<div class="input-group alin_bot texto-peque texto_derecha">
+							<label class="col-sm-6 col-form-label">Area:</label>
+							<select id="filtro" onchange="filtrar()" name="filtro" class="form-control border-primary col-sm-6">
 								<option th:value="6">Todos</option>
-								<option th:value="1">Servicio de liquidaciones</option>
-								<option th:value="2">Operaciones TI</option>
-								<option th:value="3">Gestión Activos</option>
-								<option th:value="4">Servicio de participantes</option>
-								<option th:value="5">Facturas Negociables</option>
-								
+								<option th:each="area:${listaAreas}" th:value="${area.id}" th:text="${area.nombre}"></option>								
 							</select>
 							<span class="input-group-append">								
 							</span>
-						</div>
+						</div>	
 					</div>
 				</div>
-					<div class="contenedor_tabla">
-					<div class="d-flex texto-peque">
-						<label>Buscar en la tabla: </label>
-						<input onkeyup="buscar(this)" class="buscador_sobretabla" type="text">
-					</div>
+				<div class="contenedor_tabla">
+					
 					<table id="tabla" class="table table-striped table-hover">	
 						<thead>
 					  		<tr>
@@ -93,11 +100,13 @@
 					  			<td th:class="${jira.etiqueta.css_class}" ><a th:href="'https://jira.cavali.com.pe:8443/browse/' +${jira.jira}" target=”_blank” th:text="${jira.jira}"></a></td>					  						  			
 					  			<td th:text="${jira.areaSolicitante.nombrecorto}"></td>					  			
 					  			<td class="d-flex">
-					  				<span th:class="${jira.indicador.css_class}"><i th:class="${jira.indicador.icon_ind_contable}"></i></span>
-					  				<span th:class="${jira.tipoRequerimiento.css_class}"><i th:class="${jira.tipoRequerimiento.icon_ind_contable}"></i></span>
+					  				<span th:if="${jira.indicador!=null}" th:class="${jira.indicador.css_class}"><i th:class="${jira.indicador.icon_ind_contable}"></i></span>
+					  				<span th:if="${jira.tipoRequerimiento!=null}" th:class="${jira.tipoRequerimiento.css_class}"><i th:class="${jira.tipoRequerimiento.icon_ind_contable}"></i></span>
 					  			</td>
 					  			<td th:text="${jira.resumen}"></td>		 
-					  			<td class="centrado"><span th:if="${jira.estadoJira.grupoEstado != null}" th:class="${jira.estadoJira.grupoEstado.css_class}" th:text="${jira.estadoJira.grupoEstado.grupoEstado}"></span></td> 	
+					  			
+					  			<td class="centrado"><span th:if="${jira.estadoJira != null && jira.estadoJira.grupoEstado != null}" th:class="${jira.estadoJira.grupoEstado.css_class}" th:text="${jira.estadoJira.grupoEstado.grupoEstado}"></span></td> 	
+					  			
 					  			<td th:text="${jira.asignado}"></td> 	
 					  			<td th:text="${jira.responsable}"></td>	
 					  			<td>
@@ -109,8 +118,12 @@
 					  				<span th:if="${jira.fecha_produccion == null}" class="font-gris">Por definir</span>
 					  			</td>
 					  			<td>
-					  				<span th:text="${jira.monto_total != 0} ?  'S/ ' + ${#numbers.formatDecimal(jira.monto_total, 0, 'DEFAULT', 2, 'DEFAULT')} : 'Por estimar'"></span>
+					  				<span th:if="${jira.monto_total != 0}" th:text="'S/ ' + ${#numbers.formatDecimal(jira.monto_total, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+					  				<span th:if="${jira.monto_total == 0}" class="font-gris">Por estimar</span>
 					  			</td>
+					  			
+					  			<td style="display: none;" th:text="${jira.etiqueta.nombre}"></td> 	
+					  			
 					  		</tr>
 					  	</tbody>
 				  	</table>
@@ -157,5 +170,6 @@
     <script th:src="@{/js/shared/tooltips.js}"></script>
     <script th:src="@{/js/shared/popover.js}"></script>
     <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/shared/chart.js}"></script>
 </body>
 </html>

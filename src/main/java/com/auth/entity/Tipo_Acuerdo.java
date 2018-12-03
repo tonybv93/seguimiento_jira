@@ -11,7 +11,7 @@ public class Tipo_Acuerdo {
 	private int id;
 	private String nombre;
 	private String css_class;
-	private String icono;
+	private String icon_ind_contable;
 	
 	public int getId() {
 		return id;
@@ -31,11 +31,12 @@ public class Tipo_Acuerdo {
 	public void setCss_class(String css_class) {
 		this.css_class = css_class;
 	}
-	public String getIcono() {
-		return icono;
+	
+	public String getIcon_ind_contable() {
+		return icon_ind_contable;
 	}
-	public void setIcono(String icono) {
-		this.icono = icono;
+	public void setIcon_ind_contable(String icon_ind_contable) {
+		this.icon_ind_contable = icon_ind_contable;
 	}
 	public Tipo_Acuerdo() {
 		super();

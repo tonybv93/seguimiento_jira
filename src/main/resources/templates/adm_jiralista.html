@@ -33,7 +33,7 @@
 				<div class="card-body">
 				<div class="row">
 					<div class="col-sm-12 col-md-8">
-						<h4>Administrador de Fechas</h4>	
+						<h4>Administrador de Fechas - <span  id="titulo_lista">Todos</span></h4>	
 					</div> 
 					<div class="col-sm-12 col-md-4 texto_derecha">
 						<button class="btn btn-outline-primary" onclick="actualizarjiras(this)">
@@ -56,12 +56,8 @@
 						<div class="input-group col-xs-12 alin_bot">
 							<label class="col-sm-3 col-form-label">Area:</label>
 							<select id="filtro" onchange="filtrar()" name="filtro" class="form-control border-primary col-sm-9">
-								<option th:value="1">Servicio de liquidaciones</option>
-								<option th:value="2">Operaciones TI</option>
-								<option th:value="3">Gestión Activos</option>
-								<option th:value="4">Servicio de participantes</option>
-								<option th:value="5">Facturas Negociables</option>
 								<option th:value="6">Todos</option>
+								<option th:each="area:${listaAreas}" th:value="${area.id}" th:text="${area.nombre}"></option>	
 							</select>
 							<span class="input-group-append">								
 							</span>
@@ -91,9 +87,11 @@
 					  	<tbody>
 					  		<tr th:each="jira:${lstJiras}">					  			
 					  			<td th:class="${jira.etiqueta.css_class}" ><a th:href="'https://jira.cavali.com.pe:8443/browse/' +${jira.jira}" target=”_blank” th:text="${jira.jira}"></a></td>					  						  			
-					  			<td th:text="${jira.areaSolicitante.nombre}"></td>			
+					  			<td th:text="${jira.areaSolicitante.nombrecorto}"></td>			
 					  			<td th:text="${jira.resumen}"></td>	 
-					  			<td class="centrado"><span th:if="${jira.estadoJira.grupoEstado != null}" th:class="${jira.estadoJira.grupoEstado.css_class}" th:text="${jira.estadoJira.grupoEstado.grupoEstado}"></span></td> 	
+					  			
+					  			<td class="centrado"><span th:if="${jira.estadoJira != null && jira.estadoJira.grupoEstado != null}" th:class="${jira.estadoJira.grupoEstado.css_class}" th:text="${jira.estadoJira.grupoEstado.grupoEstado}"></span></td> 	
+					  			
 					  			<td th:text="${jira.asignado}"></td> 	
 					  			<td th:text="${jira.responsable}"></td>						  			
 					  			<td>

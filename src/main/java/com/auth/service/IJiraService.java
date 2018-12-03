@@ -8,6 +8,7 @@ public interface IJiraService {
 	
 	
 	public List<Jira> listarJiras();		//LISTAR TODOS
+	public List<Jira> listarJirasPorEmpresa(Integer id);		//LISTAR TODOS por empresa	
 	public Jira buscarPorJira(String jira);	//BUSCAR CODIGO JIRA
 	public Jira buscarPorId(Integer id);	//BUSCAR 1 JIRA
 	public Jira guardar(Jira j);			//ACTUALIZAR FECHAS

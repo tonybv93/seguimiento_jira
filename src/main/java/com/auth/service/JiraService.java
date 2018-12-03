@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.auth.entity.Area_Solicitante;
+import com.auth.entity.Empresa;
 import com.auth.entity.Estado_Jira;
 import com.auth.entity.Etiqueta;
 import com.auth.entity.Fabrica;
@@ -18,6 +19,7 @@ import com.auth.entity.JsoJira;
 import com.auth.entity.JsoPersonalizado;
 import com.auth.entity.Tipo_Requerimiento;
 import com.auth.repository.IAreaSolicitanteRepository;
+import com.auth.repository.IEmpresaRepository;
 import com.auth.repository.IEstadoJiraRepository;
 import com.auth.repository.IEtiquetaRepository;
 import com.auth.repository.IFabricaRepository;
@@ -46,6 +48,8 @@ public class JiraService implements IJiraService {
 	ITipoRequerimientoRepository tipoRepository;
 	@Autowired
 	IEstadoJiraRepository estadoRepo;
+	@Autowired
+	IEmpresaRepository empresaRepo;
 
 	@Override
 	public Jira buscarPorId(Integer id) {
@@ -66,7 +70,15 @@ public class JiraService implements IJiraService {
 	public List<Jira> listarJiras() {
 		return jiraRepo.findAllByOrderByEtiqueta();
 	}
-
+	@Override
+	public List<Jira> listarJirasPorEmpresa(Integer id) {
+		Empresa empr = empresaRepo.findById(id).orElse(null);
+		if (empr!=null)
+			return jiraRepo.findAllByEmpresaOrderByEtiqueta(empr);
+		else 
+			return null;
+	}
+//====================================================================================
 	@Override
 	public void actualizarBD() {			
 		List<JsoJira> lstJsoJira = getListaJsonJiraActualizada("labels+in+(GSOCompromiso,GSOCritico,GSOMejoraBD,GSOPrio,BVLCompromiso,BVLCritico,BVLMejoraBD,BVLPrio)+and+status+not+in(Terminado,Anulado)+ORDER+BY+labels+DESC");
@@ -143,6 +155,11 @@ public class JiraService implements IJiraService {
 				Area_Solicitante area = areaExisteOnuevo(jsonJira.getFields().getCustomfield_10800().getValue());
 				bdJira.setAreaSolicitante(area);
 			}
+			// EMPRESA
+			if (noEsNuloOVacio(jsonJira.getFields().getEmpresa() )) {
+				Empresa empresa = empresaExisteOnuevo(jsonJira.getFields().getEmpresa());
+				bdJira.setEmpresa(empresa);
+			}
 			// INDICADOR CONTABLE
 			if (noEsNuloOVacio(jsonJira.getFields().getCustomfield_11483())) {
 				Indicador_Contable indicador =   indicadorExisteOnuevo(jsonJira.getFields().getCustomfield_11483().getValue());
@@ -154,8 +171,10 @@ public class JiraService implements IJiraService {
 				bdJira.setTipoRequerimiento(tipo);
 			}
 			// ESTADO JIRA
-			Estado_Jira estado = estadoExistenteOnuevo(jsonJira.getFields().getNuevoEstado());
-			bdJira.setEstadoJira(estado);	
+			if (noEsNuloOVacio(jsonJira.getFields().getNuevoEstado())) {
+				Estado_Jira estado = estadoExistenteOnuevo(jsonJira.getFields().getNuevoEstado());
+				bdJira.setEstadoJira(estado);	
+			}			
 			jiraRepo.save(bdJira);
 			id++;
 		}
@@ -166,6 +185,7 @@ public class JiraService implements IJiraService {
 	// CONSUME SERVICIO REST DE JIRA Y ACTUALIZA LOS CAMPOS
 	private List<JsoJira> getListaJsonJiraActualizada(String filtro) {
 		List<JsoJira> jsoJiras = new ArrayList<>();
+		// Complementa la cadena de búsqueda de JIRA REST para reducir los campos
 		filtro = filtro + "&maxResults=500&fields=key,customfield_10800,customfield_11483,issuetype,summary,status,assignee,reporter,created,updated,customfield_11016,customfield_14851,customfield_14850,priority,parent,labels,customfield_11236";
 		jsoJiras = apiJira.busquedaJQL(filtro);
 		
@@ -209,18 +229,38 @@ public class JiraService implements IJiraService {
 	}
 	//Elegir una etiqueta de la lista
 	private JsoJira actualizarTipo(JsoJira j) {
-		if (j.getFields().getLabels().contains("GSOCompromiso") || j.getFields().getLabels().contains("BVLCompromiso")) 
+		if (j.getFields().getLabels().contains("GSOCompromiso")) {
 			j.getFields().setEtiqueta("Compromiso");
-		else if (j.getFields().getLabels().contains("GSOCritico") || j.getFields().getLabels().contains("BVLCritico")) 
+			j.getFields().setEmpresa("Cavali");			
+		}else if (j.getFields().getLabels().contains("BVLCompromiso")) {
+			j.getFields().setEtiqueta("Compromiso");
+			j.getFields().setEmpresa("BVL");		
+		}else if (j.getFields().getLabels().contains("GSOCritico")) {
 			j.getFields().setEtiqueta("Crítico");
-		else if (j.getFields().getLabels().contains("GSOMejoraBD") || j.getFields().getLabels().contains("BVLMejoraBD")) 
+			j.getFields().setEmpresa("Cavali");		
+		}else if (j.getFields().getLabels().contains("BVLCritico")) {
+			j.getFields().setEtiqueta("Crítico");
+			j.getFields().setEmpresa("BVL");		
+		}else if (j.getFields().getLabels().contains("GSOMejoraBD")) {
 			j.getFields().setEtiqueta("Mejora BD");
-		else if (j.getFields().getLabels().contains("GSOPrio") || j.getFields().getLabels().contains("BVLPrio")) 
-			j.getFields().setEtiqueta("Prioritario");	
-		else if (j.getFields().getLabels().contains("GSORegular") || j.getFields().getLabels().contains("BVLRegular")) 
-			j.getFields().setEtiqueta("Regular");	
-		else 
-			j.getFields().setEtiqueta("No definido");
+			j.getFields().setEmpresa("Cavali");		
+		}else if (j.getFields().getLabels().contains("BVLMejoraBD")) {
+			j.getFields().setEtiqueta("Mejora BD");
+			j.getFields().setEmpresa("BVL");		
+		}else if (j.getFields().getLabels().contains("GSOPrio")) {
+			j.getFields().setEtiqueta("Prioritario");
+			j.getFields().setEmpresa("Cavali");		
+		}else if (j.getFields().getLabels().contains("BVLPrio")) {
+			j.getFields().setEtiqueta("Prioritario");
+			j.getFields().setEmpresa("BVL");		
+		}else if (j.getFields().getLabels().contains("GSORegular")) {
+			j.getFields().setEtiqueta("Regular");
+			j.getFields().setEmpresa("Cavali");		
+		}else if (j.getFields().getLabels().contains("BVLRegular")) {
+			j.getFields().setEtiqueta("Regular");
+			j.getFields().setEmpresa("BVL");		
+		}else {
+			j.getFields().setEtiqueta("No definido");}
 		return j;
 	}
 	//Si hay requerimientos de tipo SCP, asignará el tipo inversión
@@ -266,78 +306,57 @@ public class JiraService implements IJiraService {
 		
 		return j;
 	}
+// CAMBIAR ESTADOS
 	private JsoJira cambiaEstado(JsoJira j) {		
 		String strEstadoAnterior = j.getFields().getStatus().getName();
-		String strEstadoNuevo = "";
-		String grupoEstado= "";
+		String strEstadoNuevo = "";		
 		String nuevoResponsable="";
-		String clase_estado="est_";
 					
 		if(strEstadoAnterior.equals("En Revisión")){				
 			strEstadoNuevo = "En revisión";
-	        grupoEstado = "Postproducción";
-	        clase_estado="est_pospro";
 	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 		}else if(strEstadoAnterior.equals("Alcance")){
 	        strEstadoNuevo = "En validación de alcance";
-	        grupoEstado = "Análisis";
-	        clase_estado="est_ana";
 	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 		}else if(strEstadoAnterior.equals("En Espera")){
 	        strEstadoNuevo = "En pausa";
-	        grupoEstado = "En espera";
-	        clase_estado="est_";
 	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 		}else if(strEstadoAnterior.equals("Análisis")){
 	        strEstadoNuevo = "En preanálisis";
-	        grupoEstado = "Análisis";
-	        clase_estado="est_ana";
 	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 	        
 	        JsoJira ultimoHijo = hijoMasReciente(j);
 	    	if (noEsNuloOVacio(ultimoHijo)) {
 	    		if (ultimoHijo.getFields().getIssuetype().getName().equals("Análisis")){
 		        	strEstadoNuevo = "En análisis";
-                    grupoEstado = "Análisis";
-                    clase_estado="est_ana";
+	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Desarrollo")){
+		        	strEstadoNuevo = "En análisis";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance Funcional")){
 		        	strEstadoNuevo = "En preparación de alcance";
-                    grupoEstado = "Inicial";
-                    clase_estado="est_ini";
+	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
+		        	strEstadoNuevo = "En estimación";
+	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Observacion Calidad")){
+		        	strEstadoNuevo = "Observado QA";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance")){
 		        	strEstadoNuevo = "En preparación de alcance";
-                    grupoEstado = "Inicial";
-                    clase_estado="est_ini";
 	    		}else {
 	    			strEstadoNuevo = "?";
-                    grupoEstado = "?";
-                    clase_estado="est_";
 	    		}	
 	    	}
 	    }else if(strEstadoAnterior.equals("En Aprobación")){
 	         strEstadoNuevo = "En aprobación de horas";
-	         grupoEstado = "Aprobación";
-	         clase_estado="est_aprob";
 	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 	    }else if(strEstadoAnterior.equals("Control de Calidad")){
 	         strEstadoNuevo = "Pruebas QA";
-	         grupoEstado = "QA";
-	         clase_estado="est_qa";
 	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 	    }else if(strEstadoAnterior.equals("Supervisión QA") || strEstadoAnterior.equals("Pruebas QA")){
 	         strEstadoNuevo = "Pruebas QA";
-	         grupoEstado = "QA";
-	         clase_estado="est_qa";
 	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 	    }else if(strEstadoAnterior.equals("Desarrollo") || strEstadoAnterior.equals("En Desarrollo")){
 	         strEstadoNuevo = "Construcción";
-	         grupoEstado = "Construcción";
-	         clase_estado="est_cons";
 	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 	    }else if(strEstadoAnterior.equals("Creado")){
 	         strEstadoNuevo = "Pendiente de enviar a sistemas";
-	         grupoEstado = "Inicial";
-	         clase_estado="est_ini";
 	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 	    }else if(strEstadoAnterior.equals("Ejecución")){	
 	  
@@ -345,74 +364,42 @@ public class JiraService implements IJiraService {
 	    	if (noEsNuloOVacio(ultimoHijo)) {
 	    		if (ultimoHijo.getFields().getIssuetype().getName().equals("Evidencia")) {
 		        	strEstadoNuevo = "Pruebas de Usuario";
-                    grupoEstado = "Usuario";	
-                    clase_estado="est_usu";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Validación Usuario")){
 		        	strEstadoNuevo = "Pruebas de usuario";
-                    grupoEstado = "Usuario";
-                    clase_estado="est_usu";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Observacion Calidad")){
 		        	strEstadoNuevo = "Pruebas QA";
-                    grupoEstado = "QA";
-                    clase_estado="est_qa";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Desarrollo")){
 		        	strEstadoNuevo = "En construcción";
-                    grupoEstado = "Construcción";
-                    clase_estado="est_cons";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Análisis")){
 		        	strEstadoNuevo = "En análisis";
-                    grupoEstado = "Análisis";
-                    clase_estado="est_ana";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance Funcional")){
 		        	strEstadoNuevo = "En preparación de alcance";
-                    grupoEstado = "Inicial";
-                    clase_estado="est_ini";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance")){
 		        	strEstadoNuevo = "En preparación de alcance";
-                    grupoEstado = "Inicial";
-                    clase_estado="est_ini";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
-		        	strEstadoNuevo = "En estimación";
-                    grupoEstado = "Inicial";
-                    clase_estado="est_ini";	     
+		        	strEstadoNuevo = "En estimación";    
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Funcionalidad Adjunta")){
-		        	strEstadoNuevo = "Funcionalidad Adjunta";
-                    grupoEstado = "xxx";
-                    clase_estado="est_";	 
+		        	strEstadoNuevo = "Funcionalidad Adjunta";	 
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Caso de Prueba")){
 	    			if (ultimoHijo.getFields().getStatus().getName().equals("Pruebas QA")) {
 	    				strEstadoNuevo = "Pruebas QA";
-	                    grupoEstado = "QA";
-	                    clase_estado="est_qa";
 	    			}
 	    			else if (ultimoHijo.getFields().getStatus().getName().equals("Pruebas QC")) {
 	    				strEstadoNuevo = "Pruebas QC";
-	                    grupoEstado = "Construcción";
-	                    clase_estado="est_cons";
 	    			}
 	    			else if (ultimoHijo.getFields().getStatus().getName().equals("Observado")) {
 	    				strEstadoNuevo = "Observado en pruebas";
-	                    grupoEstado = "QA";
-	                    clase_estado="est_qa";
 	    			}
 	    			else if (ultimoHijo.getFields().getStatus().getName().equals("Por Hacer")) {
 	    				strEstadoNuevo = "En construcción";
-	                    grupoEstado = "Construcción";
-	                    clase_estado="est_cons";
 	    			}
 	    			else if (ultimoHijo.getFields().getStatus().getName().equals("En Revisión")) {
 	    				strEstadoNuevo = "Pruebas QA";
-	                    grupoEstado = "QA";
-	                    clase_estado="est_qa";
 	    			}else {
 	    				strEstadoNuevo = "Indefinido";
-	                    grupoEstado = "xx";
-	                    clase_estado="est_";
 	    			}		    	
 	    		}else {
 	    			strEstadoNuevo = "?";
-                    grupoEstado = "?";
-                    clase_estado="est_";
 	    		}	    		
 	    		if(noEsNuloOVacio(ultimoHijo.getFields().getAssignee()))
 	    			nuevoResponsable = ultimoHijo.getFields().getAssignee().getDisplayName();		    		
@@ -424,73 +411,43 @@ public class JiraService implements IJiraService {
 	    	if (noEsNuloOVacio(ultimoHijo)) {		    
 		    	if (ultimoHijo.getFields().getIssuetype().getName().equals("Evidencia")) {
 		        	strEstadoNuevo = "Pruebas de Usuario";
-                    grupoEstado = "Usuario";	
-                    clase_estado="est_usu";
 		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Observacion Calidad")){
 		        	strEstadoNuevo = "Pruebas QA";
-                    grupoEstado = "QA";
-                    clase_estado="est_qa";
 		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Desarrollo")){
 		        	strEstadoNuevo = "En construcción";
-                    grupoEstado = "Construcción";
-                    clase_estado="est_cons";
 		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Análisis")){
 		        	strEstadoNuevo = "En análisis";
-                    grupoEstado = "Análisis";
-                    clase_estado="est_ana";
 		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance Funcional")){
 		        	strEstadoNuevo = "En preparación de alcance";
-                    grupoEstado = "Análisis";
-                    clase_estado="est_ana";
 		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
 		        	strEstadoNuevo = "En estimación";
-                    grupoEstado = "Análisis";
-                    clase_estado="est_ana";
 		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Caso de Prueba")){
 		        	if(ultimoHijo.getFields().getStatus().getName().equals("Pruebas QA")) {
 		        		strEstadoNuevo = "Pruebas QA";
-                        grupoEstado = "QA";		
-                        clase_estado="est_qa";
 		        	}else if (ultimoHijo.getFields().getStatus().getName().equals("Pruebas QC")) {
 		        		strEstadoNuevo = "Pruebas QC";
-		        		grupoEstado = "Construcción";
-		        		clase_estado="est_cons";
 		        	}else if (ultimoHijo.getFields().getStatus().getName().equals("Observado")) {
 		        		strEstadoNuevo = "Observado en pruebas";
-		        		grupoEstado = "QA";
-		        		clase_estado="est_qa";
 		        	}else if (ultimoHijo.getFields().getStatus().getName().equals("Por Hacer")) {
 		        		strEstadoNuevo = "En construcción";
-		        		grupoEstado = "Construcción";
-		        		clase_estado="est_cons";
 		        	}else {
 		        		strEstadoNuevo = "Falta definir - " + ultimoHijo.getKey();
-		        		grupoEstado = "??";
-		        		clase_estado="est_";
 		        	}
 		        }else {
 		        	strEstadoNuevo = "Falta definir - " + ultimoHijo.getKey();
-		        	grupoEstado = "???";
-		        	clase_estado="est_";
 		        }   
 		    	nuevoResponsable = ultimoHijo.getFields().getAssignee().getDisplayName();
 	    	}else {
 	    		 strEstadoNuevo = "Por iniciar";
-	    		 grupoEstado = "Inicial";
-	    		 clase_estado="est_ini";
 	    		 nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 	    	}
 	    	
 	    }else{
 	         strEstadoNuevo = "Falta definir - " + j.getKey();
-	         grupoEstado = "Indefinido";
-	         clase_estado="est_";
 	         nuevoResponsable = "Indefinido";
 	    }			
 		j.getFields().setNuevoEstado(strEstadoNuevo);
-		j.getFields().setGrupoEstado(grupoEstado);
 		j.getFields().setNuevoResponsable(nuevoResponsable);
-		j.getFields().setGestado_class(clase_estado);
 		return j;
 	}
 	//Hijo más reciente con estado no terminado
@@ -579,5 +536,14 @@ public class JiraService implements IJiraService {
 			fab = fabricaRepo.save(fab);
 		}
 		return fab;
+	}
+	private Empresa empresaExisteOnuevo(String str) {
+		Empresa emp = empresaRepo.findByNombre(str);
+		if (emp == null) {
+			emp = new Empresa();
+			emp.setNombre(str);
+			emp = empresaRepo.save(emp);
+		}
+		return emp;
 	}
 }

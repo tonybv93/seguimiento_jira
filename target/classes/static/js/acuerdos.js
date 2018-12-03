@@ -5,7 +5,7 @@ $(document).ready(function() {
 
 $( function() {
     $("#id_categoria").change( function() {
-        if ($(this).val() === "Jira") {
+        if ($(this).val() == 1) {        	
         	 $("#jira_selector").show();
         	 $("#area_selector").hide();
             $("#id_input").prop("disabled", false);

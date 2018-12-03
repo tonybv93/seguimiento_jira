@@ -225,6 +225,10 @@
 	bottom: 20%;
 	right: 20px;
 }
+.texto_rojo{
+
+	color: #fff;	
+}
 .buscador_sobretabla{
 	width: 180px;
 	padding: 4px 10px;
@@ -398,4 +402,27 @@
 .btn-actualizar:focus{
 	webkit-box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.5);
     box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.5);
+}
+
+.link_etiqueta_com{
+	color: #ffaf00;
+}
+.link_etiqueta_pri{
+	color: #2196f3;
+}
+.link_etiqueta_mdb{
+	color: #19d895;
+}
+.link_etiqueta_cri{
+	color: #ff6258;
+}
+.link_etiqueta_reg{
+	color: #c32c92;
+}
+.link_etiqueta_com:hover, .link_etiqueta_pri:hover, .link_etiqueta_mdb:hover, .link_etiqueta_cri:hover, .link_etiqueta_reg:hover   {
+	cursor: pointer;
+}
+.jiras_grafico{
+	border: 1px solid #eee;
+	height: 150px;
 }

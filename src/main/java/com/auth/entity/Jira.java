@@ -36,6 +36,10 @@ public class Jira {
 	private Etiqueta etiqueta;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_empresa")
+	private Empresa empresa;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_area_solicitante")
 	private Area_Solicitante areaSolicitante;
 	
@@ -181,6 +185,13 @@ public class Jira {
 	}
 	public void setFecha_produccion(Date fecha_produccion) {
 		this.fecha_produccion = fecha_produccion;
+	}
+	
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 	public Jira() {
 		super();

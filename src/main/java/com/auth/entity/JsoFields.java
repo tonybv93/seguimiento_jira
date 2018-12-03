@@ -37,11 +37,20 @@ public class JsoFields {
     
     // CAMPOS PERSONALIZADOS (NO SALEN DE JSON)
     private String etiqueta;						//Etiqueta para filtro
+    private String empresa;							// Cavali o Bolsa
     private String nuevoEstado;						//Etiqueta para el nuevo estados
     private String nuevoResponsable;				//Nuevo responsable
     private String grupoEstado;						//Etiqueta para agrupar los estados
     private String gestado_class;					//Etiqueta para agrupar los estados
     private List<JsoJira> subTareas = new ArrayList<>();	//Jiras hijo
+	
+    
+    public String getEmpresa() {
+		return empresa;
+	}
+	public void setEmpresa(String empresa) {
+		this.empresa = empresa;
+	}
 	public Integer getId() {
 		return id;
 	}

@@ -43,8 +43,7 @@
                             <label class="col-sm-3 col-form-label">Tipo</label>
                             <div class="col-sm-9">
                               <select class="form-control" id="id_categoria">
-                                <option value="Jira">Jira</option>
-                                <option value="Otros">Otros</option>
+                                <option th:each="tipo:${listaTipos}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
                               </select>
                             </div>
                           </div>

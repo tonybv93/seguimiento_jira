@@ -22,10 +22,11 @@ public class AcuerdosController {
 	private IJiraService jiraService;
 	
 	//NUEVO ACUERDO (PANEL ADMIN)
-	@GetMapping("/nuevo")
+	@GetMapping("/nuevoacuerdo")
 	public String acuerdosCavali(Model model) {	
 		model.addAttribute("acuerdonuevo",new Acuerdos());
 		model.addAttribute("listaJiras",jiraService.listarJiras());
+		model.addAttribute("listaTipos",acuerdoService.listarTiposAcuerdo());
 		model.addAttribute("listaAreas",acuerdoService.listarAreaSolicitante());
 		model.addAttribute("listaResponsables",acuerdoService.listarUsuarios());
 		model.addAttribute("listaAcuerdos", acuerdoService.listarTodos());
@@ -33,7 +34,7 @@ public class AcuerdosController {
 	}
 	
 	//LISTAR ACUERDOS
-	@GetMapping("/lista")
+	@GetMapping("/cavaliacuerdos")
 	public String listaAcuerdosCavali(Model model) {	
 		model.addAttribute("listaAcuerdos", acuerdoService.listarActivos());
 		return "acuerdoslista";

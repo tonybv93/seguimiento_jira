@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import com.auth.entity.Acuerdos;
 import com.auth.entity.Area_Solicitante;
 import com.auth.entity.Jira;
+import com.auth.entity.Tipo_Acuerdo;
 import com.auth.entity.Usuario;
 import com.auth.repository.IAcuerdosRepository;
 import com.auth.repository.IAreaSolicitanteRepository;
 import com.auth.repository.IJiraRepository;
+import com.auth.repository.ITipoAcuerdoRepository;
 import com.auth.repository.IUsuarioRepository;
 @Service
 public class AcuerdosService implements IAcuerdosService {
@@ -26,6 +28,8 @@ public class AcuerdosService implements IAcuerdosService {
 	IAreaSolicitanteRepository areaRepo;
 	@Autowired
 	IUsuarioRepository usuarioRepo;
+	@Autowired
+	ITipoAcuerdoRepository tipoRepo;
 	
 	
 	@Override
@@ -74,6 +78,10 @@ public class AcuerdosService implements IAcuerdosService {
 	@Override
 	public List<Usuario> listarUsuarios() {
 		return (List<Usuario>) usuarioRepo.findAll();
+	}
+	@Override
+	public List<Tipo_Acuerdo> listarTiposAcuerdo() {
+		return (List<Tipo_Acuerdo>) tipoRepo.findAll();
 	}
 }
 	
