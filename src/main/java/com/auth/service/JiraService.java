@@ -548,9 +548,52 @@ public class JiraService implements IJiraService {
 	}
 
 	@Override
-	public int jirasTotales() {
-		String filtro = "project=\"Requerimientos+de+Sistemas\"+and+issuetype+in+standardIssueTypes()+and+status+not+in+(Anulado,Terminado,Cancelado)+and+issuetype+in(\"Mantenimiento+de+Sistemas\",\"Error+en+Sistema\",Requerimiento)&maxResults=1000&fields=key";	//Primeros 1000 resupuestas
-		List<JsoJira> lstSubTareas = apiJira.busquedaJQL(filtro);				
-		return lstSubTareas.size();
+	public int[] jirasTotales() {
+		int nliq = 0, nsis = 0, nga = 0, npar = 0, nft = 0, notros = 0; 
+		int[] arreglo = new int[6];	
+		String filtro = "project=\"Requerimientos+de+Sistemas\"+and+issuetype+in+standardIssueTypes()+and+status+not+in+(Anulado,Terminado,Cancelado)+and+issuetype+in(\"Mantenimiento+de+Sistemas\",\"Error+en+Sistema\",Requerimiento)+and+labels+not+in+(GSOCompromiso,GSOCritico,GSOMejoraBD,GSOPrio,BVLCompromiso,BVLCritico,BVLMejoraBD,BVLPrio)&maxResults=1000&fields=key,customfield_10800";	//Primeros 1000 resupuestas
+		List<JsoJira> lstJiras = apiJira.busquedaJQL(filtro);	
+		for (JsoJira j : lstJiras) {
+			if (j.getFields().getCustomfield_10800() != null)
+			{
+			//LIQUIDACIONES
+			if (j.getFields().getCustomfield_10800().getValue().equals("Negocios Internacionales") ||
+					j.getFields().getCustomfield_10800().getValue().equals("Liquidaciones") ||
+					j.getFields().getCustomfield_10800().getValue().equals("SERVICIO DE LIQUIDACIONES") ||
+					j.getFields().getCustomfield_10800().getValue().equals("GERENCIA DE SERVICIOS Y OPERACIONES") )
+				nliq++;		
+			// SISTEMAS
+			else if (j.getFields().getCustomfield_10800().getValue().equals("Sistemas") ||
+					j.getFields().getCustomfield_10800().getValue().equals("OPERACIONES TI"))
+				nsis++;
+			
+			//GESTIÓN DE ACTIVOS
+			else if (j.getFields().getCustomfield_10800().getValue().equals("SERVICIOS GENERALES Y CONTROL DE ACTIVOS") ||
+					j.getFields().getCustomfield_10800().getValue().equals("GESTION DE ACTIVOS") ||
+					j.getFields().getCustomfield_10800().getValue().equals("GESTIÓN DE ACTIVOS") ||
+					j.getFields().getCustomfield_10800().getValue().equals("Valores")) 
+				nga++;
+			
+			//PARTICIPANTES
+			else if (j.getFields().getCustomfield_10800().getValue().equals("Participantes") ||
+					j.getFields().getCustomfield_10800().getValue().equals("SERVICIO DE PARTICIPANTES")) 
+				npar++;
+			
+			//FACTRACK
+			else if (j.getFields().getCustomfield_10800().getValue().equals("Facturas Negociables") ||
+					j.getFields().getCustomfield_10800().getValue().equals("GERENCIA DE NEGOCIOS TRANSACCIONALES")) 
+				nft++;
+			else 
+				notros++;}		
+			
+		}
+		arreglo[0] = nliq;
+		arreglo[1] = nsis;
+		arreglo[2] = nga;
+		arreglo[3] = npar;
+		arreglo[4] = nft;
+		arreglo[5] = notros;
+		
+		return arreglo;
 	}
 }

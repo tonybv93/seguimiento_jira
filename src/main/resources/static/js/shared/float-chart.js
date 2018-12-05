@@ -19,7 +19,12 @@
       data: 15000,
       color: '#63CF72',
       label: 'Richard'
-    }
+    },
+    {
+        data: 15000,
+        color: '#63CF72',
+        label: 'Richard'
+      }
   ];
 
   if ($("#pie-chart").length) {

@@ -1,0 +1,78 @@
+	<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject --->
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- ícono navegador --> 
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> </head>
+    
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+			<div style="height: 150px;">
+              <h4 class="card-title">Pie chart</h4>
+                    <div id="c3-pie-chart"></div>
+            </div>
+<!----------------------------------------------------------------------- 	FIN	 ------------------------------------------------------->
+          </div>
+          <footer th:replace="fragments/shared :: header"></footer>         
+        </div>
+      </div>
+   	</div>
+   	
+<!----------------------------------------------------------------------- 	MODALES	 ------------------------------------------------------->
+   	
+	<div id="modal_actualizando" class="un_modal">		
+		<div class="contenido_modal">
+			<div class="card-body">		
+				<div class="modal_header2">ACTUALIZANDO...</div>
+				<p class="segundero">Se extraerá la información de <b>JIRA</b>. Esto puede tomar unos segundos, por favor espere.</p>
+				<br><br>
+				<div class="bar-loader">
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<div class="segundero">Duración del proceso: <span id="contador_seg"></span> s</div>		  	
+			</div>			
+		</div>
+	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>    
+    <script th:src="@{/js/shared/data-table.js}"></script>
+    <script th:src="@{/js/shared/tooltips.js}"></script>
+    <script th:src="@{/js/shared/popover.js}"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/shared/chart.js}"></script>
+    
+     <!-- Custom js for this page-->
+    <script th:src="@{/js/shared/c3.js}"></script>
+    
+</body>
+</html>

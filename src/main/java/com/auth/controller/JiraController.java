@@ -33,9 +33,14 @@ public class JiraController {
 		model.addAttribute("listaAreas",acuerdoService.listarAreaSolicitante());
 		model.addAttribute("count",lstJiras.size());
 		model.addAttribute("lstJiras",lstJiras);
-		model.addAttribute("numtotal",jiraService.jirasTotales());
+		model.addAttribute("numtotal",jiraService.jirasTotales()[5]);
 		return "jiralista";
 	}	
+	//CHART 
+	@GetMapping("/cavalichart")
+	public String cavaliChart() {
+		return "chart";
+	}
 	//LISTAR JIRAS BOLSA
 		@GetMapping("/bolsalista")
 		public String  detalleBVL(Model model) {		
