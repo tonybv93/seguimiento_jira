@@ -28,6 +28,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/SeguimientoJira/seguimiento_jira/ojdbc6.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
