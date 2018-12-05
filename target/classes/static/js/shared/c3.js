@@ -23,8 +23,8 @@
         console.log("onmouseout", d, i);
       }
     },
-    size: {height:200, width:200},
-    legend: {show:false},
+    size: {height:200, width:400},
+    
     color: {
       pattern: ['#ffaf00', '#2196f3', '#19d895','#ff6258', '#c32c92', '#5abcf1']
     },

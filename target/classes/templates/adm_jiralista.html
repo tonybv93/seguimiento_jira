@@ -87,7 +87,9 @@
 					  	<tbody>
 					  		<tr th:each="jira:${lstJiras}">					  			
 					  			<td th:class="${jira.etiqueta.css_class}" ><a th:href="'https://jira.cavali.com.pe:8443/browse/' +${jira.jira}" target=”_blank” th:text="${jira.jira}"></a></td>					  						  			
-					  			<td th:text="${jira.areaSolicitante.nombrecorto}"></td>			
+					  			
+					  			<td th:text="${jira.areaSolicitante != null} ? ${jira.areaSolicitante.nombrecorto} : '-'"></td>	
+					  			
 					  			<td th:text="${jira.resumen}"></td>	 
 					  			
 					  			<td class="centrado"><span th:if="${jira.estadoJira != null && jira.estadoJira.grupoEstado != null}" th:class="${jira.estadoJira.grupoEstado.css_class}" th:text="${jira.estadoJira.grupoEstado.grupoEstado}"></span></td> 	
