@@ -213,7 +213,7 @@ public class JiraService implements IJiraService {
 				filtro = filtro +","+ j.getKey();
 			i++;
 		}					
-		filtro = filtro +")+and+status+not+in+(Anulado,Creado)&maxResults=1000&fields=key,issuetype,parent,status,assignee,updated,customfield_14851,customfield_14850";		
+		filtro = filtro +")+and+status+not+in+(Anulado,Creado,\"No+Aplica\",Pendiente,Cancelado,Resuelto)+and+issuetype+not+in+(\"Funcionalidad+Adjunta\")&maxResults=1000&fields=key,issuetype,parent,status,assignee,updated,customfield_14851,customfield_14850";		
 		filtro2 = filtro + "&startAt=1000";		
 		List<JsoJira> lstSubTareas = apiJira.busquedaJQL(filtro);				
 		lstSubTareas.addAll(apiJira.busquedaJQL(filtro2));		
@@ -308,79 +308,101 @@ public class JiraService implements IJiraService {
 	}
 // CAMBIAR ESTADOS
 	private JsoJira cambiaEstado(JsoJira j) {		
+		
 		String strEstadoAnterior = j.getFields().getStatus().getName();
 		String strEstadoNuevo = "";		
 		String nuevoResponsable="";
 					
-		if(strEstadoAnterior.equals("En Revisión")){				
+		if(strEstadoAnterior.equals("Creado")){
+	        strEstadoNuevo = "Pendiente de enviar a sistemas";
+	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
+	        
+		}else if(strEstadoAnterior.equals("Pendiente")){
+	    	strEstadoNuevo = "Pendiente de priorización";
+	    	nuevoResponsable = j.getFields().getAssignee().getDisplayName();
+	    	
+	    }else if(strEstadoAnterior.equals("En Revisión")){				
 			strEstadoNuevo = "En revisión";
 	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
-		}else if(strEstadoAnterior.equals("Alcance")){
-	        strEstadoNuevo = "En validación de alcance";
-	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
+	        
 		}else if(strEstadoAnterior.equals("En Espera")){
 	        strEstadoNuevo = "En pausa";
 	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
+	        
 		}else if(strEstadoAnterior.equals("Análisis")){
 	        strEstadoNuevo = "En preanálisis";
 	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
 	        
 	        JsoJira ultimoHijo = hijoMasReciente(j);
 	    	if (noEsNuloOVacio(ultimoHijo)) {
-	    		if (ultimoHijo.getFields().getIssuetype().getName().equals("Análisis")){
-		        	strEstadoNuevo = "En análisis";
-	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Desarrollo")){
-		        	strEstadoNuevo = "En análisis";
-	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance Funcional")){
-		        	strEstadoNuevo = "En preparación de alcance";
-	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
-		        	strEstadoNuevo = "En estimación";
-	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Observacion Calidad")){
-		        	strEstadoNuevo = "Observado QA";
-	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance")){
-		        	strEstadoNuevo = "En preparación de alcance";
-	    		}else {
-	    			strEstadoNuevo = "?";
-	    		}	
+
+	    		if(j.getFields().getIssuetype().equals("Error en Sistema")){
+	    			
+	    			if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
+			        	strEstadoNuevo = "En estimación";
+		    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance")){
+			        	strEstadoNuevo = "Diagnostico";
+		    		}else {
+		    			strEstadoNuevo = "En estimación";
+		    		}	
+	    			
+	    		}else if(j.getFields().getIssuetype().equals("Mantenimiento de Sistemas")){
+	    			
+	    			if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
+			        	strEstadoNuevo = "En estimación";
+		    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance")){
+			        	strEstadoNuevo = "En preparación de alcance";
+		    		}else {
+		    			strEstadoNuevo = "En estimación";
+		    		}	
+	    			
+	    		}else if(j.getFields().getIssuetype().equals("Requerimiento")){
+	    			
+	    			if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
+			        	strEstadoNuevo = "En estimación";
+		    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance")){
+			        	strEstadoNuevo = "Diagnostico";
+		    		}else {
+		    			strEstadoNuevo = "En estimación";
+		    		}	
+	    			
+	    		}
+	    		
 	    	}
+	    	
 	    }else if(strEstadoAnterior.equals("En Aprobación")){
 	         strEstadoNuevo = "En aprobación de horas";
 	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
-	    }else if(strEstadoAnterior.equals("Control de Calidad")){
-	         strEstadoNuevo = "Pruebas QA";
-	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
-	    }else if(strEstadoAnterior.equals("Supervisión QA") || strEstadoAnterior.equals("Pruebas QA")){
-	         strEstadoNuevo = "Pruebas QA";
-	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
-	    }else if(strEstadoAnterior.equals("Desarrollo") || strEstadoAnterior.equals("En Desarrollo")){
-	         strEstadoNuevo = "Construcción";
-	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
-	    }else if(strEstadoAnterior.equals("Creado")){
-	         strEstadoNuevo = "Pendiente de enviar a sistemas";
-	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
+	         
 	    }else if(strEstadoAnterior.equals("Ejecución")){	
 	  
 	    	JsoJira ultimoHijo = hijoMasReciente(j);
+	    	
 	    	if (noEsNuloOVacio(ultimoHijo)) {
+	    		
 	    		if (ultimoHijo.getFields().getIssuetype().getName().equals("Evidencia")) {
 		        	strEstadoNuevo = "Pruebas de Usuario";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Validación Usuario")){
 		        	strEstadoNuevo = "Pruebas de usuario";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Observacion Calidad")){
-		        	strEstadoNuevo = "Pruebas QA";
+		        	strEstadoNuevo = "Observado en pruebas";
+	    			
+		        	if (ultimoHijo.getFields().getStatus().getName().equals("En atención")) {
+	    				strEstadoNuevo = "Resolviendo observación";
+	    			} else if (ultimoHijo.getFields().getStatus().getName().equals("Análisis")) {
+	    				strEstadoNuevo = "Resolviendo observación";
+	    			} else if (ultimoHijo.getFields().getStatus().getName().equals("En Revisión")) {
+	    				strEstadoNuevo = "Revisando observación";
+	    			}
+	    			
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Desarrollo")){
 		        	strEstadoNuevo = "En construcción";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Análisis")){
 		        	strEstadoNuevo = "En análisis";
-	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance Funcional")){
-		        	strEstadoNuevo = "En preparación de alcance";
-	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance")){
-		        	strEstadoNuevo = "En preparación de alcance";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
 		        	strEstadoNuevo = "En estimación";    
-	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Funcionalidad Adjunta")){
-		        	strEstadoNuevo = "Funcionalidad Adjunta";	 
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Caso de Prueba")){
+	    			
 	    			if (ultimoHijo.getFields().getStatus().getName().equals("Pruebas QA")) {
 	    				strEstadoNuevo = "Pruebas QA";
 	    			}
@@ -397,7 +419,8 @@ public class JiraService implements IJiraService {
 	    				strEstadoNuevo = "Pruebas QA";
 	    			}else {
 	    				strEstadoNuevo = "Indefinido";
-	    			}		    	
+	    			}		
+	    			
 	    		}else {
 	    			strEstadoNuevo = "?";
 	    		}	    		
@@ -405,49 +428,14 @@ public class JiraService implements IJiraService {
 	    			nuevoResponsable = ultimoHijo.getFields().getAssignee().getDisplayName();		    		
 	    	}		    	         		         
 
-	    }else if(strEstadoAnterior.equals("Pendiente") || strEstadoAnterior.equals("PENDIENTE") ){
-	    	
-	    	JsoJira ultimoHijo = hijoMasReciente(j);
-	    	if (noEsNuloOVacio(ultimoHijo)) {		    
-		    	if (ultimoHijo.getFields().getIssuetype().getName().equals("Evidencia")) {
-		        	strEstadoNuevo = "Pruebas de Usuario";
-		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Observacion Calidad")){
-		        	strEstadoNuevo = "Pruebas QA";
-		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Desarrollo")){
-		        	strEstadoNuevo = "En construcción";
-		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Análisis")){
-		        	strEstadoNuevo = "En análisis";
-		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance Funcional")){
-		        	strEstadoNuevo = "En preparación de alcance";
-		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
-		        	strEstadoNuevo = "En estimación";
-		        }else if (ultimoHijo.getFields().getIssuetype().getName().equals("Caso de Prueba")){
-		        	if(ultimoHijo.getFields().getStatus().getName().equals("Pruebas QA")) {
-		        		strEstadoNuevo = "Pruebas QA";
-		        	}else if (ultimoHijo.getFields().getStatus().getName().equals("Pruebas QC")) {
-		        		strEstadoNuevo = "Pruebas QC";
-		        	}else if (ultimoHijo.getFields().getStatus().getName().equals("Observado")) {
-		        		strEstadoNuevo = "Observado en pruebas";
-		        	}else if (ultimoHijo.getFields().getStatus().getName().equals("Por Hacer")) {
-		        		strEstadoNuevo = "En construcción";
-		        	}else {
-		        		strEstadoNuevo = "Falta definir - " + ultimoHijo.getKey();
-		        	}
-		        }else {
-		        	strEstadoNuevo = "Falta definir - " + ultimoHijo.getKey();
-		        }   
-		    	nuevoResponsable = ultimoHijo.getFields().getAssignee().getDisplayName();
-	    	}else {
-	    		 strEstadoNuevo = "Por iniciar";
-	    		 nuevoResponsable = j.getFields().getAssignee().getDisplayName();
-	    	}
-	    	
 	    }else{
 	         strEstadoNuevo = "Falta definir - " + j.getKey();
 	         nuevoResponsable = "Indefinido";
 	    }			
+		
 		j.getFields().setNuevoEstado(strEstadoNuevo);
 		j.getFields().setNuevoResponsable(nuevoResponsable);
+		
 		return j;
 	}
 	//Hijo más reciente con estado no terminado
