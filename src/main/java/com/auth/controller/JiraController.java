@@ -23,7 +23,7 @@ public class JiraController {
 	@GetMapping("/actualizar")
 	public String  actualizar(Model model) {	
 		jiraService.actualizarBD();
-		return "redirect:/seguimiento/cavali/lista";
+		return "redirect:/seguimiento/cavalilista";
 	}
 	
 	//LISTAR JIRAS CAVALI
@@ -33,6 +33,7 @@ public class JiraController {
 		model.addAttribute("listaAreas",acuerdoService.listarAreaSolicitante());
 		model.addAttribute("count",lstJiras.size());
 		model.addAttribute("lstJiras",lstJiras);
+		model.addAttribute("numtotal",jiraService.jirasTotales());
 		return "jiralista";
 	}	
 	//LISTAR JIRAS BOLSA

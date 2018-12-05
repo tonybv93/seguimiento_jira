@@ -52,7 +52,7 @@
 					</div>
 					<div class="col-sm-12 col-md-6">
 						<div class="jiras_grafico">
-														
+										<span th:text="${numtotal}"></span>			
 						</div>						
 					</div>
 					<div class="col-sm-12 col-md-3">											
@@ -118,9 +118,13 @@
 					  				<span th:if="${jira.fecha_produccion == null}" class="font-gris">Por definir</span>
 					  			</td>
 					  			<td>
-					  				<span th:if="${jira.monto_total != 0}" th:text="'S/ ' + ${#numbers.formatDecimal(jira.monto_total, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+					  				<span data-toggle="tooltip" th:title="${jira.fabrica.nombre}+ ': S/ ' + ${#numbers.formatDecimal(jira.monto_des, 0, 'DEFAULT', 2, 'DEFAULT')} + ' - Pandora: S/ '   + ${#numbers.formatDecimal(jira.monto_cert, 0, 'DEFAULT', 2, 'DEFAULT')}" th:if="${jira.monto_total != 0}" th:text="'S/ ' + ${#numbers.formatDecimal(jira.monto_total, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
 					  				<span th:if="${jira.monto_total == 0}" class="font-gris">Por estimar</span>
 					  			</td>
+					  			
+					  			
+					  			<!-- td data-toggle="tooltip" th:title="${jira.fabrica} + ': S/ ' +${#numbers.formatDecimal(jira.monto_desarollo, 0, 'DEFAULT', 2, 'DEFAULT')} + ' - Pandora: S/ ' + ${#numbers.formatDecimal(jira.monto_cert, 0, 'DEFAULT', 2, 'DEFAULT')}" th:class="${jira.monto_total != 0} ? 'td_monto' : 'td_monto disable'" th:text="${jira.monto_total != 0} ?  'S/ ' + ${#numbers.formatDecimal(jira.monto_total, 0, 'DEFAULT', 2, 'DEFAULT')} : 'Por estimar'"></td>
+					  			 -->
 					  			
 					  			<td style="display: none;" th:text="${jira.etiqueta.nombre}"></td> 	
 					  			

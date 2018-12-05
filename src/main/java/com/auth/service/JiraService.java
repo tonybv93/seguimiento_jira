@@ -546,4 +546,11 @@ public class JiraService implements IJiraService {
 		}
 		return emp;
 	}
+
+	@Override
+	public int jirasTotales() {
+		String filtro = "project=\"Requerimientos+de+Sistemas\"+and+issuetype+in+standardIssueTypes()+and+status+not+in+(Anulado,Terminado,Cancelado)+and+issuetype+in(\"Mantenimiento+de+Sistemas\",\"Error+en+Sistema\",Requerimiento)&maxResults=1000&fields=key";	//Primeros 1000 resupuestas
+		List<JsoJira> lstSubTareas = apiJira.busquedaJQL(filtro);				
+		return lstSubTareas.size();
+	}
 }
