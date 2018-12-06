@@ -141,6 +141,13 @@
 	border-radius: 13px;
 	color: #fff;
 }
+.est_qa_obs{
+	background-color: #ff7d7d;
+	padding: 3px 10px;
+	border-radius: 13px;
+	color: #fff;
+}
+
 .est_pospro{
 	background-color: #00ce68;
 	padding: 3px 10px;
@@ -420,7 +427,7 @@
 }
 .jiras_grafico{	
 	margin: auto;
-	height: 170px;
+	height: 270px;
 }
 .c3 svg{
 	display:block;
