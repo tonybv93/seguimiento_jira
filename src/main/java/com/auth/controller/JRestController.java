@@ -153,5 +153,15 @@ public class JRestController {
 		acuerdo = acuerdoService.actualizar(acuerdo);			
 		return acuerdo;
 	}
-
+// -------------------------------------------------------- GRÁFICOS--------------------------------------
+	@PostMapping("/pie/cavali/atencion")
+	@ResponseBody
+	public int[] cavaliAtencion () {		
+		return jiraService.jirasAtendidosPorArea();
+	}
+	@PostMapping("/pie/cavali/noatencion")
+	@ResponseBody
+	public int[] cavaliNoAtencion () {		
+		return jiraService.jirasNoAtendidosPorArea();
+	}
 }

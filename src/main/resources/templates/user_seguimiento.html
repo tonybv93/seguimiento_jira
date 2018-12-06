@@ -40,14 +40,20 @@
 				<div class="row">
 					<div class="col-sm-12 col-md-6">
 						<div class="jiras_grafico">
-										<!-- <span th:text="${numtotal}"></span>	 -->
-										<div class="pie_areas"><div id="c3-pie-chart1" ></div>	</div>	
+							<div class="pie_areas">
+								<div id="c3-pie-chart1" ></div>
+								<div> <B>Totales:</B> <span>60</span></div>
+								<div> <B>Seleccionados:</B> <span id="graf1_sele"></span></div>
+							</div>	
 						</div>				
 					</div>
 					<div class="col-sm-12 col-md-6">
 						<div class="jiras_grafico">
-										<!-- <span th:text="${numtotal}"></span>	 -->
-										<div class="pie_areas"><div id="c3-pie-chart2" ></div>	</div>	
+							<div class="pie_areas">
+								<div id="c3-pie-chart2" ></div>
+								<div> <B>Totales:</B> <span>60</span></div>
+								<div> <B>Seleccionados:</B> <span id="graf2_sele"></span></div>
+							</div>	
 						</div>				
 					</div>
 				</div>
@@ -63,11 +69,10 @@
 						<h4 id="titulo_lista">Jiras Totales (<span th:text="${count}"></span>)</h4>
 					</div>
 					<div class="col-sm-12 col-md-4 texto_derecha " >
-					<a class="btn btn-outline-primary" th:href="@{/seguimiento/fechas}">
+						<a class="btn btn-outline-primary" th:href="@{/seguimiento/fechas}">
 	            			<i class="mdi mdi-pencil">Editar</i>
 	            		</a>
-					</div>
-									
+					</div>									
 				</div>
 				<div class="row">
 					<div class="col-sm-12 col-md-12">

@@ -33,7 +33,6 @@ public class JiraController {
 		model.addAttribute("listaAreas",acuerdoService.listarAreaSolicitante());
 		model.addAttribute("count",lstJiras.size());
 		model.addAttribute("lstJiras",lstJiras);
-		model.addAttribute("numtotal",jiraService.jirasTotales()[5]);
 		return "user_seguimiento";
 	}	
 	//CHART 

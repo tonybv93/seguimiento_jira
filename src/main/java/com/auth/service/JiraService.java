@@ -1,5 +1,7 @@
 package com.auth.service;
 
+import static java.lang.Math.toIntExact;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -553,7 +555,7 @@ public class JiraService implements IJiraService {
 	}
 
 	@Override
-	public int[] jirasTotales() {
+	public int[] jirasNoAtendidosPorArea() {
 		int nliq = 0, nsis = 0, nga = 0, npar = 0, nft = 0, notros = 0; 
 		int[] arreglo = new int[6];	
 		String filtro = "project=\"Requerimientos+de+Sistemas\"+and+issuetype+in+standardIssueTypes()+and+status+not+in+(Anulado,Terminado,Cancelado)+and+issuetype+in(\"Mantenimiento+de+Sistemas\",\"Error+en+Sistema\",Requerimiento)+and+labels+not+in+(GSOCompromiso,GSOCritico,GSOMejoraBD,GSOPrio,BVLCompromiso,BVLCritico,BVLMejoraBD,BVLPrio)&maxResults=1000&fields=key,customfield_10800";	//Primeros 1000 resupuestas
@@ -599,6 +601,19 @@ public class JiraService implements IJiraService {
 		arreglo[4] = nft;
 		arreglo[5] = notros;
 		
+		return arreglo;
+	}
+	
+	@Override
+	public int[] jirasAtendidosPorArea() {
+		int[] arreglo = new int[6];	
+		
+		arreglo[0] = toIntExact(jiraRepo.contar_por_area(23)); 	//LIQUIDACIONES
+		arreglo[1] = toIntExact(jiraRepo.contar_por_area(25)); 	//OPERACIONES TI
+		arreglo[2] = toIntExact(jiraRepo.contar_por_area(22));	//G. ACTIVOS
+		arreglo[3] = toIntExact(jiraRepo.contar_por_area(21));	//PARTICIPANTES
+		arreglo[4] = toIntExact(jiraRepo.contar_por_area(26));	//FACTRACK
+		arreglo[5] = toIntExact(jiraRepo.contar_por_area(24));	//OTROS		
 		return arreglo;
 	}
 }
