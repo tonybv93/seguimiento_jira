@@ -345,7 +345,7 @@ public class JiraService implements IJiraService {
 	        JsoJira ultimoHijo = hijoMasReciente(j);
 	    	if (noEsNuloOVacio(ultimoHijo)) {
 
-	    		if(j.getFields().getIssuetype().equals("Error en Sistema")){
+	    		if(j.getFields().getIssuetype().getName().equals("Error en Sistema")){
 	    			
 	    			if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
 			        	strEstadoNuevo = "En estimación";
@@ -355,7 +355,7 @@ public class JiraService implements IJiraService {
 		    			strEstadoNuevo = "En estimación";
 		    		}	
 	    			
-	    		}else if(j.getFields().getIssuetype().equals("Mantenimiento de Sistemas")){
+	    		}else if(j.getFields().getIssuetype().getName().equals("Mantenimiento de Sistemas")){
 	    			
 	    			if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
 			        	strEstadoNuevo = "En estimación";
@@ -365,7 +365,7 @@ public class JiraService implements IJiraService {
 		    			strEstadoNuevo = "En estimación";
 		    		}	
 	    			
-	    		}else if(j.getFields().getIssuetype().equals("Requerimiento")){
+	    		}else if(j.getFields().getIssuetype().getName().equals("Requerimiento")){
 	    			
 	    			if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
 			        	strEstadoNuevo = "En estimación";
@@ -375,22 +375,15 @@ public class JiraService implements IJiraService {
 			        	strEstadoNuevo = "En preparación de documento";
 		    		}else {
 		    			strEstadoNuevo = "En estimación";
-		    		}	
-	    			
-	    		}
-	    		
-	    	}
-	    	
+		    		}		    			
+	    		}	    		
+	    	}	    	
 	    }else if(strEstadoAnterior.equals("En Aprobación")){
 	         strEstadoNuevo = "En aprobación de horas";
-	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();
-	         
-	    }else if(strEstadoAnterior.equals("Ejecución")){	
-	  
-	    	JsoJira ultimoHijo = hijoMasReciente(j);
-	    	
-	    	if (noEsNuloOVacio(ultimoHijo)) {
-	    		
+	         nuevoResponsable = j.getFields().getAssignee().getDisplayName();	         
+	    }else if(strEstadoAnterior.equals("Ejecución")){		
+	    	JsoJira ultimoHijo = hijoMasReciente(j);	    	
+	    	if (noEsNuloOVacio(ultimoHijo)) {	    		
 	    		if (ultimoHijo.getFields().getIssuetype().getName().equals("Evidencia")) {
 		        	strEstadoNuevo = "Pruebas de Usuario";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Validación Usuario")){
