@@ -31,22 +31,24 @@
 				<div class="card-body">
 				<div class="row">
 					<div class="col-sm-12 col-md-8">
-						<h4 id="titulo_lista">Resumen</h4>
+						<!-- <h4 id="titulo_graf">Resumen de requerimientos</h4>  -->
 					</div>	
 					<div class="col-sm-12 col-md-4 texto_derecha">
 						
 					</div>			
 				</div>
 				<div class="row">
-					<div class="col-sm-12 col-md-3">
+					<div class="col-sm-12 col-md-6">
+						<div class="jiras_grafico">
+										<!-- <span th:text="${numtotal}"></span>	 -->
+										<div class="pie_areas"><div id="c3-pie-chart1" ></div>	</div>	
+						</div>				
 					</div>
 					<div class="col-sm-12 col-md-6">
 						<div class="jiras_grafico">
 										<!-- <span th:text="${numtotal}"></span>	 -->
-										<div class="pie_areas"><div id="c3-pie-chart" ></div>	</div>	
-						</div>						
-					</div>
-					<div class="col-sm-12 col-md-3">											
+										<div class="pie_areas"><div id="c3-pie-chart2" ></div>	</div>	
+						</div>				
 					</div>
 				</div>
 				</div>
@@ -70,12 +72,37 @@
 				<div class="row">
 					<div class="col-sm-12 col-md-12">
 						<div class="box_leyenda">
-							<ul class="leyenda d-flex">													
-								<li><i class="mdi mdi-tag et_comp"></i> <span onclick="filtrar_etiqueta(this)" class="link_etiqueta_com">Compromiso</span> </li>						
-								<li><i class="mdi mdi-tag et_prio"></i> <span onclick="filtrar_etiqueta(this)" class="link_etiqueta_pri">Prioritario</span> </li>
-								<li><i class="mdi mdi-tag et_mbd"></i> <span onclick="filtrar_etiqueta(this)" class="link_etiqueta_mdb"> Mejora BD</span></li>
-								<li><i class="mdi mdi-tag et_cri"></i> <span onclick="filtrar_etiqueta(this)" class="link_etiqueta_cri">Crítico</span> </li>	
-								<li><i class="mdi mdi-tag et_ate"></i> <span onclick="filtrar_etiqueta(this)" class="link_etiqueta_reg">Regular</span> </li>						
+							<ul class="leyenda d-flex">		
+								<li><i class="mdi mdi-tag et_comp"></i>
+									<span id="spanPrue" onclick="filtrar_etiqueta(this)" class="link_etiqueta_com">
+										<span data-toggle="tooltip" th:title="'Jiras de compromiso marcados con las etiquetas: (CAVALI) GSOCompromiso, (BVL) BVLCompromiso'" >Compromiso</span>
+									</span> 
+								</li>
+								
+								<li><i class="mdi mdi-tag et_prio"></i>
+									<span onclick="filtrar_etiqueta(this)" class="link_etiqueta_pri">
+										<span data-toggle="tooltip" th:title="'Jiras con prioridad alta marcados con las etiquetas: (CAVALI) GSOPrio, (BVL) BVLPrio'" >Prioritario</span>
+									</span>
+								</li>
+							
+								<li><i class="mdi mdi-tag et_mbd"></i>
+									<span onclick="filtrar_etiqueta(this)" class="link_etiqueta_mdb"> 
+										<span data-toggle="tooltip" th:title="'Jiras de OPERACIONES TI marcados con las etiquetas: (CAVALI) GSOMejoraBD, (BVl) BVLMejoraBD'" >Mejora BD</span>
+									</span>
+								</li>
+							
+								<li><i class="mdi mdi-tag et_cri"></i> 
+									<span onclick="filtrar_etiqueta(this)" class="link_etiqueta_cri">
+										<span data-toggle="tooltip" th:title="'Jiras críticos marcados con las etiquetas:  (CAVALI) GSOCritico, (BVL) BVLCritico'" >Crítico</span>
+									</span> 
+								</li>
+							
+								<li><i class="mdi mdi-tag et_ate"></i> 
+									<span onclick="filtrar_etiqueta(this)" class="link_etiqueta_reg">
+										<span data-toggle="tooltip" th:title="'Jiras con baja prioridad marcados con las etiquetas: (CAVALI) GSORegular, (BVL) BVLRegular'" >Regular</span>
+									</span> 
+								</li>
+								
 							</ul>								
 						</div>
 					</div>

@@ -34,7 +34,7 @@ public class JiraController {
 		model.addAttribute("count",lstJiras.size());
 		model.addAttribute("lstJiras",lstJiras);
 		model.addAttribute("numtotal",jiraService.jirasTotales()[5]);
-		return "jiralista";
+		return "user_seguimiento";
 	}	
 	//CHART 
 	@GetMapping("/cavalichart")
@@ -48,7 +48,7 @@ public class JiraController {
 			model.addAttribute("listaAreas",acuerdoService.listarAreaSolicitante());
 			model.addAttribute("count",lstJiras.size());
 			model.addAttribute("lstJiras",lstJiras);
-			return "jiralista";
+			return "user_seguimiento";
 		}
 	//LISTAR JIRAS CAVALI
 	@GetMapping("/fechas")
@@ -57,6 +57,6 @@ public class JiraController {
 		model.addAttribute("listaAreas",acuerdoService.listarAreaSolicitante());
 		model.addAttribute("count",lstJiras.size());
 		model.addAttribute("lstJiras",lstJiras);
-		return "adm_jiralista";
+		return "adm_jirasUpdate";
 	}
 }

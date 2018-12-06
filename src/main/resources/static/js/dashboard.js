@@ -84,7 +84,7 @@ function filtrar_etiqueta(etiqueta){
 	
 	input = document.getElementById("filtro");
 	filtroArea = input.options[input.selectedIndex].innerHTML;	
-	filtro = etiqueta.innerHTML;
+	filtro = etiqueta.children[0].innerHTML;
 	var titulo = document.getElementById("titulo_lista");
 	var txt_titu = filtroArea + ' - ' + filtro;
 	

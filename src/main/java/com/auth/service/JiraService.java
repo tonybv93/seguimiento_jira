@@ -303,7 +303,8 @@ public class JiraService implements IJiraService {
 		
 		//FACTRACK
 		else if (j.getFields().getCustomfield_10800().getValue().equals("Facturas Negociables") ||
-				j.getFields().getCustomfield_10800().getValue().equals("GERENCIA DE NEGOCIOS TRANSACCIONALES")) 
+				j.getFields().getCustomfield_10800().getValue().equals("GERENCIA DE NEGOCIOS TRANSACCIONALES") ||
+				j.getFields().getCustomfield_10800().getValue().equals("SERVICIOS TRANSACCIONALES")) 
 			j.getFields().getCustomfield_10800().setValue("FT");
 		else 
 			j.getFields().getCustomfield_10800().setValue("Otros");		
@@ -317,6 +318,10 @@ public class JiraService implements IJiraService {
 		String strEstadoNuevo = "";		
 		String nuevoResponsable="";
 					
+		if(j.getKey().equals("RSIS18-9954")){
+			System.out.println("hola");
+		}
+		
 		if(strEstadoAnterior.equals("Creado")){
 	        strEstadoNuevo = "Pendiente de enviar a sistemas";
 	        nuevoResponsable = j.getFields().getAssignee().getDisplayName();
@@ -366,6 +371,8 @@ public class JiraService implements IJiraService {
 			        	strEstadoNuevo = "En estimación";
 		    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Alcance")){
 			        	strEstadoNuevo = "Diagnostico";
+		    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Análisis")){
+			        	strEstadoNuevo = "En preparación de documento";
 		    		}else {
 		    			strEstadoNuevo = "En estimación";
 		    		}	
@@ -401,6 +408,19 @@ public class JiraService implements IJiraService {
 	    			
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Desarrollo")){
 		        	strEstadoNuevo = "En construcción";
+		        	
+		        	if (ultimoHijo.getFields().getStatus().getName().equals("Integración")) {
+	    				strEstadoNuevo = "Integrando código";
+	    			} else if (ultimoHijo.getFields().getStatus().getName().equals("Certificar ")) {
+	    				strEstadoNuevo = "Pruebas QA";
+	    			} else if (ultimoHijo.getFields().getStatus().getName().equals("Despliegue")) {
+	    				strEstadoNuevo = "Para pase a producción";
+	    			} else if (ultimoHijo.getFields().getStatus().getName().equals("En Revisión")) {
+	    				strEstadoNuevo = "Pendiente de pase a prod";
+	    			} else if (ultimoHijo.getFields().getStatus().getName().equals("Terminado")) {
+	    				strEstadoNuevo = "Culminó el pase";
+	    			}
+		        	
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Análisis")){
 		        	strEstadoNuevo = "En análisis";
 	    		}else if (ultimoHijo.getFields().getIssuetype().getName().equals("Estimación")){
