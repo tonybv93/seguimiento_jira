@@ -427,9 +427,14 @@
 }
 .jiras_grafico{	
 	margin: auto;
-	height: 350px;
+	height: 320px;
 }
 .c3 svg{
 	display:block;
 	margin: auto;
+}
+.bajo_pie{
+	width: 100%;
+	text-align: center;
+	font-size: 14px;
 }
