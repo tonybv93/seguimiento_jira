@@ -438,3 +438,93 @@
 	text-align: center;
 	font-size: 14px;
 }
+/* ------------------ ACTA ----------------------------*/
+.cabecera_acta{
+	width: 100%;
+	height: 120px;
+	text-align: center;
+}
+.logo_acta{
+	height:100%;
+	max-height: 80px;
+}
+.linea_div{
+	width: 95%;
+	border: solid 1px #eee;
+	margin-bottom: 20px;
+}
+.grupo_datos{
+	padding: 0 30px;
+	margin-bottom: 20px;
+}
+.contenedor_tabla_detalle{
+	width: 90%;
+	margin: 20px auto;
+	border: solid 1px #eee;
+	background-color: #fff;
+}
+.grupo_enmarcado{
+	background-color: #fafafa;
+	border: solid 1px #e0e0e0;
+	padding: 30px;
+}
+.caja_acciones{
+	width: 100%;
+	text-align: center;
+}
+.lista_acta{
+	list-style-type: none;
+	padding: 0;
+}
+.lista_acta li, .marco{
+	border: solid 1px #eee;
+	padding: 5px 20px;
+}
+.col_acta_6{
+	width: 50%;
+}
+.col_acta_12{
+	width: 100%;
+}
+.comentario{
+	width: 100%;	
+	border-bottom: solid 1px #e0e0e0;
+}
+.comentario_header{
+	padding: 2px 20px;
+}
+.comentario_contenido{
+	padding: 0px 22px;
+	margin-bottom: 10px;
+}
+.comentario_fecha{
+	color: #aaa;	
+}
+.comentario_usuario{
+	color: #646464;
+	font-weight: bold;
+	font-size: 14px;
+	margin-right: 10px;
+}
+.caja_comentarios{
+	width: 90%;
+	margin: auto;
+	margin-bottom: 30px;
+	font-size: 13px;
+}
+textarea
+{
+  width:100%;
+}
+.nuevo_comentario{
+	background-color: #eee;
+	border: solid 1px #e0e0e0;
+}
+.btn_comentar{
+	margin: 3px;
+	background-color: #fff;
+}
+.text_area_comentario{
+	border: #e0e0e0;
+	padding: 5px 6px;
+}

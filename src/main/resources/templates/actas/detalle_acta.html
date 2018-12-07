@@ -32,7 +32,19 @@
       	<div class="main-panel">
           <div class="content-wrapper">
 <!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
-			
+
+            <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                  	<h4>Acciones</h4> 
+                  	<div class="caja_acciones">
+                  		<button class="btn btn-primary texto_centro">Aprobar</button> 
+                  		<button class="btn btn-primary texto_centro">Rechazar</button> 
+                  	</div>
+                  </div>
+                </div>  
+            </div>
+<!----------------------------------------------- CARD 1  --------------------------------------------------->     
 			 <div class="col-12 grid-margin">
                 <div class="card">
                   <div class="card-body">    
@@ -62,105 +74,35 @@
                       <h4>Datos de Servicio</h4>      
                       <div class="grupo_datos">         
 	                      <div class="row">                      	
-	                        <div class="col-md-6">
-	                          <div class="form-group row">
-	                            <label class="col-sm-3 col-form-label">Empresa cliente:</label>
-	                            <div class="col-sm-9">
-	                              <select class="form-control">
-	                                <option>Bolsa de Valores de Lima</option>
-	                              </select>
-	                            </div>
-	                          </div>
+	                        <div class="col_acta_6">
+	                        	<ul class="lista_acta">
+	                        		<li><b>Empresa cliente: </b>Bolsa de Valores de Lima</li>
+	                        		<li><b>Periodo: </b> Ago/18 - Dic/18</li>
+	                        		
+	                        	</ul>
 	                        </div>
-	                        <div class="col-md-6">
-	                          <div class="form-group row">
-	                            <label class="col-sm-3 col-form-label">Tipo de Acta:</label>
-	                            <div class="col-sm-9">
-	                              <select class="form-control">
-	                                <option>Contrato de locación de servicios</option>
-	                              </select>
-	                            </div>
-	                          </div>
+	                        <div class="col_acta_6">
+	                        	<ul class="lista_acta">
+	                        		<li><b>Tipo de acta: </b> Contrato de locación de servicios</li>
+	                        		<li><b>Total de horas: </b> 25 H</li>
+	                        		
+	                        	</ul>
 	                        </div>
-	                      </div>                   
-	                      <div class="row">                      	
-	                        <div class="col-md-6">
-	                          <div class="form-group row">
-	                            <label class="col-sm-3 col-form-label">Periodo:</label>
-	                            <div class="col-sm-9">
-	                              <select class="form-control">
-	                                <option>Ago/18 - Dic/18</option>
-	                              </select>
-	                            </div>
-	                          </div>
-	                        </div>
-	                        <div class="col-md-6">
-	                          <div class="form-group row">
-	                            <label class="col-sm-3 col-form-label">Total Horas:</label>
-		                            <div class="col-sm-9">
-		                              <input class="form-control" type="text">
-		                            </div>
-	                          </div>
-	                        </div>
-	                      </div>
-	                       <div class="row">
-	                        <div class="col-md-12">
-	                          <div class="form-group row">
-	                            <label class="col-sm-2 col-form-label">Detalles del servicio:</label>
-	                            <div class="col-sm-9">
-	                              <textarea onblur="clear_alert('alet-obser')" class="form-control" id="exampleTextarea1" rows="2" required="required"></textarea>
-	                          	  <div id="alet-obser" class="alerta_forms"></div>
-	                          </div>
-	                        </div>
-	                      </div>
-	                      </div>
+	                      </div>  
+	                      <div class="col_acta_12 marco">
+	                      	<b>Descripción del servicio:</b>
+	                      	<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+	                      	Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
+	                      	galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also 
+	                      	the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with 
+	                      	the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing 
+	                      	software like Aldus PageMaker including versions of Lorem Ipsum</p>
+	                      </div>                 
 	                  </div>   
 	                  <div class="linea_div"></div> 
 <!----------------------------------------------------------------------- DETALLE ACTA  ------------------------------------------------------->
-                      <h4>Detalle de acta</h4>   
-                      <div class="grupo_datos grupo_enmarcado">                   
-                      <div class="row">                      	
-                        <div class="col-md-6">
-                          <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Requerimiento:</label>
-                            <div class="col-sm-9">
-                              <select class="form-control">
-                                <option></option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Horas/Hombre:</label>
-                            <div class="col-sm-9">
-                              <input class="form-control" type="text">
-                            </div>
-                          </div>
-                        </div>
-                      </div>                          
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Responsable:</label>
-                            <div class="col-sm-9">
-                              <select id="responsable" class="form-control">
-                                <option th:each="usuario:${listaResponsables}" th:value="${usuario.id}" th:text="${usuario.username}"></option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                         <div class="col-md-6">
-                          <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Tarifa:</label>
-	                            <div class="col-sm-9">
-	                              <input class="form-control" type="text">
-	                            </div>                           
-                          </div>
-                        </div>
-                      </div>                     
-                      <button class="btn btn-success mr-2">Agregar</button>
-                      <button class="btn btn-secondary btn-fw">Limpiar</button>
+                      <h4>Detalle de acta</h4>              
+
                       <div class="row">
                       	<div class="contenedor_tabla_detalle">
                       		<table class="table table-striped table-hover">
@@ -206,13 +148,63 @@
 	                      		</tbody>
 	                      	</table>                      	
                       	</div>                      	
-                      </div>
-                    </div>  
-                     <button class="btn btn-primary texto_derecha">Enviar</button>                  
+                      </div>           
                   </div>
                 </div>
 <!---------------------------------------------^ fin card 1 ^---------------------------------------------->                           
    			</div>
+<!----------------------------------------------- CARD 2  --------------------------------------------------->     
+            <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                  	<h4>Comentarios</h4> 
+                  	<div class="caja_comentarios">
+	                  	<div class="comentario">
+	                  		<div class="comentario_header">
+	                  			<span class="comentario_usuario">Nombre Usuario</span>
+	                  			<span class="comentario_fecha">12/20/2018</span>
+	                  		</div>
+	                  		<div class="comentario_contenido">
+	                  			Este es un comentario asdasd ads asd a
+	                  		</div>                 		
+	                  	</div>
+	                  	<div class="comentario">
+	                  		<div class="comentario_header">
+	                  			<span class="comentario_usuario">Nombre Usuario</span>
+	                  			<span class="comentario_fecha">12/20/2018</span>
+	                  		</div>
+	                  		<div class="comentario_contenido">
+	                  			Este es un comentario asdasd ads asd a
+	                  		</div>                 		
+	                  	</div>	
+	                  	<div class="comentario">
+	                  		<div class="comentario_header">
+	                  			<span class="comentario_usuario">Nombre Usuario</span>
+	                  			<span class="comentario_fecha">12/20/2018</span>
+	                  		</div>
+	                  		<div class="comentario_contenido">
+	                  			Este es un comentario asdasd ads asd a
+	                  		</div>                 		
+	                  	</div>	
+                  	</div>
+                  	
+                  	<div class="caja_comentarios">                  	
+                  		Nuevo comentario:
+                  		<div class="nuevo_comentario">
+                  			<textarea class="text_area_comentario"></textarea>
+                  			<button type="button" class="btn btn-secondary btn-fw btn_comentar">
+                            <i class="mdi mdi-file-document"></i>Comentar</button>
+                  		</div>
+                  		
+                  	</div>
+                  	
+                  	
+                  	<div>
+                  		
+                  	</div>
+                  </div>
+                </div>  
+            </div>
 <!------------------------------------------------------------------------------------------------------------>
         </div> 
       </div>

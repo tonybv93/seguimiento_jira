@@ -15,33 +15,26 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Estado_Acta {
+public class Acta_Estado {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "estado_acta_seq")
 	@SequenceGenerator(sequenceName="estado_acta_seq", allocationSize=1, name="estado_acta_seq")
 	private Integer id;
 	
-	private String estado;		
+	private String descripcion;		
 	private String css_clase;
-	private boolean flagactivo;
 	
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}	
+	public String getDescripcion() {
+		return descripcion;
 	}
-	public String getEstado() {
-		return estado;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-	public boolean isFlagactivo() {
-		return flagactivo;
-	}
-	public void setFlagactivo(boolean flagactivo) {
-		this.flagactivo = flagactivo;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	public String getCss_clase() {
 		return css_clase;
@@ -49,7 +42,7 @@ public class Estado_Acta {
 	public void setCss_clase(String css_clase) {
 		this.css_clase = css_clase;
 	}
-	public Estado_Acta() {
+	public Acta_Estado() {
 
 	}
 }

@@ -2,7 +2,7 @@
 
 	$.ajax({
 	        url : '/rest/pie/cavali/atencion',  	        
-	        method : 'post',
+	        method : 'get',
 	        success : function(respuesta){
 	        	var total1 = document.getElementById('graf1_tot');
 				var tot = 0;
@@ -63,7 +63,7 @@
 	
 	$.ajax({
         url : '/rest/pie/cavali/noatencion',  	        
-        method : 'post',
+        method : 'get',
         success : function(respuesta){
         	var total2 = document.getElementById('graf2_tot');
 			var tot = 0;

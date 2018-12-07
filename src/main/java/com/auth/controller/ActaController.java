@@ -12,5 +12,14 @@ public class ActaController {
 	public String  actualizar(Model model) {	
 		return "actas/registro_acta";
 	}
+	
+	@GetMapping("/{id}")
+	public String  detalle() {	
+		return "actas/detalle_acta";
+	}
 
+	@GetMapping("/lista")
+	public String listarActas() {
+		return "actas/lista_acta";
+	}
 }

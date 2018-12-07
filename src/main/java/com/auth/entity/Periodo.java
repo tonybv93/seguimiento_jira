@@ -23,6 +23,7 @@ public class Periodo {
 	private String codigo;
 	private Date inicio;
 	private Date fin;
+	
 	public Integer getId() {
 		return id;
 	}

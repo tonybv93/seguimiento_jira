@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Comentario {
+public class Acta_Comentario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comentario_seq")
 	@SequenceGenerator(sequenceName="comentario_seq", allocationSize=1, name="comentario_seq")
@@ -38,7 +38,7 @@ public class Comentario {
 	@JoinColumn(name="id_usuario")
 	private Usuario usuario;
 
-	public Comentario() {
+	public Acta_Comentario() {
 
 	}
 

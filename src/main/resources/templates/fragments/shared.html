@@ -160,6 +160,26 @@
                 </ul>
               </div>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="collapse" href="#sidebar-layouts" aria-expanded="false" aria-controls="sidebar-layouts">
+                <i class="menu-icon mdi mdi-texture"></i>
+                <span class="menu-title">Actas</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="sidebar-layouts">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item">
+                    <a class="nav-link" th:href="@{/actas/nueva}">Registrar acta</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" th:href="@{/actas/1}">Detalle acta</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" th:href="@{/actas/lista}">Lista actas</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
             <li class="nav-link">
                 <a class="btn btn-danger btn-block texto_rojo" th:href="@{/logout}">
                   <i class="mdi mdi-logout"></i>Cerrar sesión

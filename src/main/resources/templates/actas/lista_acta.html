@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <link rel="stylesheet" th:href="@{/css/select2.min.css}">
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> 
+  </head>
+
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+			
+			 <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">    
+ 
+<!----------------------------------------------------------------------- DETALLE ACTA  ------------------------------------------------------->
+                      <h4>Lista de actas</h4>                                        
+                      <div class="row">
+                      	<div class="contenedor_tabla_detalle">
+                      		<table class="table table-striped table-hover">
+	                      		<thead>
+	                      			<tr>
+	                      				<th>Código</th>
+	                      				<th>Tipo</th>
+	                      				<th>Empresa</th>
+	                      				<th>Fábrica</th>
+	                      				<th>Descripción</th>
+	                      				<th>Horas</th>
+	                      				<th>Monto</th>	                      				
+	                      			</tr>
+	                      		</thead>
+	                      		<tbody>
+	                      			<tr>
+	                      				<td>1</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>S</td>
+	                      				<td>1.0</td>
+	                      				<td>1.0</td>
+	                      			</tr>
+	                      			<tr>
+	                      				<td>2</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>S</td>
+	                      				<td>1.0</td>
+	                      				<td>1.0</td>
+	                      			</tr>
+	                      			<tr>
+	                      				<td>3</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>S</td>
+	                      				<td>1.0</td>
+	                      				<td>1.0</td>
+	                      			</tr>
+	                      		</tbody>
+	                      	</table>                      	
+                      	</div>                      	
+                      </div>                
+                  </div>
+                </div>                      
+   			</div>
+<!------------------------------------------------------------------------------------------------------------>
+        </div> 
+      </div>
+   	</div>
+ 	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>
+    
+     <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
+     
+    <script th:src="@{/js/select2.min.js}"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/acuerdos.js}"></script>
+</body>
+</html>
