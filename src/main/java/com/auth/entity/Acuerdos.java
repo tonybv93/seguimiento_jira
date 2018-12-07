@@ -24,8 +24,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Acuerdos {
 	@Id
 	@Column(name="ID")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GSOACUERDOS_SEQ")
-	@SequenceGenerator(sequenceName="gsoacuerdos_seq", allocationSize=1, name="GSOACUERDOS_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ACUERDOS_SEQ")
+	@SequenceGenerator(sequenceName="acuerdos_seq", allocationSize=1, name="ACUERDOS_SEQ")
 	private Integer id;
 	
 	@Column(name="id_jira")
@@ -38,7 +38,7 @@ public class Acuerdos {
 	private String observacion;	
 	
 	@Column(name="flagterminado")
-	boolean flagterminado;
+	private boolean flagterminado;
 
 	@Column(name="fecha_creacion")
 	private Date fecha_creacion;

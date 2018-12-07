@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <link rel="stylesheet" th:href="@{/css/select2.min.css}">
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> 
+  </head>
+
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+			
+			 <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4>Registrar nuevo acuerdo</h4><br>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Tipo</label>
+                            <div class="col-sm-9">
+                              <select class="form-control" id="id_categoria">
+                                <option th:each="tipo:${listaTipos}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6" id="area_selector" style="display: none;">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Area:</label>
+                            <div class="col-sm-9">                              
+                              <select class="form-control" id="id_input2" disabled="disabled">                              	
+                              	<option th:each="area:${listaAreas}" th:value="${area.id}" th:text="${area.nombre}"></option>
+                              </select>
+                          	</div>
+                          </div>
+                        </div>
+                        <div class="col-md-6" id="jira_selector">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Jira:</label>
+                            <div class="col-sm-9">                              
+                              <select class="form-control js-example-basic-single" id="id_input">
+                              	<option th:each="jira:${listaJiras}" th:value="${jira.id}" th:text="${jira.jira} + ' ' + ${jira.resumen}"></option>
+                              </select>
+                          	</div>
+                          </div>
+                        </div>                        
+                      </div>                      
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Responsable:</label>
+                            <div class="col-sm-9">
+                              <select id="responsable" class="form-control">
+                                <option th:each="usuario:${listaResponsables}" th:value="${usuario.id}" th:text="${usuario.username}"></option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                         <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Fecha fin:</label>
+                            <div class="col-sm-9">
+                              <input onblur="clear_alert('alet-fecha')" type="date" id="fecha_entrega" class="form-control" placeholder="dd/mm/yyyy" required="required" /> 
+                              <div id="alet-fecha" class="alerta_forms"></div>
+                              </div>
+                              
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Detalles del acuerdo:</label>
+                            <div class="col-sm-9">
+                              <textarea onblur="clear_alert('alet-obser')" class="form-control" id="exampleTextarea1" rows="2" required="required"></textarea>
+                          	  <div id="alet-obser" class="alerta_forms"></div>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                      <button onclick="agregar_acuerdo()" class="btn btn-success mr-2">Guardar</button>
+                                        
+                  </div>
+                </div>
+              </div> 
+<!------------------------------------------------------------------------------------------------------------>                          
+   			</div>
+   		</div>
+   	</div>
+ 	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>
+    
+     <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
+     
+    <script th:src="@{/js/select2.min.js}"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/acuerdos.js}"></script>
+</body>
+</html>
