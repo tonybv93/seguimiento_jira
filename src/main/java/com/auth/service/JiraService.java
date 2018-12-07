@@ -320,7 +320,7 @@ public class JiraService implements IJiraService {
 		String strEstadoNuevo = "";		
 		String nuevoResponsable="";
 					
-		if(j.getKey().equals("RSIS18-9954")){
+		if(j.getKey().equals("RSIS18-5127")){
 			System.out.println("hola");
 		}
 		
