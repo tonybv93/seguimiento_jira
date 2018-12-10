@@ -41,9 +41,9 @@
 					<div class="col-sm-12 col-md-6">
 						<div class="jiras_grafico">
 							<div class="pie_areas">
-								<div> <B>Total de requerimientos:</B> <span>60</span></div> <br/>
 								<div id="c3-pie-chart1" ></div>
-								<!-- <div> <B>Cantidad de requerimientos:</B> <span id="graf1_sele"></span></div> -->
+								<div class="bajo_pie1"> <B>Totales:</B> <span  id="graf1_tot"></span></div>
+								<div class="bajo_pie1"> <B>Seleccionados:</B> <span id="graf1_sele"></span></div>
 							</div>	
 						</div>				
 					</div>
@@ -51,8 +51,8 @@
 						<div class="jiras_grafico">
 							<div class="pie_areas">
 								<div id="c3-pie-chart2" ></div>
-								<div class="bajo_pie"> <B>Totales:</B> <span  id="graf2_tot"></span></div>
-								<div class="bajo_pie"> <B>Seleccionados:</B> <span id="graf2_sele"></span></div>
+								<div class="bajo_pie2"> <B>Totales:</B> <span  id="graf2_tot"></span></div>
+								<div class="bajo_pie2"> <B>Seleccionados:</B> <span id="graf2_sele"></span></div>
 							</div>	
 						</div>				
 					</div>
@@ -232,8 +232,7 @@
     <script th:src="@{/js/shared/tooltips.js}"></script>
     <script th:src="@{/js/shared/popover.js}"></script>
     <script th:src="@{/js/dashboard.js}"></script>
-    <script th:src="@{/js/shared/chart.js}"></script>
-    
+    <script th:src="@{/js/shared/chart.js}"></script>    
     <script th:src="@{/js/shared/c3.js}"></script>
     <script th:inline="javascript">
     
