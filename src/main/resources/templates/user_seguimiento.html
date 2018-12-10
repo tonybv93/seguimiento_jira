@@ -42,8 +42,8 @@
 						<div class="jiras_grafico">
 							<div class="pie_areas">
 								<div id="c3-pie-chart1" ></div>
-								<div class="bajo_pie1"> <B>Totales:</B> <span  id="graf1_tot"></span></div>
-								<div class="bajo_pie1"> <B>Seleccionados:</B> <span id="graf1_sele"></span></div>
+								<div class="bajo_pie"> <B>Totales:</B> <span  id="graf1_tot"></span></div>
+								<div class="bajo_pie"> <B>Seleccionados:</B> <span id="graf1_sele"></span></div>
 							</div>	
 						</div>				
 					</div>
@@ -51,8 +51,8 @@
 						<div class="jiras_grafico">
 							<div class="pie_areas">
 								<div id="c3-pie-chart2" ></div>
-								<div class="bajo_pie2"> <B>Totales:</B> <span  id="graf2_tot"></span></div>
-								<div class="bajo_pie2"> <B>Seleccionados:</B> <span id="graf2_sele"></span></div>
+								<div class="bajo_pie"> <B>Totales:</B> <span  id="graf2_tot"></span></div>
+								<div class="bajo_pie"> <B>Seleccionados:</B> <span id="graf2_sele"></span></div>
 							</div>	
 						</div>				
 					</div>
@@ -233,9 +233,110 @@
     <script th:src="@{/js/shared/popover.js}"></script>
     <script th:src="@{/js/dashboard.js}"></script>
     <script th:src="@{/js/shared/chart.js}"></script>    
-    <script th:src="@{/js/shared/c3.js}"></script>
     <script th:inline="javascript">
     
+    var arreglo_atendido = /*[[${arreglo_atendidos}]]*/ 'default';
+    console.log(arreglo_atendido);
+    var arreglo_no_atendido = /*[[${arreglo_noatendidos}]]*/ 'default';
+    console.log(arreglo_no_atendido);
+    
+    var total1 = document.getElementById('graf1_tot');
+	var tot = 0;
+	for (i = 0; i < 6; i++) { 
+		  tot += arreglo_atendido[i];
+		}
+	total1.innerHTML = tot;
+    var c3PieChart = c3.generate({
+		bindto : '#c3-pie-chart1',
+		data : {
+			// iris data from R
+			columns : 
+				[ [ 'LIQ', arreglo_atendido[0] ], 
+				[ 'PAR', arreglo_atendido[3] ], 
+				[ 'GA', arreglo_atendido[2] ],
+				[ 'FT', arreglo_atendido[4] ], 
+				[ 'OTI', arreglo_atendido[1] ], 
+				[ 'Otros',arreglo_atendido[5] ], ],
+			type : 'pie',
+			onclick : function(d, i) {
+				var area_seleaccionada = document.getElementById('graf1_sele');
+				area_seleaccionada.innerHTML = d.value  + ' - ' + d.id;
+			},
+			onmouseover : function(d, i) {
+				//console.log("onmouseover", d, i);
+			},
+			onmouseout : function(d, i) {
+				//console.log("onmouseout", d, i);
+			}
+		},
+		size : {
+			height : 280,
+			width : 400
+		},
+		title : {
+			text : "Distribución de Jiras en atención por área"
+		},
+		color : {
+			pattern : [ '#ffaf00', '#2196f3', '#19d895', '#ff6258', '#c32c92',
+					'#5abcf1' ]
+		},
+		padding : {
+			top : 0,
+			right : 0,
+			bottom : 30,
+			left : 0,
+		}
+	});
+    
+    var total2 = document.getElementById('graf2_tot');
+	var tot = 0;
+	for (i = 0; i < 6; i++) { 
+		  tot += arreglo_no_atendido[i];
+		}
+	total2.innerHTML = tot;
+	var c3PieChart = c3.generate({
+		bindto : '#c3-pie-chart2',
+		data : {
+			// iris data from R
+			columns : 
+				[ [ 'LIQ', arreglo_no_atendido[0] ], 
+				[ 'PAR', arreglo_no_atendido[3] ], 
+				[ 'GA', arreglo_no_atendido[2] ],
+				[ 'FT', arreglo_no_atendido[4] ], 
+				[ 'OTI', arreglo_no_atendido[1] ], 
+				[ 'Otros',arreglo_no_atendido[5] ], ],        				
+			type : 'donut',
+			onclick : function(d, i) {
+				var area_seleaccionada = document.getElementById('graf2_sele');
+				area_seleaccionada.innerHTML = d.value + ' - ' + d.id;
+				//console.log("onclick", d, i);
+			},
+			onmouseover : function(d, i) {
+				//console.log("onmouseover", d, i);
+			},
+			onmouseout : function(d, i) {
+				//console.log("onmouseout", d, i);
+			}
+		},
+
+		size : {
+			height : 280,
+			width : 400
+		},
+		title : {
+			text : "Distribución de Jiras NO atendidos por área"
+		},
+		color : {
+			pattern : [ '#ffaf00', '#2196f3', '#19d895', '#ff6258', '#c32c92',
+					'#5abcf1' ]
+		},
+		padding : {
+			top : 0,
+			right : 0,
+			bottom : 30,
+			left : 0,
+		}
+	});
 		
     </script>
 </body>

@@ -47,12 +47,11 @@ public class JRestController {
 	}
 	
 	// Buscar JIRAS
-	@GetMapping("/jira/{id}")
+	@GetMapping("/jira/{jira}")
 	@ResponseBody
-	public Jira buscarJira(@PathVariable(name="id") Integer id){
-		String str = "RSIS18-" + id;
-		Jira jira = jiraService.buscarPorJira(str);
-		return jira;
+	public Jira buscarJira(@PathVariable(name="jira") String jira){
+		Jira rjira = jiraService.buscarPorJira(jira);
+		return rjira;
 	}
 	
 	// ACTUALIZAR FECHAS JIRA

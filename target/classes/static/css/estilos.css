@@ -528,3 +528,27 @@ textarea
 	border: #e0e0e0;
 	padding: 5px 6px;
 }
+.card_header{
+	background: linear-gradient(120deg, #556cdc, #128bfc, #18bef1);
+	border-radius: 7px; 
+	color: #fff;
+	padding:10px 20px;
+	margin-bottom: -10px;
+	width: 250px;
+}
+.grafico_horas{
+	widows: 100%;
+	min-height: 200px;
+	margin-bottom: 10px;
+}
+.fecha_plomo{
+	color:#747576;
+	background-color: rgba(162, 177, 188, 0.2);
+	border-radius: 3px;
+	font-size: 13px;
+	padding: 5px 10px;	
+}
+.botones_reg_horas{
+	text-align: center;
+	padding-top: 7px;
+}

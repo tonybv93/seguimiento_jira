@@ -34,6 +34,7 @@ public class JiraController {
 		model.addAttribute("count",lstJiras.size());
 		model.addAttribute("lstJiras",lstJiras);
 		model.addAttribute("arreglo_atendidos",jiraService.jirasAtendidosPorArea());
+		model.addAttribute("arreglo_noatendidos",jiraService.jirasNoAtendidosPorArea());
 		return "user_seguimiento";
 	}	
 	//CHART 
@@ -48,6 +49,8 @@ public class JiraController {
 			model.addAttribute("listaAreas",acuerdoService.listarAreaSolicitante());
 			model.addAttribute("count",lstJiras.size());
 			model.addAttribute("lstJiras",lstJiras);
+			model.addAttribute("arreglo_atendidos",jiraService.jirasAtendidosPorArea());
+			model.addAttribute("arreglo_noatendidos",jiraService.jirasNoAtendidosPorArea());
 			return "user_seguimiento";
 		}
 	//LISTAR JIRAS CAVALI
