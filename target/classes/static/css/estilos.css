@@ -552,3 +552,13 @@ textarea
 	text-align: center;
 	padding-top: 7px;
 }
+.resumen_horas_tatales{
+	width: 90%;
+	margin: auto;
+	font-size: 14px;
+	text-align: right;
+	line-height: 16px;
+}
+.resumen_horas_tatales span{
+	margin-left: 5px;
+}

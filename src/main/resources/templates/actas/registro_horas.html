@@ -31,20 +31,15 @@
       	<nav th:replace="fragments/shared :: sidebar"></nav>
       	<div class="main-panel">
           <div class="content-wrapper">
-<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+
+<!-----------------------------------------------------------------------REGISTRO  ------------------------------------------------------->
 			
 			 <div class="col-12 grid-margin">
 			 <div class="card_header">
 			 	<h4>Registro de horas</h4>  
 			 </div> 
-                <div class="card">
-                
-                  <div class="card-body">    
-<!-----------------------------------------------------------------------CABECERA  ------------------------------------------------------->               
-
-	         
-<!----------------------------------------------------------------------- DETALLE ACTA  ------------------------------------------------------->
-                      
+                <div class="card">                
+                  <div class="card-body">             
                       <div class="grupo_datos grupo_enmarcado">      
                       <div class="row">
                        <div class="col-md-8">
@@ -116,17 +111,17 @@
 	                      				<th>Reuqerimiento</th>
 	                      				<th>Resumen</th>
 	                      				<th>Horas aprobadas</th>
-	                      				<th>Horas restantes</th>
 	                      				<th>Perioto</th>
 	                      				<th>Fecha</th>
 	                      				<th>H/H</th>	                      				
 	                      				<th>Tarifa</th>
 	                      				<th>Total sin IGV.</th>
+	                      				<th>Quitar</th>
 	                      			</tr>
 	                      		</thead>
 	                      		<tbody id="detalle_registros">
 	                      		</tbody>
-	                      	</table>                      	
+	                      	</table>   	                      	                 	
                       	</div>                      	
                       </div> 
                     </div>                      
@@ -135,9 +130,20 @@
                                      
                   </div>
                 </div>
-<!---------------------------------------------^ fin card 1 ^---------------------------------------------->                           
    			</div>
 <!------------------------------------------------------------------------------------------------------------>
+<!-----------------------------------------------------------------------HORAS TRABAJADAS  ------------------------------------------------------->
+			
+			 <div class="col-12 grid-margin">
+			 <div class="card_header">
+			 	<h4>útimas dos semanas</h4>  
+			 </div> 
+                <div class="card">                
+                  <div class="card-body">  
+                  	<div id="c3_barras" ></div>                       
+                  </div>
+                </div>
+   			</div>
         </div> 
       </div>
    	</div>
@@ -157,65 +163,5 @@
      
     <script th:src="@{/js/select2.min.js}"></script>
     <script th:src="@{/js/reg_horas.js}"></script>
-    <script th:inline="javascript">
-    /*--------------------  C3 ----------------------------*/
-        var c3PieChart = c3.generate({
-		bindto : '#c3-pie-chart1',
-		data : {
-			columns : 
-				[ [ 'Consumidas', 12 ], 				
-				[ 'Restantes', 5 ], 
-				[ 'Exceso',0], ],
-			type : 'pie',
-			onclick : function(d, i) {				
-			},
-			onmouseover : function(d, i) {
-			},
-			onmouseout : function(d, i) {
-			}
-		},
-		size : {
-			height : 200,
-			width : 300
-		},
-		color : {
-			pattern : [  '#2196f3', '#5abcf1', '#ff6258'
-					 ]
-		},
-		padding : {
-			top : 0,
-			right : 0,
-			bottom : 0,
-			left : 0,
-		}
-	});		
-        
-   /*--------------------  INPUT2 ----------------------------*/
-        
-        $(document).ready(function() {
-            $('.js-example-basic-single').select2();
-        });
-
-
-        $( function() {
-            $("#id_categoria").change( function() {
-                if ($(this).val() == 1) {        	
-                	 $("#jira_selector").show();
-                	 $("#area_selector").hide();
-                	 
-                    $("#id_input").prop("disabled", false);
-                    $("#id_input2").prop("disabled", true);
-                    $("#id_input2").val("");
-                } else {              
-                    $("#jira_selector").hide();
-                    $("#area_selector").show();
-                    
-                    $("#id_input").prop("disabled", true);  
-                    $("#id_input2").prop("disabled", false);
-                    $("#id_input2").val("Otros");
-                }
-            });
-        });
-    </script>
 </body>
 </html>
