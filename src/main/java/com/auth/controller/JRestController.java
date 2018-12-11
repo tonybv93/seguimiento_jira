@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,12 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth.entity.Acuerdos;
 import com.auth.entity.Jira;
 import com.auth.entity.Jira_Detalle;
+import com.auth.entity.Usuario;
 import com.auth.rest.RespAcuerdoTerminado;
 import com.auth.rest.RespFechas;
 import com.auth.rest.RespGenerica;
 import com.auth.service.IAcuerdosService;
 import com.auth.service.IJiraDetalleService;
 import com.auth.service.IJiraService;
+import com.auth.service.IRegistroHorasService;
+import com.auth.service.IUsuarioService;
 
 
 @RestController
@@ -36,6 +41,10 @@ public class JRestController {
 	private IJiraDetalleService jdetalleService;
 	@Autowired
 	private IAcuerdosService acuerdoService;
+	@Autowired
+	IUsuarioService usuarioService;	
+	@Autowired
+	IRegistroHorasService registroService;
 	
 // -------------------------------------------------------- JIRA--------------------------------------
 	// Enviar una lista: JIRAS
@@ -80,7 +89,6 @@ public class JRestController {
 			try {
 				fecha = formatoFechas.parse(str_f1);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
 		
@@ -93,7 +101,6 @@ public class JRestController {
 			try {
 				fecha = formatoFechas.parse(str_f2);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
@@ -105,7 +112,7 @@ public class JRestController {
 		return "Actualización exitosa";
 	}
 	
-// -------------------------------------------------------- ACUERDOS--------------------------------------
+// -------------------------------------------------------- ACUERDOS-----------------------------------
 	// Obtener respuesta de ajax : NUEVO ACUERDO
 	@PostMapping("/acuerdo/nuevo")
 	public Acuerdos nuevoAcuerdo (@RequestBody RespGenerica jsonAcuerdo) {	
@@ -121,13 +128,13 @@ public class JRestController {
 			e.printStackTrace();
 		}
 		
-		acuerdo.setTipo(acuerdoService.buscarTipoAcuerdoPorId(jsonAcuerdo.getNumero1()));
+		acuerdo.setTipo(acuerdoService.buscarTipoAcuerdoPorId((int)jsonAcuerdo.getNumero1()));
 		if (jsonAcuerdo.getNumero1() == 1)
-			acuerdo.setId_jira(jiraService.buscarPorId(jsonAcuerdo.getNumero4()).getJira());
+			acuerdo.setId_jira(jiraService.buscarPorId((int)jsonAcuerdo.getNumero4()).getJira());
 		else
-			acuerdo.setAreaSolicitante(acuerdoService.buscarAreaPorId(jsonAcuerdo.getNumero2()));	
+			acuerdo.setAreaSolicitante(acuerdoService.buscarAreaPorId((int)jsonAcuerdo.getNumero2()));	
 			
-		acuerdo.setResponsable(acuerdoService.buscarUsuarioPorId(jsonAcuerdo.getNumero3()));
+		acuerdo.setResponsable(acuerdoService.buscarUsuarioPorId((int)jsonAcuerdo.getNumero3()));
 		acuerdo.setEstado(acuerdoService.buscarEstadoPorId(1)); //Estado por defecto: 1-En proceso
 		acuerdo = acuerdoService.guardar(acuerdo);			
 		return acuerdo;
@@ -152,7 +159,7 @@ public class JRestController {
 		acuerdo = acuerdoService.actualizar(acuerdo);			
 		return acuerdo;
 	}
-// -------------------------------------------------------- GRÁFICOS--------------------------------------
+// -------------------------------------------------------- GRÁFICOS----------------------------------
 	@GetMapping("/pie/cavali/atencion")
 	@ResponseBody
 	public int[] cavaliAtencion () {		
@@ -164,4 +171,14 @@ public class JRestController {
 	public int[] cavaliNoAtencion () {		
 		return jiraService.jirasNoAtendidosPorArea();
 	}
+	
+// -------------------------------------------------- REGISTRO DE HORAS ----------------------------
+
+	@PostMapping("/registrhoras")
+	public String registrarHoras (@RequestBody RespGenerica jsonAcuerdo) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
+		return registroService.registrarHoras(usuario, jsonAcuerdo);
+	}
 }
+

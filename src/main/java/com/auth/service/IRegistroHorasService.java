@@ -6,6 +6,7 @@ import com.auth.entity.Estado_Reg_Horas;
 import com.auth.entity.Periodo;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Usuario;
+import com.auth.rest.RespGenerica;
 
 public interface IRegistroHorasService {
 	public void guardarRegistros(List<Proveedor_Reg_Horas> listaRegistros);
@@ -16,5 +17,11 @@ public interface IRegistroHorasService {
 	public List<Proveedor_Reg_Horas> listarRegistrosPorEstado(Estado_Reg_Horas estado);
 	//----------------- PERIODO
 	public List<Periodo> listarPeriodos();
+	//----------------- DESARROLLADOR
+	
+	//----------------- ESTADOS
+	public Estado_Reg_Horas buscarPorId(int id);
+	//----------------- ESPECIALES
+	public String registrarHoras(Usuario u, RespGenerica objeto);
 
 }

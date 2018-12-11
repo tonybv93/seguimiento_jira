@@ -28,15 +28,17 @@ public class Proveedor_Reg_Horas {
 	@SequenceGenerator(sequenceName="acta_seq", allocationSize=1, name="acta_seq")
 	private Integer id;
 
-	private String jira;	
-	private String desarrollador;	
+	private String jira;
+	private String tipo;
+	private String resumen;
+	
 	private Date fecha_registro;	
 	private Date fecha_real_trabajo;
 	private long nro_horas;
-
+	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_fabrica")
-	private Fabrica fabrica;
+	@JoinColumn(name="id_desarrollador")
+	private Desarrollador desarrollador;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_estado_reg_horas")
@@ -50,20 +52,20 @@ public class Proveedor_Reg_Horas {
 		this.id = id;
 	}
 
+	public Desarrollador getDesarrollador() {
+		return desarrollador;
+	}
+
+	public void setDesarrollador(Desarrollador desarrollador) {
+		this.desarrollador = desarrollador;
+	}
+
 	public String getJira() {
 		return jira;
 	}
 
 	public void setJira(String jira) {
 		this.jira = jira;
-	}
-
-	public String getDesarrollador() {
-		return desarrollador;
-	}
-
-	public void setDesarrollador(String desarrollador) {
-		this.desarrollador = desarrollador;
 	}
 
 	public Date getFecha_registro() {
@@ -90,14 +92,6 @@ public class Proveedor_Reg_Horas {
 		this.nro_horas = nro_horas;
 	}
 
-	public Fabrica getFabrica() {
-		return fabrica;
-	}
-
-	public void setFabrica(Fabrica fabrica) {
-		this.fabrica = fabrica;
-	}
-
 	public Estado_Reg_Horas getEstado() {
 		return estado;
 	}
@@ -105,7 +99,22 @@ public class Proveedor_Reg_Horas {
 	public void setEstado(Estado_Reg_Horas estado) {
 		this.estado = estado;
 	}
+	
+	public String getTipo() {
+		return tipo;
+	}
 
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public String getResumen() {
+		return resumen;
+	}
+
+	public void setResumen(String resumen) {
+		this.resumen = resumen;
+	}
 
 	public Proveedor_Reg_Horas() {
 		super();

@@ -1,3 +1,14 @@
+/*------------------------- AL CARGAR LA PÁGINA ------------------*/
+fecha_hoy();
+cargarGraficoBarras();
+
+//--------------------- FECHA ACTUAL POR DEFECTO
+function fecha_hoy () {
+	var myDate = document.getElementById("fecha_registro");
+	var today = new Date();
+	myDate.value = today.toISOString().substr(0, 10);
+}
+
 //------------------------------ ACTUALIZAR GRÁFICOS BARRAS -------------------------
 function cargarGraficoBarras(){
     var gbarras = c3.generate({
@@ -36,32 +47,59 @@ function cargarGraficoBarras(){
 });		
 }
 //------------------------------ AGREGAR TABLA -------------------------
-var contador = 0;
+function clear_alert(idalert,input){	
+	var alerta = document.getElementById(idalert);
+	alerta.innerHTML = '';
+}
+
 function agregar(){
 	var tabla = document.getElementById("detalle_registros");
-	var fecha = new Date().toLocaleDateString("es-ES");	
-	var periodo = document.getElementById("periodo").value
-	var nro_horas = document.getElementById("nro_horas").value
+	var fecha = document.getElementById("fecha_registro").value;	
+	var nro_horas = document.getElementById("nro_horas").value;
 	var tr = document.createElement('tr');
 	var jira = document.getElementById("id_input").value;
-	var str_busqueda = '../../rest/jira/' + jira
-	$.get(str_busqueda).done(function( data ) {	  
-		contador++;
-		tr.appendChild(crearTD(contador));
-		tr.appendChild(crearTD(jira));
-		tr.appendChild(crearTD(data.resumen));
-		tr.appendChild(crearTD(data.horas_des));
-		tr.appendChild(crearTD(periodo));
-		tr.appendChild(crearTD(fecha));
-		tr.appendChild(crearTD(nro_horas));
-		tr.appendChild(crearTD(data.fabrica.tarifa));
-		tr.appendChild(crearTD(data.fabrica.tarifa*nro_horas));
-		tr.appendChild(crearBotonX());
-		
-		  
-		tabla.appendChild(tr);	  
-	});	
+	var str_busqueda = '../../rest/jira/' + jira;
+	var alerta = document.getElementById("alerta_horas");
+	
+	if (nro_horas == 0 || nro_horas == null){
+		alerta.innerHTML = "*Campo obligatorio";	
+	}else{
+		$.get(str_busqueda).done(function( data ) {	  
+			tr.appendChild(crearTD(jira));
+			tr.appendChild(crearTD(data.tipoRequerimiento.nombre));
+			tr.appendChild(crearTD(data.resumen));
+			tr.appendChild(crearTD(fecha));
+			tr.appendChild(crearTD(data.horas_des));			
+			tr.appendChild(crearTD(nro_horas));
+			tr.appendChild(crearBotonX());		
+			tr.appendChild(crearBotonCheck());		
+			tabla.appendChild(tr);		
+			
+			var objjson = {};
+			objjson.numero1 = nro_horas;
+			objjson.texto1 = jira;
+			objjson.texto2 = fecha;	
+			objjson.texto3 = data.tipoRequerimiento.nombre;	
+			objjson.texto4 = data.resumen;	
+			data = JSON.stringify(objjson);
+			$.ajax({
+			        url : '/rest/registrhoras',  	        
+			        contentType:'application/json',
+			        method : 'post',
+			      	data : data,
+			        success : function(respuesta){
+			        	console.log(respuesta);
+			        },
+			        error: function(error,sm1,sm2){
+			        	alert("Se prodjo un error");
+			        	console.log(sm2);
+			            alert(sm1);
+			        }  	        
+			    });
+		});	
+	}
 }
+
 function crearTD(valor1){
 		td = document.createElement('td');
 		td.innerHTML = valor1;
@@ -81,7 +119,25 @@ function crearBotonX(){
 	td.appendChild(contenido);
 	return td;
 }
+function crearBotonCheck(){
+	btn2 = document.createElement('button');
+	i2 = document.createElement('i');
+	i2.setAttribute('class','mdi mdi-checkbox-marked-circle-outline');
+	btn2.appendChild(i2);
+	btn2.setAttribute('class','btn btn-icons btn-inverse-success');
+	btn2.setAttribute('onclick','enviarElemento(this)');		
+	td = document.createElement('td');
+	contenido = document.createElement('div');
+	contenido.setAttribute('class','d-flex ico_centrado texto_derecha');
+	contenido.appendChild(btn2);
+	td.appendChild(contenido);
+	return td;
+}
 function quitarElemento(btn){
+	var fila = btn.parentNode.parentNode.parentNode;
+	fila.parentNode.removeChild(fila);
+}
+function enviarElemento(btn){
 	var fila = btn.parentNode.parentNode.parentNode;
 	fila.parentNode.removeChild(fila);
 }
@@ -93,7 +149,7 @@ $( function() {
     	var jira = document.getElementById("id_input").value;
     	var str_busqueda = '../../rest/jira/' + jira    	
     	$.get(str_busqueda).done(function( data ) {	  
-    		cargarGrafico(data.horas_des,4);    		
+    		cargarGrafico(data.horas_des,0);    		
     	});	
     });
 });
@@ -150,7 +206,6 @@ function cargarGrafico(totales,consumidos){
 $(document).ready(function() {
     $('.js-example-basic-single').select2();
 });
-cargarGraficoBarras();
 
 $( function() {
     $("#id_categoria").change( function() {
@@ -171,3 +226,9 @@ $( function() {
         }
     });
 });
+
+
+
+
+
+

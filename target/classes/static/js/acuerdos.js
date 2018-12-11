@@ -199,7 +199,6 @@ $( function() {
 		objjson.texto1 = document.getElementById("fecha_entrega").value;	//Fecha
 		objjson.texto2 = document.getElementById("exampleTextarea1").value; 	//Acuerdo
 		data = JSON.stringify(objjson); 	
-	  	console.log(data);
 	  	objjson = {};
 	  	
 	  	// REALIZAR PETICION
