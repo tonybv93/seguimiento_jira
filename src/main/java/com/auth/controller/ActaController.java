@@ -53,6 +53,7 @@ public class ActaController {
 		model.addAttribute("listaJiras",jiraService.listarJiras());	
 		model.addAttribute("listaPeriodos",regHorasService.listarPeriodos());
 		model.addAttribute("desarrollador",desarrollador);
+		model.addAttribute("listaRegistros",regHorasService.listarRegistrosEnviadosPorDesarrollador(desarrollador));
 		return "actas/registro_horas";
 	}
 }

@@ -562,3 +562,6 @@ textarea
 .resumen_horas_tatales span{
 	margin-left: 5px;
 }
+.no_mostrar{
+	display: none;
+}

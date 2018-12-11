@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth.entity.Acuerdos;
 import com.auth.entity.Jira;
 import com.auth.entity.Jira_Detalle;
+import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Usuario;
 import com.auth.rest.RespAcuerdoTerminado;
 import com.auth.rest.RespFechas;
@@ -180,5 +181,42 @@ public class JRestController {
 		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
 		return registroService.registrarHoras(usuario, jsonAcuerdo);
 	}
+	
+	@PostMapping("/registro/eliminar")
+	public String eliminarRegistro(@RequestBody RespGenerica respuesta) {			
+		//VALIDACIÓN
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
+		Proveedor_Reg_Horas registro = registroService.buscarRegPorID((int)respuesta.getNumero1());
+		
+		if (registro.getDesarrollador().getUsuario() == usuario) {
+			registroService.eliminarRegistro((int)respuesta.getNumero1()); 		 
+			return "Eliminado";			
+		}else {
+			return "Error, no puede eliminar registros de otras personas";
+		}
+	}
+	
+	@PostMapping("/registro/confirmar")
+	public String confirmarRegistro(@RequestBody RespGenerica respuesta) {			
+		//VALIDACIÓN
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
+		
+		Proveedor_Reg_Horas registro = registroService.buscarRegPorID((int)respuesta.getNumero1());
+		
+		if (registro.getDesarrollador().getUsuario() == usuario) {				 
+			return registroService.confirmarRegistro(registro);			
+		}else {
+			return "Error, no puede confirmar registros de otras personas";
+		}
+	}
+	
+	// PRUEBAAA
+		@GetMapping("/prueba")
+		@ResponseBody
+		public long listaHoras(){
+			return registroService.horasSemanalesPorUsuario(1,"11-12-2018");
+		}
 }
 

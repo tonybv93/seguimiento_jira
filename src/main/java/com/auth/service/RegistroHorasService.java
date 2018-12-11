@@ -50,14 +50,13 @@ public class RegistroHorasService implements IRegistroHorasService {
 	}
 
 	@Override
-	public void eliminarRegistro(Proveedor_Reg_Horas registro) {
-		regHorasRepo.delete(registro);
+	public void eliminarRegistro(int id) {
+		regHorasRepo.deleteById(id);
 	}
 
 	@Override
-	public List<Proveedor_Reg_Horas> listarRegistrosPorUsuario(Usuario usuario) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Proveedor_Reg_Horas> listarRegistrosEnviadosPorDesarrollador(Desarrollador desarrollador) {
+		return regHorasRepo.listarEnviadoPorUsuario(desarrollador.getId());
 	}
 
 	@Override
@@ -97,16 +96,41 @@ public class RegistroHorasService implements IRegistroHorasService {
 			registro.setFecha_registro(new Date());
 			registro.setJira(respuesta.getTexto1());
 			registro.setNro_horas(respuesta.getNumero1());
+			registro.setTipo(respuesta.getTexto3());
+			registro.setResumen(respuesta.getTexto4());
+			registro = regHorasRepo.save(registro);
 			
-			regHorasRepo.save(registro);
-			
-		return "Registro exitoso";		
+		return registro.getId().toString();		
 	}
 
 	@Override
-	public Estado_Reg_Horas buscarPorId(int id) {
-		return estadoRepo.findById(id).orElse(null);
+	public Proveedor_Reg_Horas buscarRegPorID(int id) {
+		return regHorasRepo.findById(id).orElse(null);
+	}
+
+	@Override
+	public Estado_Reg_Horas buscarEstadoPorId(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String confirmarRegistro(Proveedor_Reg_Horas registro) {
+		registro.setEstado(estadoRepo.findById(2).orElse(null));
+		regHorasRepo.save(registro);
+		return "Confirmado";
+	}
+
+	@Override
+	public long horasSemanalesPorUsuario(int id, String fecha) {
+		return regHorasRepo.horasPorDia(id,fecha);
 	}
 	
-
+	private String[] encontrarSemana(String fecha) {
+		String[] arregloFechas =  new String[13];
+		for (int i = 0; i < 14; i++) {
+			arregloFechas[i] = "a";
+		}
+		return arregloFechas;
+	}
 }

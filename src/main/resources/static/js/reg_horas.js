@@ -65,30 +65,32 @@ function agregar(){
 		alerta.innerHTML = "*Campo obligatorio";	
 	}else{
 		$.get(str_busqueda).done(function( data ) {	  
-			tr.appendChild(crearTD(jira));
-			tr.appendChild(crearTD(data.tipoRequerimiento.nombre));
-			tr.appendChild(crearTD(data.resumen));
-			tr.appendChild(crearTD(fecha));
-			tr.appendChild(crearTD(data.horas_des));			
-			tr.appendChild(crearTD(nro_horas));
-			tr.appendChild(crearBotonX());		
-			tr.appendChild(crearBotonCheck());		
-			tabla.appendChild(tr);		
-			
+
 			var objjson = {};
 			objjson.numero1 = nro_horas;
 			objjson.texto1 = jira;
 			objjson.texto2 = fecha;	
 			objjson.texto3 = data.tipoRequerimiento.nombre;	
 			objjson.texto4 = data.resumen;	
-			data = JSON.stringify(objjson);
+			
+			datajs = JSON.stringify(objjson);
 			$.ajax({
 			        url : '/rest/registrhoras',  	        
 			        contentType:'application/json',
 			        method : 'post',
-			      	data : data,
+			      	data : datajs,
 			        success : function(respuesta){
 			        	console.log(respuesta);
+			        	tr.appendChild(crearTDoculto(respuesta));
+						tr.appendChild(crearTD(jira));
+						tr.appendChild(crearTD(data.tipoRequerimiento.nombre));
+						tr.appendChild(crearTD(data.resumen));
+						tr.appendChild(crearTD(fecha));			
+						tr.appendChild(crearTD(nro_horas));
+						tr.appendChild(crearTD("Creado"));
+						tr.appendChild(crearBotonX());		
+						tr.appendChild(crearBotonCheck());		
+						tabla.appendChild(tr);	
 			        },
 			        error: function(error,sm1,sm2){
 			        	alert("Se prodjo un error");
@@ -105,12 +107,18 @@ function crearTD(valor1){
 		td.innerHTML = valor1;
 		return td;
 	}
+function crearTDoculto(valor1){
+	td = document.createElement('td');
+	td.innerHTML = valor1;
+	td.setAttribute('class','no_mostrar');
+	return td;
+}
 function crearBotonX(){
 	btn2 = document.createElement('button');
 	i2 = document.createElement('i');
 	i2.setAttribute('class','mdi mdi-close');
 	btn2.appendChild(i2);
-	btn2.setAttribute('class','btn btn-icons btn-inverse-warning');
+	btn2.setAttribute('class','btn btn-icons btn-inverse-danger');
 	btn2.setAttribute('onclick','quitarElemento(this)');		
 	td = document.createElement('td');
 	contenido = document.createElement('div');
@@ -134,11 +142,53 @@ function crearBotonCheck(){
 	return td;
 }
 function quitarElemento(btn){
-	var fila = btn.parentNode.parentNode.parentNode;
+	var fila = btn.parentNode.parentNode.parentNode;	
+	id = fila.children[0].innerHTML;
+	console.log(id);
+	objjson = {};
+	objjson.numero1 = id;
+	data = JSON.stringify(objjson);
+	$.ajax({
+	        url : '/rest/registro/eliminar',  	        
+	        contentType:'application/json',
+	        method : 'post',
+	      	data : data,
+	        success : function(respuesta){
+	        	console.log(respuesta);
+	        },
+	        error: function(error,sm1,sm2){
+	        	alert("Se prodjo un error");
+	        	console.log(sm2);
+	            alert(sm1);
+	        }  	        
+	    });
+	
 	fila.parentNode.removeChild(fila);
 }
+
+
 function enviarElemento(btn){
-	var fila = btn.parentNode.parentNode.parentNode;
+	var fila = btn.parentNode.parentNode.parentNode;	
+	id = fila.children[0].innerHTML;
+	console.log(id);
+	objjson = {};
+	objjson.numero1 = id;
+	data = JSON.stringify(objjson);
+	$.ajax({
+	        url : '/rest/registro/confirmar',  	        
+	        contentType:'application/json',
+	        method : 'post',
+	      	data : data,
+	        success : function(respuesta){
+	        	console.log(respuesta);
+	        },
+	        error: function(error,sm1,sm2){
+	        	alert("Se prodjo un error");
+	        	console.log(sm2);
+	            alert(sm1);
+	        }  	        
+	    });
+	
 	fila.parentNode.removeChild(fila);
 }
 
@@ -149,55 +199,55 @@ $( function() {
     	var jira = document.getElementById("id_input").value;
     	var str_busqueda = '../../rest/jira/' + jira    	
     	$.get(str_busqueda).done(function( data ) {	  
-    		cargarGrafico(data.horas_des,0);    		
+    		cargarGrafico(data.horas_des,10);    		
     	});	
     });
 });
 
 function cargarGrafico(totales,consumidos){
-	if (consumidos > totales ){
-		restantes = 0;
-		exceso = consumidos - totales;
-	}else{
-		restantes = totales - consumidos;
-		exceso = 0;
-	}
-    var c3PieChart = c3.generate({
-	bindto : '#c3-pie-chart1',
-	data : {
-		columns : 
-			[ [ 'Consumidas', consumidos ], 				
-			[ 'Restantes', restantes ], 
-			[ 'Exceso',exceso], ],
-		type : 'donut',
-		onclick : function(d, i) {				
-		},		
-		onmouseover : function(d, i) {
+	if (totales != 0 && totales != null){
+		var restantes = totales - consumidos;
+	    var c3PieChart = c3.generate({
+		bindto : '#c3-pie-chart1',
+		data : {
+			columns : 
+				[ [ 'Consumidas', consumidos ], 				
+				[ 'Restantes', restantes ] ],
+			type : 'donut',
+			onclick : function(d, i) {				
+			},		
+			onmouseover : function(d, i) {
+			},
+			onmouseout : function(d, i) {
+			}
 		},
-		onmouseout : function(d, i) {
+		donut: { 
+			width: 50,
+			label: {
+				format: function(val) { return val; }
+			}
+		},
+		size : {
+			height : 200,
+			width : 300
+		},
+		color : {
+			pattern : [  '#2196f3', '#b1d5e2'
+					 ]
+		},
+		padding : {
+			top : 0,
+			right : 0,
+			bottom : 0,
+			left : 0,
 		}
-	},
-	donut: { 
-		width: 50,
-		label: {
-			format: function(val) { return val; }
-		}
-	},
-	size : {
-		height : 200,
-		width : 300
-	},
-	color : {
-		pattern : [  '#2196f3', '#5abcf1', '#ff6258'
-				 ]
-	},
-	padding : {
-		top : 0,
-		right : 0,
-		bottom : 0,
-		left : 0,
+	    });
+	}else{
+		var div_cont = document.getElementById("c3-pie-chart1");
+		div_cont.innerHTML = "No existe data para mostrar, no se han aprobado horas para este requerimiento.";
+			
 	}
-});		
+			
 }
 
 

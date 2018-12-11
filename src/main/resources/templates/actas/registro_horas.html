@@ -120,13 +120,28 @@
 	                      				<th>Tipo</th>
 	                      				<th>Resumen</th>	                      				
 	                      				<th>Fecha</th>
-	                      				<th>Horas aprobadas</th>
-	                      				<th>H/H</th>	     
+	                      				<th>H/H</th>	
+	                      				<th>Estado</th>     
 	                      				<th>Quitar</th>
 	                      				<th>Enviar</th>
 	                      			</tr>
 	                      		</thead>
 	                      		<tbody id="detalle_registros">
+	                      			<tr  th:each="registro:${listaRegistros}">  
+	                      				<td class="no_mostrar"  th:text="${registro.id}"></td>                   				
+	                      				<td  th:text="${registro.jira}"></td>
+	                      				<td  th:text="${registro.tipo}"></td>
+	                      				<td  th:text="${registro.resumen}"></td>
+	                      				<td  th:text="${registro.fecha_real_trabajo	}"></td>
+	                      				<td  th:text="${registro.nro_horas}"></td>
+	                      				<td  th:text="${registro.estado.descripcion}"></td>
+	                      				<td>
+	                      					<div class="d-flex ico_centrado texto_derecha"><button class="btn btn-icons btn-inverse-danger" onclick="quitarElemento(this)"><i class="mdi mdi-close"></i></button></div>
+	                      				</td>
+	                      				<td>
+	                      					<div class="d-flex ico_centrado texto_derecha"><button class="btn btn-icons btn-inverse-success" onclick="enviarElemento(this)"><i class="mdi mdi-checkbox-marked-circle-outline"></i></button></div>
+	                      				</td>
+	                      			</tr>
 	                      		</tbody>
 	                      	</table>   	                      	                 	
                       	</div>                      	
