@@ -3,6 +3,7 @@ package com.auth.service;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -10,13 +11,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.auth.auxiliar.HorasPorSemana;
 import com.auth.entity.Desarrollador;
 import com.auth.entity.Estado_Reg_Horas;
+import com.auth.entity.Horas_X_Jira;
 import com.auth.entity.Periodo;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Usuario;
 import com.auth.repository.IDesarrolladorRepository;
 import com.auth.repository.IEstadoRegHorasRepository;
+import com.auth.repository.IHorasXJiraRepository;
 import com.auth.repository.IJiraRepository;
 import com.auth.repository.IPeriodoRepository;
 import com.auth.repository.IProveedorRegHorasRepository;
@@ -37,6 +41,8 @@ public class RegistroHorasService implements IRegistroHorasService {
 	IDesarrolladorRepository desarrolladorRepo;
 	@Autowired
 	IEstadoRegHorasRepository estadoRepo;
+	@Autowired
+	IHorasXJiraRepository hxjRepo;
 	
 	@Override
 	public void guardarRegistros(List<Proveedor_Reg_Horas> listaRegistros) {
@@ -80,8 +86,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 
 	@Override
 	public String registrarHoras(Usuario u, RespGenerica respuesta) {
-		Desarrollador desarrollador = desarrolladorRepo.findByUsuario(u);
-		
+		Desarrollador desarrollador = desarrolladorRepo.findByUsuario(u);	
 
 			Proveedor_Reg_Horas registro = new Proveedor_Reg_Horas();
 			registro.setDesarrollador(desarrollador);
@@ -99,9 +104,16 @@ public class RegistroHorasService implements IRegistroHorasService {
 			registro.setNro_horas(respuesta.getNumero1());
 			registro.setTipo(respuesta.getTexto3());
 			registro.setResumen(respuesta.getTexto4());
-			registro = regHorasRepo.save(registro);
 			
-		return registro.getId().toString();		
+			Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
+			if((hxj.getHoras_desarrollo() - hxj.getConsumido_desarrollo()) > registro.getNro_horas()) {
+				hxj.setConsumido_desarrollo(registro.getNro_horas());
+				registro = regHorasRepo.save(registro);
+				hxjRepo.save(hxj);
+				return registro.getId().toString();	
+			}else {
+				return "No quedan horas";
+			}	
 	}
 
 	@Override
@@ -123,19 +135,74 @@ public class RegistroHorasService implements IRegistroHorasService {
 	}
 
 	@Override
-	public long horasSemanalesPorUsuario(int id, String fecha) {
-		return regHorasRepo.horasPorDia(id,fecha);
+	public List<HorasPorSemana> listarDiasPorSemana(int id) {
+		//Variables
+		Desarrollador d = desarrolladorRepo.findById(id).orElse(null);
+		List<HorasPorSemana> lstHoras = regHorasRepo.horasSemanales(d);
+		List<HorasPorSemana> listaFinal = new ArrayList<>();
+		int j = 0; //Contador
+		
+		//Encontrar día de la semana
+		Calendar calendario = Calendar.getInstance();
+		calendario.setTime(new Date());
+		int dow = calendario.get(Calendar.DAY_OF_WEEK); 
+		//Ultimo domingo de la semana actual:
+		calendario.add(Calendar.DAY_OF_YEAR, 8- dow); 	
+
+		//Formatos
+		SimpleDateFormat formatoCorto = new SimpleDateFormat("dd");
+		SimpleDateFormat formatoLargo = new SimpleDateFormat("dd-MM-yyyy");		
+		String fechal1, fechal2, fechaCorta;
+
+		//Llenar nuevo arreglo		
+		for (int i = 0; i < 14; i++) {	
+			HorasPorSemana hxdia = new HorasPorSemana();
+			fechaCorta = formatoCorto.format(calendario.getTime());
+			fechal1 = formatoLargo.format(calendario.getTime());
+			
+			if (lstHoras.size() > j)
+				fechal2 = formatoLargo.format(lstHoras.get(j).getFecha());
+			else 
+				fechal2 = "";
+			
+			hxdia.setLeyenda(fechaCorta);
+			if (fechal1.equals(fechal2)) {				
+				hxdia.setTotal(lstHoras.get(j).getTotal());
+				j++;
+			}else {
+				hxdia.setTotal(0);
+			}
+			listaFinal.add(hxdia);
+			calendario.add(Calendar.DAY_OF_YEAR, -1);
+		}
+		return listaFinal;
+	}
+
+	@Override
+	public long horasTrabajadas(String jira) {
+		return regHorasRepo.horasTrabajadas(jira);
+	}
+
+	@Override
+	public Horas_X_Jira buscarHXJira(String jira) {
+		return hxjRepo.findByJira(jira);
+	}
+
+	@Override
+	public String eliminarHoras(Usuario u, RespGenerica respuesta) {
+		
+		Proveedor_Reg_Horas registro = regHorasRepo.findById((int)respuesta.getNumero1()).orElse(null);
+		
+		if (registro.getDesarrollador().getUsuario() == u) {
+			regHorasRepo.deleteById((int)respuesta.getNumero1()); 
+			Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
+			hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo() - registro.getNro_horas());
+			hxjRepo.save(hxj);
+			return "Eliminado";			
+		}else {
+			return "Error, no puede eliminar registros de otras personas";
+		}
+
 	}
 	
-	private String[] encontrarSemana(Date fecha) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(fecha);
-		int dia =  c.get(Calendar.DAY_OF_WEEK);			
-			
-		String[] arregloFechas =  new String[13];
-		for (int i = 0; i < 14; i++) {
-			arregloFechas[i] = "a";
-		}
-		return arregloFechas;
-	}
 }

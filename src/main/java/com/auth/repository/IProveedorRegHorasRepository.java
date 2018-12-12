@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import com.auth.auxiliar.HorasPorSemana;
 import com.auth.entity.Desarrollador;
 import com.auth.entity.Proveedor_Reg_Horas;
 
@@ -16,6 +17,15 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_DESARROLLADOR = ?1 AND ID_ESTADO_REG_HORAS = 3)",nativeQuery = true)
 	public List<Proveedor_Reg_Horas> listarEnviadoPorUsuario(int id);	
 	
-	@Query(value ="(SELECT SUM(NRO_HORAS) FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_DESARROLLADOR = ?1 AND ID_ESTADO_REG_HORAS != 1  AND TO_CHAR(FECHA_REAL_TRABAJO,'dd-mm-yyyy') = ?2 GROUP BY FECHA_REAL_TRABAJO)",nativeQuery = true)
-	public long horasPorDia(int id,String fecha);	
+	@Query(value="SELECT NEW com.auth.auxiliar.HorasPorSemana(pr.fecha_real_trabajo, sum(pr.nro_horas)) "+
+				" FROM Proveedor_Reg_Horas pr" + 
+				" WHERE pr.desarrollador = ?1"+
+				" GROUP BY pr.fecha_real_trabajo" +
+				" ORDER BY pr.fecha_real_trabajo DESC"
+				,nativeQuery= false)
+	public List<HorasPorSemana> horasSemanales(Desarrollador desarollador);	
+	
+	@Query(value="SELECT sum(NRO_HORAS) FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE jira = ?1", nativeQuery = true)
+	public long horasTrabajadas(String jira);
+	
 }

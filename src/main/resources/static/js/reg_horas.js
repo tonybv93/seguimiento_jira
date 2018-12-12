@@ -1,5 +1,6 @@
 /*------------------------- AL CARGAR LA PÁGINA ------------------*/
 fecha_hoy();
+cargarDonutInicial();
 cargarGraficoBarras();
 
 //--------------------- FECHA ACTUAL POR DEFECTO
@@ -11,40 +12,121 @@ function fecha_hoy () {
 
 //------------------------------ ACTUALIZAR GRÁFICOS BARRAS -------------------------
 function cargarGraficoBarras(){
-    var gbarras = c3.generate({
-	bindto : '#c3_barras',
-	data : {
-		columns : 	[ 
-			[ 'Trabajado', 2,10,6,2,10,0, 10,10,6,0,0,0 ], 				
-			[ 'Faltante', 8,0,4, 8,0,10, 0,0,4,10,10,10 ], 
-			[ 'Exceso',0,2,0,0,2,0,3,1,0,0,0,0], 
-		],
-		type : 'bar',
-		groups: [
-	         ['Trabajado','Faltante','Exceso']
-	     ],
-	     order: 'null'
-	},	 
-	size : {
-		height : 200,
-		width : 700
-	},
-	color : {
-		pattern : [  '#2196f3', '#b1d5e2', '#c15456']
-	},
-	axis: {
-	    x: {
-	        type: 'category',
-	        categories: ['lun', 'mar','mie', 'jue','vie', 'sab','lun', 'mar','mie', 'jue','vie', 'sab']
-	    }
-	},
-	padding : {
-		top : 0,
-		right : 0,
-		bottom : 0,
-		left : 0,
-	}
-});		
+	$.ajax({
+        url : '/rest/horas/semana',  	        
+        contentType:'application/json',
+        method : 'post',
+      	data : 1,
+        success : function(rep){  			
+        	var t = [];
+        	var f = [];
+        	var e = [];
+        	for (var i = 0; i < 14; i++) {
+				if (rep[i].total < 8 ){
+					t[i] = rep[i].total;
+					f[i] = 8 - t[i];
+					e[i] = 0;
+				}else{
+					t[i] = 8;
+					f[i] = 0;
+					e[i] = rep[i].total - 8;
+				}
+			}
+        	var gbarras = c3.generate({
+        		bindto : '#c3_barras',
+        		data : {
+        			columns : 	[ 
+        					[ 'Trabajado', t[13],
+        									t[12],
+        									t[11],
+        									t[10],
+        									t[9],
+        									t[8],
+        									t[7],
+        									t[6],
+        									t[5],
+        									t[4],
+        									t[3],
+        									t[2],
+        									t[1],
+        									t[0]], 				
+        					[ 'Faltante', f[13],
+											f[12],
+											f[11],
+											f[10],
+											f[9],
+											f[8],
+											f[7],
+											f[6],
+											f[5],
+											f[4],
+											f[3],
+											f[2],
+											f[1],
+											f[0]], 
+        					[ 'Exceso',e[13],
+											e[12],
+											e[11],
+											e[10],
+											e[9],
+											e[8],
+											e[7],
+											e[6],
+											e[5],
+											e[4],
+											e[3],
+											e[2],
+											e[1],
+											e[0]] 
+        				],
+        				type : 'bar',
+        				groups: [
+        			         ['Trabajado','Faltante','Exceso']
+        			     ],
+        			     order: 'null'
+        			},	 
+        			size : {
+        				height : 200,
+        				width : 700
+        			},
+        			color : {
+        				pattern : [  '#2196f3', '#b1d5e2', '#c15456']
+        			},
+        			axis: {
+        			    x: {
+        			        type: 'category',
+        			        categories: [	'Lun ' + rep[13].leyenda,
+        			        				'Mar ' + rep[12].leyenda,
+        			        				'Mie ' + rep[11].leyenda,
+        			        				'Jue ' + rep[10].leyenda,
+        			        				'Vie ' + rep[9].leyenda,
+        			        				'Sab ' + rep[8].leyenda,
+        			        				'Dom ' + rep[7].leyenda,
+        			        				'Lun ' + rep[6].leyenda,
+        			        				'Mar ' + rep[5].leyenda,
+        			        				'Mie ' + rep[4].leyenda,
+        			        				'Jue ' + rep[3].leyenda,
+        			        				'Vie ' + rep[2].leyenda,
+        			        				'Sab ' + rep[1].leyenda,
+        			        				'Dom ' + rep[0].leyenda
+        			        			]
+        			    }
+        			},
+        			padding : {
+        				top : 0,
+        				right : 0,
+        				bottom : 0,
+        				left : 0,
+        			}
+        	    });
+        },
+        error: function(error,sm1,sm2){
+        	alert("Se prodjo un error");
+        	console.log(sm2);
+            alert(sm1);
+        }  	        
+    });
+		
 }
 //------------------------------ AGREGAR TABLA -------------------------
 function clear_alert(idalert,input){	
@@ -58,46 +140,49 @@ function agregar(){
 	var nro_horas = document.getElementById("nro_horas").value;
 	var tr = document.createElement('tr');
 	var jira = document.getElementById("id_input").value;
-	var str_busqueda = '../../rest/jira/' + jira;
+	var str_busqueda = '../../rest/hxjira/' + jira;
 	var alerta = document.getElementById("alerta_horas");
 	
 	if (nro_horas == 0 || nro_horas == null){
 		alerta.innerHTML = "*Campo obligatorio";	
 	}else{
 		$.get(str_busqueda).done(function( data ) {	  
-
-			var objjson = {};
-			objjson.numero1 = nro_horas;
-			objjson.texto1 = jira;
-			objjson.texto2 = fecha;	
-			objjson.texto3 = data.tipoRequerimiento.nombre;	
-			objjson.texto4 = data.resumen;	
-			
-			datajs = JSON.stringify(objjson);
-			$.ajax({
-			        url : '/rest/registrhoras',  	        
-			        contentType:'application/json',
-			        method : 'post',
-			      	data : datajs,
-			        success : function(respuesta){
-			        	console.log(respuesta);
-			        	tr.appendChild(crearTDoculto(respuesta));
-						tr.appendChild(crearTD(jira));
-						tr.appendChild(crearTD(data.tipoRequerimiento.nombre));
-						tr.appendChild(crearTD(data.resumen));
-						tr.appendChild(crearTD(fecha));			
-						tr.appendChild(crearTD(nro_horas));
-						tr.appendChild(crearTD("Creado"));
-						tr.appendChild(crearBotonX());		
-						tr.appendChild(crearBotonCheck());		
-						tabla.appendChild(tr);	
-			        },
-			        error: function(error,sm1,sm2){
-			        	alert("Se prodjo un error");
-			        	console.log(sm2);
-			            alert(sm1);
-			        }  	        
-			    });
+			if (data.horas_desarrollo < nro_horas){
+				alert("No hay horas disponibles");
+			}else{
+				var objjson = {};
+				objjson.numero1 = nro_horas;
+				objjson.texto1 = jira;
+				objjson.texto2 = fecha;	
+				objjson.texto3 = data.tipo;	
+				objjson.texto4 = data.descripcion;	
+				
+				datajs = JSON.stringify(objjson);
+				$.ajax({
+				        url : '/rest/registrhoras',  	        
+				        contentType:'application/json',
+				        method : 'post',
+				      	data : datajs,
+				        success : function(respuesta){
+				        	console.log(respuesta);
+				        	tr.appendChild(crearTDoculto(respuesta));
+							tr.appendChild(crearTD(jira));
+							tr.appendChild(crearTD(data.tipo));
+							tr.appendChild(crearTD(data.descripcion));
+							tr.appendChild(crearTD(fecha));			
+							tr.appendChild(crearTD(nro_horas));
+							tr.appendChild(crearTD("Creado"));
+							tr.appendChild(crearBotonX());		
+							tr.appendChild(crearBotonCheck());		
+							tabla.appendChild(tr);	
+				        },
+				        error: function(error,sm1,sm2){
+				        	alert("Se prodjo un error");
+				        	console.log(sm2);
+				            alert(sm1);
+				        }  	        
+				    });				
+			}			
 		});	
 	}
 }
@@ -197,14 +282,24 @@ function enviarElemento(btn){
 $( function() {
     $("#id_input").change( function() {
     	var jira = document.getElementById("id_input").value;
-    	var str_busqueda = '../../rest/jira/' + jira    	
+    	var str_busqueda = '../../rest/hxjira/' + jira    	
     	$.get(str_busqueda).done(function( data ) {	  
-    		cargarGrafico(data.horas_des,10);    		
+    		cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo);    		
     	});	
     });
 });
 
-function cargarGrafico(totales,consumidos){
+function cargarDonutInicial(){
+	var jira = document.getElementById("id_input").value;
+	var str_busqueda = '../../rest/hxjira/' + jira    
+	$.get(str_busqueda).done(function( data ) {
+		cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo); 
+	});
+
+	
+}
+
+function cargarGraficoDonut(totales,consumidos){
 	if (totales != 0 && totales != null){
 		var restantes = totales - consumidos;
 	    var c3PieChart = c3.generate({
@@ -244,7 +339,7 @@ function cargarGrafico(totales,consumidos){
 	    });
 	}else{
 		var div_cont = document.getElementById("c3-pie-chart1");
-		div_cont.innerHTML = "No existe data para mostrar, no se han aprobado horas para este requerimiento.";
+		div_cont.innerHTML = "No existe data para mostrar en este requerimiento. No se han aprobado horas de dsarrollo.";
 			
 	}
 			

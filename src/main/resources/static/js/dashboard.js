@@ -22,6 +22,7 @@ function buscar(inp){
 	  	
 		if (td) {    				
 	         if (td[0].innerHTML.toLowerCase().search(buscar) != -1  ||
+	        		 td[2].innerHTML.toLowerCase().search(buscar) != -1 ||
 	        		 td[3].innerHTML.toLowerCase().search(buscar) != -1 ||
 	        		 td[4].innerHTML.toLowerCase().search(buscar) != -1 ||
 	        		 td[5].innerHTML.toLowerCase().search(buscar) != -1 ||

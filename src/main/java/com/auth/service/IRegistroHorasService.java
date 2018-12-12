@@ -2,8 +2,10 @@ package com.auth.service;
 
 import java.util.List;
 
+import com.auth.auxiliar.HorasPorSemana;
 import com.auth.entity.Desarrollador;
 import com.auth.entity.Estado_Reg_Horas;
+import com.auth.entity.Horas_X_Jira;
 import com.auth.entity.Periodo;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Usuario;
@@ -25,6 +27,10 @@ public interface IRegistroHorasService {
 	public Estado_Reg_Horas buscarEstadoPorId(int id);
 	//----------------- ESPECIALES
 	public String registrarHoras(Usuario u, RespGenerica objeto);
+	public String eliminarHoras(Usuario u, RespGenerica objeto);
 	public String confirmarRegistro(Proveedor_Reg_Horas registro);
-	public long horasSemanalesPorUsuario(int id, String fecha);
+	public List<HorasPorSemana> listarDiasPorSemana(int id);
+	public long horasTrabajadas(String jira);
+	//------------------ HX JIRA
+	public Horas_X_Jira buscarHXJira(String jira);
 }

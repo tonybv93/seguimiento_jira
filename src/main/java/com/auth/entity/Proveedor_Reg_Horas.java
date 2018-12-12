@@ -43,7 +43,7 @@ public class Proveedor_Reg_Horas {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_estado_reg_horas")
 	private Estado_Reg_Horas estado;
-
+	
 	public Integer getId() {
 		return id;
 	}

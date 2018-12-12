@@ -14,6 +14,7 @@ import com.auth.entity.Empresa;
 import com.auth.entity.Estado_Jira;
 import com.auth.entity.Etiqueta;
 import com.auth.entity.Fabrica;
+import com.auth.entity.Horas_X_Jira;
 import com.auth.entity.Indicador_Contable;
 import com.auth.entity.Jira;
 import com.auth.entity.Jira_Detalle;
@@ -25,6 +26,7 @@ import com.auth.repository.IEmpresaRepository;
 import com.auth.repository.IEstadoJiraRepository;
 import com.auth.repository.IEtiquetaRepository;
 import com.auth.repository.IFabricaRepository;
+import com.auth.repository.IHorasXJiraRepository;
 import com.auth.repository.IIndicadorContableRepository;
 import com.auth.repository.IJiraDetalleRepository;
 import com.auth.repository.IJiraRepository;
@@ -52,6 +54,8 @@ public class JiraService implements IJiraService {
 	IEstadoJiraRepository estadoRepo;
 	@Autowired
 	IEmpresaRepository empresaRepo;
+	@Autowired
+	IHorasXJiraRepository horasJiraRepo;
 
 	@Override
 	public Jira buscarPorId(Integer id) {
@@ -176,8 +180,24 @@ public class JiraService implements IJiraService {
 			if (noEsNuloOVacio(jsonJira.getFields().getNuevoEstado())) {
 				Estado_Jira estado = estadoExistenteOnuevo(jsonJira.getFields().getNuevoEstado());
 				bdJira.setEstadoJira(estado);	
-			}			
+			}		
 			jiraRepo.save(bdJira);
+			
+			Horas_X_Jira hxj;			
+			if(horasJiraRepo.findByJira(bdJira.getJira()) == null) {
+				hxj = new Horas_X_Jira();
+				hxj.setJira(bdJira.getJira());
+				hxj.setDescripcion(bdJira.getResumen());
+				hxj.setTipo(bdJira.getTipoRequerimiento().getNombre());
+				hxj.setHoras_desarrollo(bdJira.getHoras_des());
+				hxj.setHoras_prueba(bdJira.getHoras_cert());
+			}else {
+				hxj = horasJiraRepo.findByJira(bdJira.getJira());
+				hxj.setHoras_desarrollo(bdJira.getHoras_des());
+				hxj.setHoras_prueba(bdJira.getHoras_cert());
+			}	
+			horasJiraRepo.save(hxj);
+			
 			id++;
 		}
 	}

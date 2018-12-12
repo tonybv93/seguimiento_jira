@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.auth.auxiliar.HorasPorSemana;
 import com.auth.entity.Acuerdos;
+import com.auth.entity.Horas_X_Jira;
 import com.auth.entity.Jira;
 import com.auth.entity.Jira_Detalle;
 import com.auth.entity.Proveedor_Reg_Horas;
@@ -187,14 +189,7 @@ public class JRestController {
 		//VALIDACIÓN
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
-		Proveedor_Reg_Horas registro = registroService.buscarRegPorID((int)respuesta.getNumero1());
-		
-		if (registro.getDesarrollador().getUsuario() == usuario) {
-			registroService.eliminarRegistro((int)respuesta.getNumero1()); 		 
-			return "Eliminado";			
-		}else {
-			return "Error, no puede eliminar registros de otras personas";
-		}
+		return registroService.eliminarHoras(usuario, respuesta);
 	}
 	
 	@PostMapping("/registro/confirmar")
@@ -210,13 +205,25 @@ public class JRestController {
 		}else {
 			return "Error, no puede confirmar registros de otras personas";
 		}
+	}	
+	// Lista de actividad diaria por Desarrollador
+	@PostMapping("/horas/semana")
+	@ResponseBody
+	public List<HorasPorSemana> listaHorasDiarias(){
+		return registroService.listarDiasPorSemana(1);
 	}
 	
-	// PRUEBAAA
-		@GetMapping("/prueba")
+	@GetMapping("/horastrabajadas/{jira}")
+	@ResponseBody
+	public long horasTrabajadasPorJira(@PathVariable(name="jira") String jira) {
+		return registroService.horasTrabajadas(jira);
+	}
+	
+	// Buscar HORAS X JIRAS
+		@GetMapping("/hxjira/{jira}")
 		@ResponseBody
-		public long listaHoras(){
-			return registroService.horasSemanalesPorUsuario(1,"11-12-2018");
+		public Horas_X_Jira buscarHXJira(@PathVariable(name="jira") String jira){
+			return registroService.buscarHXJira(jira);
 		}
 }
 
