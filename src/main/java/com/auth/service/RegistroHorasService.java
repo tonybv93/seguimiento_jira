@@ -3,6 +3,7 @@ package com.auth.service;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -126,7 +127,11 @@ public class RegistroHorasService implements IRegistroHorasService {
 		return regHorasRepo.horasPorDia(id,fecha);
 	}
 	
-	private String[] encontrarSemana(String fecha) {
+	private String[] encontrarSemana(Date fecha) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(fecha);
+		int dia =  c.get(Calendar.DAY_OF_WEEK);			
+			
 		String[] arregloFechas =  new String[13];
 		for (int i = 0; i < 14; i++) {
 			arregloFechas[i] = "a";
