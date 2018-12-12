@@ -276,15 +276,15 @@ public class JiraService implements IJiraService {
 		return j;
 	}	
 	private JsoJira cambiarAreaSolicitante(JsoJira j) {		
-		//LIQUIDACIONES
+
 		if (j.getFields().getCustomfield_10800() == null) {
 			return j;
 		}else {
-			
+		
+		//LIQUIDACIONES
 		if (j.getFields().getCustomfield_10800().getValue().equals("Negocios Internacionales") ||
 				j.getFields().getCustomfield_10800().getValue().equals("Liquidaciones") ||
-				j.getFields().getCustomfield_10800().getValue().equals("SERVICIO DE LIQUIDACIONES") ||
-				j.getFields().getCustomfield_10800().getValue().equals("GERENCIA DE SERVICIOS Y OPERACIONES") )
+				j.getFields().getCustomfield_10800().getValue().equals("SERVICIO DE LIQUIDACIONES"))
 			j.getFields().getCustomfield_10800().setValue("LIQ");		
 		// SISTEMAS
 		else if (j.getFields().getCustomfield_10800().getValue().equals("Sistemas") ||
