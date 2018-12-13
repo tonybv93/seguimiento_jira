@@ -43,12 +43,10 @@ public class ActaController {
 	}
 	
 	@GetMapping("/registro/horas")
-	public String registrarHoras(Model model) {
-		
+	public String registrarHoras(Model model) {		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
-		Desarrollador desarrollador = desarrolladorService.buscarPorUsuario(usuario);
-				
+		Desarrollador desarrollador = desarrolladorService.buscarPorUsuario(usuario);				
 		model.addAttribute("listaJiras",jiraService.listarJiras());	
 		model.addAttribute("listaJiras",jiraService.listarJiras());	
 		model.addAttribute("listaPeriodos",regHorasService.listarPeriodos());

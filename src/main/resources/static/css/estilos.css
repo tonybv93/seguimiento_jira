@@ -565,3 +565,22 @@ textarea
 .no_mostrar{
 	display: none;
 }
+.titulo_pie{
+	width: 100%;
+	text-align: center;
+	color: #0c6fcc;
+	font-weight: bold;
+}
+.tabla_modal{
+	height: 320px;
+	overflow: auto;
+	background-color: #eee;
+	border: solid 1px #ddd;
+}
+.tr_seleccionable:hover{
+	cursor: pointer;
+}
+.mensaje_resultado{
+	color: #0c6fcc;
+	font-size: 13px;
+}

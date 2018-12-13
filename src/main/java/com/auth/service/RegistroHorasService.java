@@ -15,6 +15,7 @@ import com.auth.auxiliar.HorasPorSemana;
 import com.auth.entity.Desarrollador;
 import com.auth.entity.Estado_Reg_Horas;
 import com.auth.entity.Horas_X_Jira;
+import com.auth.entity.JsoJira;
 import com.auth.entity.Periodo;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Usuario;
@@ -25,6 +26,7 @@ import com.auth.repository.IJiraRepository;
 import com.auth.repository.IPeriodoRepository;
 import com.auth.repository.IProveedorRegHorasRepository;
 import com.auth.repository.IUsuarioRepository;
+import com.auth.repository.JiraApiRepository;
 import com.auth.rest.RespGenerica;
 
 @Service
@@ -43,6 +45,8 @@ public class RegistroHorasService implements IRegistroHorasService {
 	IEstadoRegHorasRepository estadoRepo;
 	@Autowired
 	IHorasXJiraRepository hxjRepo;
+	@Autowired
+	JiraApiRepository jiraResRepo;
 	
 	@Override
 	public void guardarRegistros(List<Proveedor_Reg_Horas> listaRegistros) {
@@ -185,7 +189,24 @@ public class RegistroHorasService implements IRegistroHorasService {
 
 	@Override
 	public Horas_X_Jira buscarHXJira(String jira) {
-		return hxjRepo.findByJira(jira);
+		Horas_X_Jira hxj = hxjRepo.findByJira(jira);
+		if (hxj == null) {
+			hxj = new Horas_X_Jira();
+			JsoJira j = jiraResRepo.busquedaJQL("key="+jira).get(0);
+			if (j != null) {
+				hxj.setJira(j.getKey());
+				hxj.setDescripcion(j.getFields().getSummary());
+				hxj.setTipo(j.getFields().getIssuetype().getName());
+				hxj.setHoras_desarrollo(j.getFields().getCustomfield_14851());
+				hxj.setHoras_prueba(j.getFields().getCustomfield_14850());
+				hxj = hxjRepo.save(hxj);
+				return hxj;				
+			}else {
+				return null;
+			}
+		}else {
+			return hxj;
+		}
 	}
 
 	@Override

@@ -220,10 +220,17 @@ public class JRestController {
 	}
 	
 	// Buscar HORAS X JIRAS
-		@GetMapping("/hxjira/{jira}")
-		@ResponseBody
-		public Horas_X_Jira buscarHXJira(@PathVariable(name="jira") String jira){
-			return registroService.buscarHXJira(jira);
-		}
+	@GetMapping("/hxjira/{jira}")
+	@ResponseBody
+	public Horas_X_Jira buscarHXJira(@PathVariable(name="jira") String jira){
+		return registroService.buscarHXJira(jira);
+	}
+	
+	//BUSCAR JIRAS PARA ACTA
+	@GetMapping("/buscar/jira/{str}")
+	@ResponseBody
+	public List<Horas_X_Jira> buscarJirasPersonalizado(@PathVariable(name="str") String str){
+		return jiraService.BuscadorPersonalizado(str);
+	}
 }
 

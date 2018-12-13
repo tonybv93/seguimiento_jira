@@ -2,6 +2,7 @@ package com.auth.service;
 
 import java.util.List;
 
+import com.auth.entity.Horas_X_Jira;
 import com.auth.entity.Jira;
 
 public interface IJiraService {
@@ -16,4 +17,7 @@ public interface IJiraService {
 	public Jira guardar(Jira j);			//ACTUALIZAR FECHAS
 	
 	public void actualizarBD();
+	
+	public List<Horas_X_Jira> BuscadorPersonalizado(String str);
+	
 }

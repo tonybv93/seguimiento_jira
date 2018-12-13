@@ -31,9 +31,7 @@
       	<nav th:replace="fragments/shared :: sidebar"></nav>
       	<div class="main-panel">
           <div class="content-wrapper">
-
 <!-----------------------------------------------------------------------REGISTRO  ------------------------------------------------------->
-			
 			 <div class="col-12 grid-margin">
                 <div class="card">                
                   <div class="card-body"> 
@@ -76,9 +74,11 @@
 	                          <div class="form-group row">
 	                            <label class="col-sm-3 col-form-label texto_derecha">Jira:</label>
 	                            <div class="col-sm-9">
-	                               <select class="form-control js-example-basic-single" id="id_input">
-	                              	<option th:each="jira:${listaJiras}" th:value="${jira.jira}" th:text="${jira.jira} + ' ' + ${jira.resumen}"></option>
-	                              </select>
+		                            <div class="d-flex">
+		                               <input type="text" placeholder="Jira" id="id_input" class="form-control">
+		                               <button onclick="modal_buscar_jira()" class="btn btn-inverse-dark"><i class="mdi mdi-file-find mdi-24px"></i></button>                             	
+		                           	</div>
+		                           	<div class="mensaje_resultado" id="resultado"></div>
 	                            </div>
 	                          </div>
 	                        </div>
@@ -88,6 +88,7 @@
                        </div>
                        <div class="col-md-4">
                        	<div class="grafico_horas">
+                       		<h6 class="titulo_pie">Horas del requerimiento</h6>
                        		<div id="c3-pie-chart1" ></div>
                        	</div>
                        </div>
@@ -130,7 +131,7 @@
 	                      				<td  th:text="${registro.jira}"></td>
 	                      				<td  th:text="${registro.tipo}"></td>
 	                      				<td  th:text="${registro.resumen}"></td>
-	                      				<td  th:text="${registro.fecha_real_trabajo	}"></td>
+	                      				<td  th:text="${#dates.format(registro.fecha_real_trabajo, 'dd-MM-yyyy')}"></td>
 	                      				<td  th:text="${registro.nro_horas}"></td>
 	                      				<td  th:text="${registro.estado.descripcion}"></td>
 	                      				<td>
@@ -154,15 +155,51 @@
 			 <div class="col-12 grid-margin"> 
                 <div class="card">                
                   <div class="card-body">  
-                 	 <h4>Horas trabajadas por día</h4>  
-                  	<div id="c3_barras" ></div>                       
+                 	<h4>Horas trabajadas por día</h4>  
+                  	<div id="c3_barras" ></div>       
                   </div>
                 </div>
    			</div>
+    			
         </div> 
       </div>
    	</div>
  	</div>
+<!----------------------------------------------------------------------- MODAL ------------------------------------------------------->
+	<div id="mi_modal" class="un_modal">			
+		<div class="contenido_modal">
+			<div class="card-body">  
+				<div class="row">
+				  	<div class="col-8 grid-margin">
+				  		<div class="modal_header">Buscar Jira</div>	
+				  	</div>				  
+				  	<div class="col-4 grid-margin">
+				  		<span class="close">&times;</span>
+				  	</div>
+			  	</div>
+               	<div class="d-flex">
+               		<input type="text" id="jira_buscador" placeholder="Texto para buscar" class="form-control">
+               		<button onclick="buscar_jiras()" class="btn btn-primary mr-2">Buscar</button>
+              	</div>
+               	<br>
+				<div class="tabla_modal">
+	               	<table class="table table-striped table-hover">
+	               		<thead>
+	               			<tr>
+	               				<th>Jira</th>
+	               				<th>Resumen</th>
+	               				<th>Tipo</th>
+	               			</tr>
+	               		</thead>
+	               		<tbody id="tabla_buscar">
+	               		</tbody>
+	               	</table>	               
+    			</div>
+    			<p>*Solo se muestran <b>10</b> resultados. Para mejorar la búsqueda escriba algo más específico.</p>
+        	</div>
+		</div>
+	</div>
+
 <!------------------------------------------------------------------------------------------------------------>
 <!---------------------------------              SCRIPS                      --------------------------------->
 <!------------------------------------------------------------------------------------------------------------>
@@ -172,9 +209,10 @@
     <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
     <script th:src="@{/js/shared/misc.js}"></script>
     <script th:src="@{/js/shared/settings.js}"></script>
-    <script th:src="@{/js/shared/todolist.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>    
+    <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
+     
     
-     <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
      
     <script th:src="@{/js/select2.min.js}"></script>
     <script th:src="@{/js/reg_horas.js}"></script>

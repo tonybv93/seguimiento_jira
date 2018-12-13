@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <link rel="stylesheet" th:href="@{/css/select2.min.css}">
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> 
+  </head>
+
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+
+            <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                  	<h4>Acciones</h4> 
+                  	<div class="caja_acciones">
+                  		<button class="btn btn-primary texto_centro">Aprobar</button> 
+                  		<button class="btn btn-primary texto_centro">Rechazar</button> 
+                  	</div>
+                  </div>
+                </div>  
+            </div>
+<!----------------------------------------------- CARD 1  --------------------------------------------------->     
+			 <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">    
+<!-----------------------------------------------------------------------CABECERA  ------------------------------------------------------->               
+                      <div class="row">
+                      	<div class="col-md-3">
+                      		<div class="cabecera_acta">
+                      			<img class="logo_acta" src="/images/CANVIA.png" alt="logo">
+                      		</div>
+                      	</div>
+                      	<div class="col-md-6">
+                      		<div class="cabecera_acta">
+                      			<h5><b>ACTA DE ACEPTACIÓN DE SERVICIOS DE FACTURACIÓN</b></h5>
+                      			<h6><b>Código:</b> <span>1050005</span> </h6>                      		
+                      			<p><b>Fecha:</b> <span> 07/12/2018</span> <br>
+                      			<b>Versión:</b> <span> 2.0.1</span> </p>                    			
+                      		</div>
+                      	</div>
+                      	<div class="col-md-3">
+                      		<div class="cabecera_acta">
+                      			<img class="logo_acta" src="/images/bvl.png" alt="logo">
+                      		</div>
+                      	</div>                      	
+                      </div>
+                      <div class="linea_div"></div>  
+<!----------------------------------------------------------------------- DATOS SERVICIO  ------------------------------------------------------->
+                      <h4>Datos de Servicio</h4>      
+                      <div class="grupo_datos">         
+	                      <div class="row">                      	
+	                        <div class="col_acta_6">
+	                        	<ul class="lista_acta">
+	                        		<li><b>Empresa cliente: </b>Bolsa de Valores de Lima</li>
+	                        		<li><b>Periodo: </b> Ago/18 - Dic/18</li>
+	                        		
+	                        	</ul>
+	                        </div>
+	                        <div class="col_acta_6">
+	                        	<ul class="lista_acta">
+	                        		<li><b>Tipo de acta: </b> Contrato de locación de servicios</li>
+	                        		<li><b>Total de horas: </b> 25 H</li>
+	                        		
+	                        	</ul>
+	                        </div>
+	                      </div>  
+	                      <div class="col_acta_12 marco">
+	                      	<b>Descripción del servicio:</b>
+	                      	<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+	                      	Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a 
+	                      	galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also 
+	                      	the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with 
+	                      	the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing 
+	                      	software like Aldus PageMaker including versions of Lorem Ipsum</p>
+	                      </div>                 
+	                  </div>   
+	                  <div class="linea_div"></div> 
+<!----------------------------------------------------------------------- DETALLE ACTA  ------------------------------------------------------->
+                      <h4>Detalle de acta</h4>              
+
+                      <div class="row">
+                      	<div class="contenedor_tabla_detalle">
+                      		<table class="table table-striped table-hover">
+	                      		<thead>
+	                      			<tr>
+	                      				<th>#</th>
+	                      				<th>Reuqerimiento</th>
+	                      				<th>Tipo Req.</th>
+	                      				<th>Descripción</th>
+	                      				<th>H/H</th>
+	                      				<th>Tarifa</th>
+	                      				<th>Total sin IGV.</th>
+	                      			</tr>
+	                      		</thead>
+	                      		<tbody>
+	                      			<tr>
+	                      				<td>1</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>1</td>
+	                      				<td>1.0</td>
+	                      				<td>1.0</td>
+	                      			</tr>
+	                      			<tr>
+	                      				<td>2</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>1</td>
+	                      				<td>1.0</td>
+	                      				<td>1.0</td>
+	                      			</tr>
+	                      			<tr>
+	                      				<td>3</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>1</td>
+	                      				<td>1.0</td>
+	                      				<td>1.0</td>
+	                      			</tr>
+	                      		</tbody>
+	                      	</table>                      	
+                      	</div>                      	
+                      </div>           
+                  </div>
+                </div>
+<!---------------------------------------------^ fin card 1 ^---------------------------------------------->                           
+   			</div>
+<!----------------------------------------------- CARD 2  --------------------------------------------------->     
+            <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                  	<h4>Comentarios</h4> 
+                  	<div class="caja_comentarios">
+	                  	<div class="comentario">
+	                  		<div class="comentario_header">
+	                  			<span class="comentario_usuario">Nombre Usuario</span>
+	                  			<span class="comentario_fecha">12/20/2018</span>
+	                  		</div>
+	                  		<div class="comentario_contenido">
+	                  			Este es un comentario asdasd ads asd a
+	                  		</div>                 		
+	                  	</div>
+	                  	<div class="comentario">
+	                  		<div class="comentario_header">
+	                  			<span class="comentario_usuario">Nombre Usuario</span>
+	                  			<span class="comentario_fecha">12/20/2018</span>
+	                  		</div>
+	                  		<div class="comentario_contenido">
+	                  			Este es un comentario asdasd ads asd a
+	                  		</div>                 		
+	                  	</div>	
+	                  	<div class="comentario">
+	                  		<div class="comentario_header">
+	                  			<span class="comentario_usuario">Nombre Usuario</span>
+	                  			<span class="comentario_fecha">12/20/2018</span>
+	                  		</div>
+	                  		<div class="comentario_contenido">
+	                  			Este es un comentario asdasd ads asd a
+	                  		</div>                 		
+	                  	</div>	
+                  	</div>
+                  	
+                  	<div class="caja_comentarios">                  	
+                  		Nuevo comentario:
+                  		<div class="nuevo_comentario">
+                  			<textarea class="text_area_comentario"></textarea>
+                  			<button type="button" class="btn btn-secondary btn-fw btn_comentar">
+                            <i class="mdi mdi-file-document"></i>Comentar</button>
+                  		</div>
+                  		
+                  	</div>
+                  	
+                  	
+                  	<div>
+                  		
+                  	</div>
+                  </div>
+                </div>  
+            </div>
+<!------------------------------------------------------------------------------------------------------------>
+        </div> 
+      </div>
+   	</div>
+ 	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>
+    
+     <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
+     
+    <script th:src="@{/js/select2.min.js}"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/acuerdos.js}"></script>
+</body>
+</html>
