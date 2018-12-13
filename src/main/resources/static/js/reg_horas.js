@@ -25,16 +25,31 @@ function limpiarTablaBusqueda(){
 }
 
 /*--------------------  MODAL ----------------------------*/
+var modal;
+
 function modal_buscar_jira(){
+	modal = document.getElementById('mi_modal');
+	span = document.getElementsByClassName("close")[0];
 	modal.style.display = "block";
 }
-var span = document.getElementsByClassName("close")[0];
-var modal = document.getElementById('mi_modal');
 
-span.onclick = function() {
+function modal_confirmar(btn){
+	tr = btn.parentNode.parentNode.parentNode;
+	document.getElementById('mocon1').innerHTML = tr.children[1].innerHTML + ' - ' + tr.children[3].innerHTML;
+	document.getElementById('mocon2').innerHTML = tr.children[4].innerHTML;
+	document.getElementById('mocon3').innerHTML = tr.children[5].innerHTML;
+	document.getElementById('input_pk').value = tr.children[0].innerHTML;
+	
+	modal = document.getElementById('modal_confirmacion');
+	span =  document.getElementsByClassName("close")[1];
+	modal.style.display = "block";
+}
+
+function cerrar_modal() {
 	limpiarTablaBusqueda();
 	modal.style.display = "none";
 }
+
 window.onclick = function(event)	 {
 if (event.target == modal) {
 	limpiarTablaBusqueda();

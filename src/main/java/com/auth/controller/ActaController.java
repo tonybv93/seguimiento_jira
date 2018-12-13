@@ -6,9 +6,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.auth.entity.Desarrollador;
+import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Usuario;
 import com.auth.service.IDesarrolladorService;
 import com.auth.service.IJiraService;
@@ -25,6 +28,7 @@ public class ActaController {
 	IUsuarioService usuarioService;
 	@Autowired
 	IDesarrolladorService desarrolladorService;
+	
 	
 	
 	@GetMapping("nueva")
@@ -53,5 +57,18 @@ public class ActaController {
 		model.addAttribute("desarrollador",desarrollador);
 		model.addAttribute("listaRegistros",regHorasService.listarRegistrosEnviadosPorDesarrollador(desarrollador));
 		return "actas/registro_horas";
+	}
+	@PostMapping("/horas/registrar")
+	public String registrarHorasPost(@RequestParam(name="id_hora") int id) {
+		//VALIDACIÓN
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
+			
+		Proveedor_Reg_Horas registro = regHorasService.buscarRegPorID(id);
+				
+		if (registro.getDesarrollador().getUsuario() == usuario) {				 
+			regHorasService.confirmarRegistro(registro);			
+		}
+		return "redirect:/actas/registro/horas";
 	}
 }
