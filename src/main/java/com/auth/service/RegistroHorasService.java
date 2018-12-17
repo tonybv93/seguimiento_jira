@@ -111,7 +111,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 			registro.setFecha_registro(new Date());
 			registro.setJira(respuesta.getTexto1());
 			registro.setNro_horas(respuesta.getNumero1());
-			registro.setTipo(respuesta.getTexto3());
+			registro.setTipojira(respuesta.getTexto3());
 			registro.setResumen(respuesta.getTexto4());
 			
 			Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
@@ -149,7 +149,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 	public List<HorasPorSemana> listarDiasPorSemana(int id) {
 		//Variables
 		Desarrollador d = desarrolladorRepo.findById(id).orElse(null);
-		List<HorasPorSemana> lstHoras = regHorasRepo.horasSemanales(d);
+		List<HorasPorSemana> lstHoras = regHorasRepo.horasSemanales(d, null);
 		List<HorasPorSemana> listaFinal = new ArrayList<>();
 		int j = 0; //Contador
 		
