@@ -34,7 +34,7 @@ public class Proveedor_Reg_Horas {
 	
 	private Date fecha_registro;	
 	private Date fecha_real_trabajo;
-	private long nro_horas;
+	private double nro_horas;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_desarrollador")
@@ -84,11 +84,11 @@ public class Proveedor_Reg_Horas {
 		this.fecha_real_trabajo = fecha_real_trabajo;
 	}
 
-	public long getNro_horas() {
+	public double getNro_horas() {
 		return nro_horas;
 	}
 
-	public void setNro_horas(long nro_horas) {
+	public void setNro_horas(double nro_horas) {
 		this.nro_horas = nro_horas;
 	}
 

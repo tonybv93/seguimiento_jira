@@ -182,6 +182,8 @@ function agregar(){
 	
 	if (nro_horas == 0 || nro_horas == null){
 		alerta.innerHTML = "*Campo obligatorio";	
+	}else if(nro_horas < 1 || nro_horas > 24){
+		alerta.innerHTML = "*Las horas deben estar entre 1 y 24.";
 	}else{
 		$.get(str_busqueda).done(function( data ) {	  
 			if (data.horas_desarrollo < nro_horas){
@@ -208,7 +210,6 @@ function agregar(){
 							tr.appendChild(crearTD(data.descripcion));
 							tr.appendChild(crearTD(fechastr));			
 							tr.appendChild(crearTD(nro_horas));
-							tr.appendChild(crearTD("Creado"));
 							tr.appendChild(crearBotonX());		
 							tr.appendChild(crearBotonCheck());		
 							tabla.appendChild(tr);	
@@ -389,36 +390,6 @@ function cargarGraficoDonut(totales,consumidos){
 		div_cont.innerHTML = "No existe data para mostrar en este requerimiento. No se han aprobado horas de dsarrollo.";			
 	}			
 }
-
-
-/*--------------------  INPUT2 ----------------------------*/
-
-$(document).ready(function() {
-    $('.js-example-basic-single').select2();
-});
-
-$( function() {
-    $("#id_categoria").change( function() {
-        if ($(this).val() == 1) {        	
-        	 $("#jira_selector").show();
-        	 $("#area_selector").hide();
-        	 
-            $("#id_input").prop("disabled", false);
-            $("#id_input2").prop("disabled", true);
-            $("#id_input2").val("");
-        } else {              
-            $("#jira_selector").hide();
-            $("#area_selector").show();
-            
-            $("#id_input").prop("disabled", true);  
-            $("#id_input2").prop("disabled", false);
-            $("#id_input2").val("Otros");
-        }
-    });
-});
-
-
-
 
 
 

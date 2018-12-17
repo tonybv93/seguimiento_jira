@@ -50,12 +50,11 @@ public class ActaController {
 	public String registrarHoras(Model model) {		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
-		Desarrollador desarrollador = desarrolladorService.buscarPorUsuario(usuario);				
-		model.addAttribute("listaJiras",jiraService.listarJiras());	
-		model.addAttribute("listaJiras",jiraService.listarJiras());	
-		model.addAttribute("listaPeriodos",regHorasService.listarPeriodos());
+		Desarrollador desarrollador = desarrolladorService.buscarPorUsuario(usuario);	
+		
 		model.addAttribute("desarrollador",desarrollador);
 		model.addAttribute("listaRegistros",regHorasService.listarRegistrosEnviadosPorDesarrollador(desarrollador));
+		model.addAttribute("listaRegistrosConfirmados",regHorasService.listarRegistrosConfirmadosPorDesarrollador(desarrollador));
 		return "actas/registro_horas";
 	}
 	@PostMapping("/horas/registrar")

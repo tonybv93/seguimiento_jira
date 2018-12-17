@@ -21,8 +21,8 @@ public class Jira {
 	private String informador;
 	private String asignado;
 	private String responsable;	
-	private int horas_cert;
-	private int horas_des;
+	private double horas_cert;
+	private double horas_des;
 	private double monto_cert;
 	private double monto_des;
 	private double monto_total;	
@@ -95,16 +95,17 @@ public class Jira {
 	public void setResponsable(String responsable) {
 		this.responsable = responsable;
 	}
-	public int getHoras_cert() {
+	
+	public double getHoras_cert() {
 		return horas_cert;
 	}
-	public void setHoras_cert(int horas_cert) {
+	public void setHoras_cert(double horas_cert) {
 		this.horas_cert = horas_cert;
 	}
-	public int getHoras_des() {
+	public double getHoras_des() {
 		return horas_des;
 	}
-	public void setHoras_des(int horas_des) {
+	public void setHoras_des(double horas_des) {
 		this.horas_des = horas_des;
 	}
 	public double getMonto_cert() {

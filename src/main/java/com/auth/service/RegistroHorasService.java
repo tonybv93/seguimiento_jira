@@ -69,6 +69,11 @@ public class RegistroHorasService implements IRegistroHorasService {
 	public List<Proveedor_Reg_Horas> listarRegistrosEnviadosPorDesarrollador(Desarrollador desarrollador) {
 		return regHorasRepo.listarEnviadoPorUsuario(desarrollador.getId());
 	}
+	
+	@Override
+	public List<Proveedor_Reg_Horas> listarRegistrosConfirmadosPorDesarrollador(Desarrollador desarrollador) {
+		return regHorasRepo.listarConfirmadosPorUsuario(desarrollador.getId());
+	}
 
 	@Override
 	public List<Proveedor_Reg_Horas> listarRegistrisPorJira(String jira) {
@@ -111,9 +116,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 			
 			Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
 			if((hxj.getHoras_desarrollo() - hxj.getConsumido_desarrollo()) > registro.getNro_horas()) {
-				hxj.setConsumido_desarrollo(registro.getNro_horas());
 				registro = regHorasRepo.save(registro);
-				hxjRepo.save(hxj);
 				return registro.getId().toString();	
 			}else {
 				return "No quedan horas";
@@ -135,6 +138,10 @@ public class RegistroHorasService implements IRegistroHorasService {
 	public String confirmarRegistro(Proveedor_Reg_Horas registro) {
 		registro.setEstado(estadoRepo.findById(2).orElse(null));
 		regHorasRepo.save(registro);
+		
+		Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
+		hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo() + registro.getNro_horas());
+		hxjRepo.save(hxj);
 		return "Confirmado";
 	}
 
@@ -183,7 +190,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 	}
 
 	@Override
-	public long horasTrabajadas(String jira) {
+	public double horasTrabajadas(String jira) {
 		return regHorasRepo.horasTrabajadas(jira);
 	}
 

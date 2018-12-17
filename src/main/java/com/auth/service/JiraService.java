@@ -206,9 +206,9 @@ public class JiraService implements IJiraService {
 				bdJira.setEstadoJira(estado);	
 			}		
 			jiraRepo.save(bdJira);
-			
-			Horas_X_Jira hxj;			
-			if(horasJiraRepo.findByJira(bdJira.getJira()) == null) {
+			Horas_X_Jira hxj;
+			hxj = horasJiraRepo.findByJira(bdJira.getJira());
+			if(hxj == null) {
 				hxj = new Horas_X_Jira();
 				hxj.setJira(bdJira.getJira());
 				hxj.setDescripcion(bdJira.getResumen());
@@ -216,12 +216,10 @@ public class JiraService implements IJiraService {
 				hxj.setHoras_desarrollo(bdJira.getHoras_des());
 				hxj.setHoras_prueba(bdJira.getHoras_cert());
 			}else {
-				hxj = horasJiraRepo.findByJira(bdJira.getJira());
 				hxj.setHoras_desarrollo(bdJira.getHoras_des());
 				hxj.setHoras_prueba(bdJira.getHoras_cert());
 			}	
 			horasJiraRepo.save(hxj);
-			
 			id++;
 		}
 	}

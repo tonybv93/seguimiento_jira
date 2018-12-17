@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RespGenerica {
-	private long numero1;
-	private long numero2;
-	private long numero3;
-	private long numero4;
+	private double numero1;
+	private double numero2;
+	private double numero3;
+	private double numero4;
 	private String texto1;
 	private String texto2;
 	private String texto3;
@@ -42,36 +42,36 @@ public class RespGenerica {
 		this.texto2 = texto2;
 	}
 
-	public long getNumero1() {
+	public double getNumero1() {
 		return numero1;
 	}
 
-	public void setNumero1(long numero1) {
+	public void setNumero1(double numero1) {
 		this.numero1 = numero1;
 	}
 
-	public long getNumero2() {
+	public double getNumero2() {
 		return numero2;
 	}
 
-	public void setNumero2(long numero2) {
+	public void setNumero2(double numero2) {
 		this.numero2 = numero2;
 	}
 
-	public long getNumero3() {
+	public double getNumero3() {
 		return numero3;
 	}
 
-	public void setNumero3(long numero3) {
+	public void setNumero3(double numero3) {
 		this.numero3 = numero3;
 	}
 
-	public long getNumero4() {
+	public double getNumero4() {
 		return numero4;
 	}
 
-	public void setNumero4(long numero4) {
+	public void setNumero4(double numero4) {
 		this.numero4 = numero4;
 	}
-	
+		
 }

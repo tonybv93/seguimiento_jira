@@ -215,7 +215,7 @@ public class JRestController {
 	
 	@GetMapping("/horastrabajadas/{jira}")
 	@ResponseBody
-	public long horasTrabajadasPorJira(@PathVariable(name="jira") String jira) {
+	public double horasTrabajadasPorJira(@PathVariable(name="jira") String jira) {
 		return registroService.horasTrabajadas(jira);
 	}
 	
