@@ -149,7 +149,7 @@
 }
 
 .est_pospro{
-	background-color: #00ce68;
+	background-color: rgb(195, 44, 146);
 	padding: 3px 10px;
 	border-radius: 13px;
 	color: #fff;
@@ -583,4 +583,39 @@ textarea
 .mensaje_resultado{
 	color: #0c6fcc;
 	font-size: 13px;
+}
+.bg-rojo{
+	background-color: red;
+}
+.btn-ico{
+	padding: 0 !important;
+	width: 30px !important;
+	height: 30px !important;
+	border-radius: 15px;
+	font-size: 18px;
+}
+.btn-ico i{
+	line-height: 30px;	
+}
+.ancho_corto{
+	width: 40%;
+	margin: 0 10px;
+}
+.cont_graf_barras{
+	width: 100%;
+	margin: 20px auto;
+}
+.titulo_graf_barras{
+	background-color: #0c6fcc;
+	color: #fff;
+	padding: 5px 20px;
+	margin-bottom: 20px;
+}
+.ico_rechazado{
+	color: #ff6258;
+	font-size: 16px; 
+}
+.ico_creado{
+	color: #2196f3;
+	font-size:16px; 
 }

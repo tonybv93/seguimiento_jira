@@ -46,6 +46,16 @@ public class ActaController {
 		return "actas/lista_acta";
 	}
 	
+	@GetMapping("/aprobacion/horas")
+	public String aprobacionHoras(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
+		Desarrollador desarrollador = desarrolladorService.buscarPorUsuario(usuario);
+		
+		model.addAttribute("listaRegistrosConfirmados",regHorasService.listarRegistrosConfirmadosPorDesarrollador(desarrollador));
+		return "actas/aprobacion_horas";
+	}
+	
 	@GetMapping("/registro/horas")
 	public String registrarHoras(Model model) {		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
@@ -55,6 +65,8 @@ public class ActaController {
 		model.addAttribute("desarrollador",desarrollador);
 		model.addAttribute("listaRegistros",regHorasService.listarRegistrosEnviadosPorDesarrollador(desarrollador));
 		model.addAttribute("listaRegistrosConfirmados",regHorasService.listarRegistrosConfirmadosPorDesarrollador(desarrollador));
+		model.addAttribute("listaRegistrosAprobados",regHorasService.listarRegistrosAprobadosPorDesarrollador(desarrollador));
+		model.addAttribute("listaTiposRegistro",regHorasService.listarTiposActividad());
 		return "actas/registro_horas";
 	}
 	@PostMapping("/horas/registrar")

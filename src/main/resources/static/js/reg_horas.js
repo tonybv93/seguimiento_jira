@@ -179,9 +179,18 @@ function agregar(){
 	var jira = document.getElementById("id_input").value;
 	var str_busqueda = '../../rest/hxjira/' + jira;
 	var alerta = document.getElementById("alerta_horas");
+	var alertajira = document.getElementById("alerta_jira");
+	var tipo_reg = document.getElementById("cbx_tipo_registro").value;
+	var comentario = document.getElementById("txa_comentario").value;
+	var resultado = document.getElementById("resultado");
+	
+	if (jira == '' || jira == null || resultado.innerHTML == 'No encontrado.'){
+		alertajira.innerHTML = "*Obligatorio";
+		resultado.innerHTML ="";
+	}
 	
 	if (nro_horas == 0 || nro_horas == null){
-		alerta.innerHTML = "*Campo obligatorio";	
+		alerta.innerHTML = "*Obligatorio";	
 	}else if(nro_horas < 1 || nro_horas > 24){
 		alerta.innerHTML = "*Las horas deben estar entre 1 y 24.";
 	}else{
@@ -191,10 +200,12 @@ function agregar(){
 			}else{
 				var objjson = {};
 				objjson.numero1 = nro_horas;
+				objjson.numero2 = tipo_reg;
 				objjson.texto1 = jira;
 				objjson.texto2 = fechajs;	
 				objjson.texto3 = data.tipo;	
 				objjson.texto4 = data.descripcion;	
+				objjson.texto5 = comentario;
 				
 				datajs = JSON.stringify(objjson);
 				$.ajax({
@@ -208,10 +219,11 @@ function agregar(){
 							tr.appendChild(crearTD(jira));
 							tr.appendChild(crearTD(data.tipo));
 							tr.appendChild(crearTD(data.descripcion));
-							tr.appendChild(crearTD(fechastr));			
+							tr.appendChild(crearTD(tipo_reg));							
 							tr.appendChild(crearTD(nro_horas));
-							tr.appendChild(crearBotonX());		
-							tr.appendChild(crearBotonCheck());		
+							tr.appendChild(crearTD(fechastr));
+							tr.appendChild(crearTD(comentario));
+							tr.appendChild(crearBotonX());			
 							tabla.appendChild(tr);	
 				        },
 				        error: function(error,sm1,sm2){
@@ -237,15 +249,25 @@ function crearTDoculto(valor1){
 	return td;
 }
 function crearBotonX(){
+	btn1 = document.createElement('button');
 	btn2 = document.createElement('button');
+	i1 = document.createElement('i');
+	i1.setAttribute('class','mdi mdi-checkbox-marked-circle-outline');
 	i2 = document.createElement('i');
 	i2.setAttribute('class','mdi mdi-close');
+	btn1.appendChild(i1);
 	btn2.appendChild(i2);
-	btn2.setAttribute('class','btn btn-icons btn-inverse-danger');
-	btn2.setAttribute('onclick','quitarElemento(this)');		
+	
+	btn1.setAttribute('class','btn btn-icons btn-inverse-success btn-ico');
+	btn1.setAttribute('onclick','modal_confirmar(this)');
+	
+	btn2.setAttribute('class','btn btn-icons btn-inverse-danger btn-ico');
+	btn2.setAttribute('onclick','quitarElemento(this)');	
+	
 	td = document.createElement('td');
 	contenido = document.createElement('div');
-	contenido.setAttribute('class','d-flex ico_centrado texto_derecha');
+	contenido.setAttribute('class','texto_derecha');
+	contenido.appendChild(btn1);
 	contenido.appendChild(btn2);
 	td.appendChild(contenido);
 	return td;
@@ -296,6 +318,7 @@ function enviarElemento(btn){
 	console.log(id);
 	objjson = {};
 	objjson.numero1 = id;
+	objjson.numero2 = 2;
 	data = JSON.stringify(objjson);
 	$.ajax({
 	        url : '/rest/registro/confirmar',  	        

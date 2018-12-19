@@ -32,8 +32,33 @@
 			<div class="card">
 				<div class="card-body">
 				<h4 th:text="${titulo}"></h4>
-					<h4>Hola <b>[[${#httpServletRequest.remoteUser}]] </b>, Bienvenido a Jira-Dashboard.</h4>
+					<h4>Hola <b th:text="${session.usuario.username}" th:unless="${session == null}"> </b>, Bienvenido a Jira-Dashboard.</h4>
 					<h5>Una aplicación del grupo BVL.</h5> 
+			  	</div>
+		  	</div>
+		  	<div class="card">
+				<div class="card-body">				
+					<h4>Menu</h4>
+					<br>
+					<ul class="nav">
+						<li class="nav-item" th:each="menu:${session.menus}">
+							<a class="nav-link">
+								<i class="menu-icon mdi mdi-television"></i>
+								<span class="menu-title" th:text="${menu.texto}"></span>
+								<i class="menu-arrow"></i>
+							</a>
+							<!-- <tr th:each="person,rowStat : ${list.?[age > __${min}__]}"> -->
+							<div>
+								<ul th:each="submenu,rowStat:${session.submenus.?[raiz.id == __${menu.id}__]}">
+									<li class="nav-item">
+				                		<a class="nav-link" th:href="${submenu.url}" th:text="${submenu.texto}"></a>
+				                	</li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+
+
 			  	</div>
 		  	</div>
 <!----------------------------------------------------------------------- 	FIN	 ------------------------------------------------------->

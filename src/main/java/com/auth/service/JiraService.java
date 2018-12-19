@@ -111,7 +111,7 @@ public class JiraService implements IJiraService {
 //====================================================================================
 	@Override
 	public void actualizarBD() {			
-		List<JsoJira> lstJsoJira = getListaJsonJiraActualizada("labels+in+(GSOCompromiso,GSOCritico,GSOMejoraBD,GSOPrio,BVLCompromiso,BVLCritico,BVLMejoraBD,BVLPrio)+and+status+not+in(Terminado,Anulado)+ORDER+BY+labels+DESC");
+		List<JsoJira> lstJsoJira = getListaJsonJiraActualizada("labels+in+(GSOCompromiso,GSOCritico,GSOMejoraBD,GSOPrio,GSORegular,BVLCompromiso,BVLCritico,BVLMejoraBD,BVLPrio,BVLRegular)+and+status+not+in(Terminado,Anulado)+ORDER+BY+labels+DESC");
 		//Limpiar tabla y reiniciar id (PK)
 		jiraRepo.deleteAll(); 
 		int id = 1;
@@ -470,6 +470,9 @@ public class JiraService implements IJiraService {
 	    			else if (ultimoHijo.getFields().getStatus().getName().equals("Pruebas QC")) {
 	    				strEstadoNuevo = "Pruebas QC";
 	    			}
+	    			else if (ultimoHijo.getFields().getStatus().getName().equals("Pruebas Usuario")){
+	    				strEstadoNuevo = "Pruebas de usuario";
+	    			}
 	    			else if (ultimoHijo.getFields().getStatus().getName().equals("Observado")) {
 	    				strEstadoNuevo = "Observado en pruebas";
 	    			}
@@ -600,7 +603,7 @@ public class JiraService implements IJiraService {
 	public int[] jirasNoAtendidosPorArea() {
 		int nliq = 0, nsis = 0, nga = 0, npar = 0, nft = 0, notros = 0; 
 		int[] arreglo = new int[6];	
-		String filtro = "project=\"Requerimientos+de+Sistemas\"+and+issuetype+in+standardIssueTypes()+and+status+not+in+(Anulado,Terminado,Cancelado)+and+issuetype+in(\"Mantenimiento+de+Sistemas\",\"Error+en+Sistema\",Requerimiento)+and+labels+not+in+(GSOCompromiso,GSOCritico,GSOMejoraBD,GSOPrio,BVLCompromiso,BVLCritico,BVLMejoraBD,BVLPrio)&maxResults=1000&fields=key,customfield_10800";	//Primeros 1000 resupuestas
+		String filtro = "project=\"Requerimientos+de+Sistemas\"+and+empresa=cavali+and+issuetype+in+standardIssueTypes()+and+status+not+in+(Anulado,Terminado,Cancelado)+and+issuetype+in(\"Mantenimiento+de+Sistemas\",\"Error+en+Sistema\",Requerimiento)+and+labels+not+in+(GSOCompromiso,GSOCritico,GSOMejoraBD,GSOPrio,GSORegular,BVLRegular,BVLCompromiso,BVLCritico,BVLMejoraBD,BVLPrio)&maxResults=1000&fields=key,customfield_10800";	//Primeros 1000 resupuestas
 		List<JsoJira> lstJiras = apiJira.busquedaJQL(filtro);	
 		for (JsoJira j : lstJiras) {
 			if (j.getFields().getCustomfield_10800() != null)

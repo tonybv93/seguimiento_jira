@@ -13,13 +13,20 @@ import com.auth.entity.Proveedor_Reg_Horas;
 
 @Repository
 public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_Reg_Horas, Integer> {
-	public List<Proveedor_Reg_Horas> findAllByDesarrollador(Desarrollador d);
 	
-	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_DESARROLLADOR = ?1 AND ID_ESTADO_REG_HORAS = 3)",nativeQuery = true)
+	public List<Proveedor_Reg_Horas> findAllByDesarrollador(Desarrollador d);
+	public List<Proveedor_Reg_Horas> findAllByEstado(Estado_Reg_Horas e);
+	
+	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_DESARROLLADOR = ?1 AND ID_ESTADO_REG_HORAS in (3,4) )",nativeQuery = true)
 	public List<Proveedor_Reg_Horas> listarEnviadoPorUsuario(int id);	
 	
 	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_DESARROLLADOR = ?1 AND ID_ESTADO_REG_HORAS = 2)",nativeQuery = true)
 	public List<Proveedor_Reg_Horas> listarConfirmadosPorUsuario(int id);
+	
+	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_DESARROLLADOR = ?1 AND ID_ESTADO_REG_HORAS = 1)",nativeQuery = true)
+	public List<Proveedor_Reg_Horas> listarAprobadosPorUsuario(int id);
+	
+	
 	
 	@Query(value="SELECT NEW com.auth.auxiliar.HorasPorSemana(pr.fecha_real_trabajo, sum(pr.nro_horas)) "+
 				" FROM Proveedor_Reg_Horas pr" + 

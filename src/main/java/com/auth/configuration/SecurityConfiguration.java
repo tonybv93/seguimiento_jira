@@ -22,8 +22,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private BCryptPasswordEncoder encriptador;
 	
 	@Autowired
-	private DataSource dataSource;
-	
+	private DataSource dataSource;	
 	private final String USERS_QUERY = "select username, password, enable from usuario where username = ?";
 	private final String ROLES_QUERY = "select u.username, r.rol from usuario u inner join usuario_rol ur on (u.id = ur.id_user) inner join rol r on (ur.id_rol = r.id) where u.username =?";
 
@@ -34,10 +33,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		   .authoritiesByUsernameQuery(ROLES_QUERY)
 		   .dataSource(dataSource)
 		   .passwordEncoder(encriptador);
-		 }
+	}
 	
-	 @Override
-	 protected void configure(HttpSecurity http) throws Exception{
+	@Override
+	protected void configure(HttpSecurity http) throws Exception{
+
 	  http.authorizeRequests()
 	   .antMatchers("/").permitAll()
 	   .antMatchers("/js/**").permitAll()
@@ -46,19 +46,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	   .antMatchers("/scss/**").permitAll()
 	   .antMatchers("/images/**").permitAll()
 	   .antMatchers("/").permitAll()
-	   .antMatchers("/seguimiento/cavali/lista").permitAll()
 	   .antMatchers("/fonts/**").permitAll()
 	   .antMatchers("/login").permitAll()
 	   .antMatchers("/registro").permitAll()
-	   .antMatchers("/admin/**").hasAuthority("ADMIN").anyRequest()
-	   .authenticated().and().csrf().disable()
+	   .antMatchers("/seguimiento/**").hasAuthority("ADMIN")
+	   .antMatchers("/acuerdos/**").hasAuthority("ADMIN")
+	   .antMatchers("/actas/**").hasAuthority("PROVDES") 
+	   .anyRequest().authenticated()
+	   .and().csrf().disable()
 	   .formLogin().loginPage("/login").failureUrl("/login?error=true")
 	   .defaultSuccessUrl("/home")
 	   .usernameParameter("username")
 	   .passwordParameter("password")
 	   .and().logout()
 	   .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-	   .logoutSuccessUrl("/")
+	   .logoutSuccessUrl("/login")
 	   .and().rememberMe()
 	   .tokenRepository(persistentTokenRepository())
 	   .tokenValiditySeconds(60*60)

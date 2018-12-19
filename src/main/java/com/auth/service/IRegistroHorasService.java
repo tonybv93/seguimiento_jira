@@ -8,6 +8,7 @@ import com.auth.entity.Estado_Reg_Horas;
 import com.auth.entity.Horas_X_Jira;
 import com.auth.entity.Periodo;
 import com.auth.entity.Proveedor_Reg_Horas;
+import com.auth.entity.Tipo_Actividad_Proveedor;
 import com.auth.entity.Usuario;
 import com.auth.rest.RespGenerica;
 
@@ -18,6 +19,7 @@ public interface IRegistroHorasService {
 	public void eliminarRegistro (int id);
 	public List<Proveedor_Reg_Horas> listarRegistrosEnviadosPorDesarrollador(Desarrollador usuario);
 	public List<Proveedor_Reg_Horas> listarRegistrosConfirmadosPorDesarrollador(Desarrollador usuario);
+	public List<Proveedor_Reg_Horas> listarRegistrosAprobadosPorDesarrollador(Desarrollador usuario);
 	public List<Proveedor_Reg_Horas> listarRegistrisPorJira(String jira);
 	public List<Proveedor_Reg_Horas> listarRegistrosPorEstado(Estado_Reg_Horas estado);
 	//----------------- PERIODO
@@ -30,8 +32,12 @@ public interface IRegistroHorasService {
 	public String registrarHoras(Usuario u, RespGenerica objeto);
 	public String eliminarHoras(Usuario u, RespGenerica objeto);
 	public String confirmarRegistro(Proveedor_Reg_Horas registro);
+	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro,int id_estado);
 	public List<HorasPorSemana> listarDiasPorSemana(int id);
 	public double horasTrabajadas(String jira);
 	//------------------ HX JIRA
 	public Horas_X_Jira buscarHXJira(String jira);
+	//----------------- TIPO ACTIVIDAD
+	public List<Tipo_Actividad_Proveedor> listarTiposActividad();
+	public Tipo_Actividad_Proveedor buscarTipoActividadPorID(int id);
 }

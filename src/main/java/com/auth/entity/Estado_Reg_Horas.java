@@ -23,9 +23,19 @@ public class Estado_Reg_Horas {
 	@SequenceGenerator(sequenceName="acta_seq", allocationSize=1, name="acta_seq")
 	private Integer id;
 	private String descripcion;
+	private String icono;
 
 	public Estado_Reg_Horas() {
 		super();
+	}
+
+	
+	public String getIcono() {
+		return icono;
+	}
+
+	public void setIcono(String icono) {
+		this.icono = icono;
 	}
 
 	public Integer getId() {

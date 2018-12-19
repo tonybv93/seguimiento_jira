@@ -201,7 +201,7 @@ public class JRestController {
 		Proveedor_Reg_Horas registro = registroService.buscarRegPorID((int)respuesta.getNumero1());
 		
 		if (registro.getDesarrollador().getUsuario() == usuario) {				 
-			return registroService.confirmarRegistro(registro);			
+			return registroService.cambiarEstadoRegistro(registro,(int) respuesta.getNumero2());			
 		}else {
 			return "Error, no puede confirmar registros de otras personas";
 		}

@@ -18,6 +18,6 @@ public interface IJiraRepository extends CrudRepository<Jira, Integer> {
 	public Jira findByJira(String j);
 	public long count();
 	
-	@Query(value ="(SELECT COUNT(*) FROM BVLSEGDB.JIRA WHERE ID_AREA_SOLICITANTE = ?1)",nativeQuery = true)
+	@Query(value ="(SELECT COUNT(*) FROM BVLSEGDB.JIRA WHERE ID_AREA_SOLICITANTE = ?1 and id_empresa=1)",nativeQuery = true)
 	public long contar_por_area(int id);	
 }
