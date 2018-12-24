@@ -3,7 +3,6 @@ package com.auth.service;
 import java.util.List;
 
 import com.auth.auxiliar.HorasPorSemana;
-import com.auth.entity.Desarrollador;
 import com.auth.entity.Estado_Reg_Horas;
 import com.auth.entity.Horas_X_Jira;
 import com.auth.entity.Periodo;
@@ -17,9 +16,9 @@ public interface IRegistroHorasService {
 	public Proveedor_Reg_Horas guardarRegHoras (Proveedor_Reg_Horas registro);
 	public Proveedor_Reg_Horas buscarRegPorID(int id);
 	public void eliminarRegistro (int id);
-	public List<Proveedor_Reg_Horas> listarRegistrosEnviadosPorDesarrollador(Desarrollador usuario);
-	public List<Proveedor_Reg_Horas> listarRegistrosConfirmadosPorDesarrollador(Desarrollador usuario);
-	public List<Proveedor_Reg_Horas> listarRegistrosAprobadosPorDesarrollador(Desarrollador usuario);
+	public List<Proveedor_Reg_Horas> listarRegistrosEnviadosPorDesarrollador(Usuario usuario);
+	public List<Proveedor_Reg_Horas> listarRegistrosConfirmadosPorDesarrollador(Usuario usuario);
+	public List<Proveedor_Reg_Horas> listarRegistrosAprobadosPorDesarrollador(Usuario usuario);
 	public List<Proveedor_Reg_Horas> listarRegistrisPorJira(String jira);
 	public List<Proveedor_Reg_Horas> listarRegistrosPorEstado(Estado_Reg_Horas estado);
 	//----------------- PERIODO
@@ -31,9 +30,8 @@ public interface IRegistroHorasService {
 	//----------------- ESPECIALES
 	public String registrarHoras(Usuario u, RespGenerica objeto);
 	public String eliminarHoras(Usuario u, RespGenerica objeto);
-	public String confirmarRegistro(Proveedor_Reg_Horas registro);
 	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro,int id_estado);
-	public List<HorasPorSemana> listarDiasPorSemana(int id);
+	public List<HorasPorSemana> listarDiasPorSemana(int id_usuario);
 	public double horasTrabajadas(String jira);
 	//------------------ HX JIRA
 	public Horas_X_Jira buscarHXJira(String jira);

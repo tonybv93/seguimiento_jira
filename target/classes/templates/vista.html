@@ -20,7 +20,8 @@
     <!-- Layout styles -->
     <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
     <!-- End Layout styles -->
-    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> </head>
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> 	
+</head>
 <body class="sidebar-toggle-display sidebar-hidden">
 	<div class="container-scroller">	
 	<nav th:replace="fragments/shared :: header"></nav>
@@ -32,33 +33,8 @@
 			<div class="card">
 				<div class="card-body">
 				<h4 th:text="${titulo}"></h4>
-					<h4>Hola <b th:text="${session.usuario.username}" th:unless="${session == null}"> </b>, Bienvenido a Jira-Dashboard.</h4>
-					<h5>Una aplicación del grupo BVL.</h5> 
-			  	</div>
-		  	</div>
-		  	<div class="card">
-				<div class="card-body">				
-					<h4>Menu</h4>
-					<br>
-					<ul class="nav">
-						<li class="nav-item" th:each="menu:${session.menus}">
-							<a class="nav-link">
-								<i class="menu-icon mdi mdi-television"></i>
-								<span class="menu-title" th:text="${menu.texto}"></span>
-								<i class="menu-arrow"></i>
-							</a>
-							<!-- <tr th:each="person,rowStat : ${list.?[age > __${min}__]}"> -->
-							<div>
-								<ul th:each="submenu,rowStat:${session.submenus.?[raiz.id == __${menu.id}__]}">
-									<li class="nav-item">
-				                		<a class="nav-link" th:href="${submenu.url}" th:text="${submenu.texto}"></a>
-				                	</li>
-								</ul>
-							</div>
-						</li>
-					</ul>
-
-
+					<h4>Hola usuario,</h4>
+					<h5>Esta es una aplicación del grupo BVL.</h5> 										
 			  	</div>
 		  	</div>
 <!----------------------------------------------------------------------- 	FIN	 ------------------------------------------------------->
@@ -76,6 +52,13 @@
     <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
     <script th:src="@{/js/shared/misc.js}"></script>
     <script th:src="@{/js/shared/settings.js}"></script>
-    <script th:src="@{/js/shared/todolist.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>  
+    
+    <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
+    <script th:src="@{/js/menus.js}"></script>    
+    <script type="text/javascript">
+    	cargar_menus();
+	</script>
+          
 </body>
 </html>

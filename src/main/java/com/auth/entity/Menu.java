@@ -10,8 +10,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Menu {
 	@Id
 	private Integer id;
@@ -19,9 +23,11 @@ public class Menu {
 	private String url;	
 	private int nivel;
 	
+	@JsonIgnore()
 	@ManyToOne(cascade={CascadeType.ALL})
 	@JoinColumn(name="raiz")
 	private Menu raiz;
+	
 	
 	@OneToMany(mappedBy="raiz")
 	private List<Menu> submenus = new ArrayList<>();

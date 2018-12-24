@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <link rel="stylesheet" th:href="@{/css/select2.min.css}">
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> 
+  </head>
+
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+			
+			 <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">    
+<!-----------------------------------------------------------------------CABECERA  ------------------------------------------------------->               
+                      <div class="row">
+                      	<div class="col-md-3">
+                      		<div class="cabecera_acta">
+                      			<img class="logo_acta" src="/images/CANVIA.png" alt="logo">
+                      		</div>
+                      	</div>
+                      	<div class="col-md-6">
+                      		<div class="cabecera_acta">
+                      			<h5><b>ACTA DE ACEPTACIÓN DE SERVICIOS DE FACTURACIÓN</b></h5>
+                      			<h6><b>Código:</b> <span>1050005</span> </h6>                      		
+                      			<p><b>Fecha:</b> <span> 07/12/2018</span> <br>
+                      			<b>Versión:</b> <span> 2.0.1</span> </p>                    			
+                      		</div>
+                      	</div>
+                      	<div class="col-md-3">
+                      		<div class="cabecera_acta">
+                      			<img class="logo_acta" src="/images/bvl.png" alt="logo">
+                      		</div>
+                      	</div>                      	
+                      </div>
+                      <div class="linea_div"></div>  
+<!----------------------------------------------------------------------- DATOS SERVICIO  ------------------------------------------------------->
+                      <h4>Datos de Servicio</h4>      
+                      <div class="grupo_datos">         
+	                      <div class="row">                      	
+	                        <div class="col-md-6">
+	                          <div class="form-group row">
+	                            <label class="col-sm-3 col-form-label">Empresa cliente:</label>
+	                            <div class="col-sm-9">
+	                              <select class="form-control">
+	                                <option>Bolsa de Valores de Lima</option>
+	                              </select>
+	                            </div>
+	                          </div>
+	                        </div>
+	                        <div class="col-md-6">
+	                          <div class="form-group row">
+	                            <label class="col-sm-3 col-form-label">Tipo de Acta:</label>
+	                            <div class="col-sm-9">
+	                              <select class="form-control">
+	                                <option>Contrato de locación de servicios</option>
+	                              </select>
+	                            </div>
+	                          </div>
+	                        </div>
+	                      </div>                   
+	                      <div class="row">                      	
+	                        <div class="col-md-6">
+	                          <div class="form-group row">
+	                            <label class="col-sm-3 col-form-label">Periodo:</label>
+	                            <div class="col-sm-9">
+	                              <select class="form-control">
+	                                <option>Ago/18 - Dic/18</option>
+	                              </select>
+	                            </div>
+	                          </div>
+	                        </div>
+	                        <div class="col-md-6">
+	                          <div class="form-group row">
+	                            <label class="col-sm-3 col-form-label">Total Horas:</label>
+		                            <div class="col-sm-9">
+		                              <input class="form-control" type="text">
+		                            </div>
+	                          </div>
+	                        </div>
+	                      </div>
+	                       <div class="row">
+	                        <div class="col-md-12">
+	                          <div class="form-group row">
+	                            <label class="col-sm-2 col-form-label">Detalles del servicio:</label>
+	                            <div class="col-sm-9">
+	                              <textarea onblur="clear_alert('alet-obser')" class="form-control" id="exampleTextarea1" rows="2" required="required"></textarea>
+	                          	  <div id="alet-obser" class="alerta_forms"></div>
+	                          </div>
+	                        </div>
+	                      </div>
+	                      </div>
+	                  </div>   
+	                  <div class="linea_div"></div> 
+<!----------------------------------------------------------------------- DETALLE ACTA  ------------------------------------------------------->
+                      <h4>Detalle de acta</h4>   
+                      <div class="grupo_datos grupo_enmarcado">                   
+                      <div class="row">                      	
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Requerimiento:</label>
+                            <div class="col-sm-9">
+                              <select class="form-control">
+                                <option></option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Horas/Hombre:</label>
+                            <div class="col-sm-9">
+                              <input class="form-control" type="text">
+                            </div>
+                          </div>
+                        </div>
+                      </div>                          
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Responsable:</label>
+                            <div class="col-sm-9">
+                              <select id="responsable" class="form-control">
+                                <option th:each="usuario:${listaResponsables}" th:value="${usuario.id}" th:text="${usuario.username}"></option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                         <div class="col-md-6">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Tarifa:</label>
+	                            <div class="col-sm-9">
+	                              <input class="form-control" type="text">
+	                            </div>                           
+                          </div>
+                        </div>
+                      </div>                     
+                      <button class="btn btn-success mr-2">Agregar</button>
+                      <button class="btn btn-secondary btn-fw">Limpiar</button>
+                      <div class="row">
+                      	<div class="contenedor_tabla_detalle">
+                      		<table class="table table-striped table-hover">
+	                      		<thead>
+	                      			<tr>
+	                      				<th>#</th>
+	                      				<th>Reuqerimiento</th>
+	                      				<th>Tipo Req.</th>
+	                      				<th>Descripción</th>
+	                      				<th>H/H</th>
+	                      				<th>Tarifa</th>
+	                      				<th>Total sin IGV.</th>
+	                      			</tr>
+	                      		</thead>
+	                      		<tbody>
+	                      			<tr>
+	                      				<td>1</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>1</td>
+	                      				<td>1.0</td>
+	                      				<td>1.0</td>
+	                      			</tr>
+	                      			<tr>
+	                      				<td>2</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>1</td>
+	                      				<td>1.0</td>
+	                      				<td>1.0</td>
+	                      			</tr>
+	                      			<tr>
+	                      				<td>3</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>A</td>
+	                      				<td>1</td>
+	                      				<td>1.0</td>
+	                      				<td>1.0</td>
+	                      			</tr>
+	                      		</tbody>
+	                      	</table>                      	
+                      	</div>                      	
+                      </div>
+                    </div>  
+                     <button class="btn btn-primary texto_derecha">Enviar</button>                  
+                  </div>
+                </div>
+<!---------------------------------------------^ fin card 1 ^---------------------------------------------->                           
+   			</div>
+<!------------------------------------------------------------------------------------------------------------>
+        </div> 
+      </div>
+   	</div>
+ 	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>
+    
+    <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
+     
+    <script th:src="@{/js/select2.min.js}"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
+    <script th:src="@{/js/acuerdos.js}"></script>
+    
+    
+	
+</body>
+</html>

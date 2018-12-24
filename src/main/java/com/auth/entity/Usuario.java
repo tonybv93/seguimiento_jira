@@ -13,11 +13,9 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_seq")
 	@SequenceGenerator(sequenceName="usuario_seq", allocationSize=1, name="usuario_seq")
 	private Integer id;
-	@Column(name="username")
 	private String username;
-	@Column(name="password")
 	private String password;
-	@Column(name="enable")
+	private String descripcion;
 	private int enable;
 	
 	@ManyToMany
@@ -53,9 +51,7 @@ public class Usuario {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 	
-
 	public int getEnable() {
 		return enable;
 	}
@@ -72,4 +68,12 @@ public class Usuario {
 		this.roles = roles;
 	}
 
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+	
 }

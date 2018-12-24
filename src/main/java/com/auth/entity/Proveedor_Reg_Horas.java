@@ -42,8 +42,8 @@ public class Proveedor_Reg_Horas {
 	private Tipo_Actividad_Proveedor tipoActividad;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_desarrollador")
-	private Desarrollador desarrollador;
+	@JoinColumn(name="id_usuario")
+	private Usuario usuario;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_estado_reg_horas")
@@ -129,12 +129,12 @@ public class Proveedor_Reg_Horas {
 		this.tipoActividad = tipoActividad;
 	}
 
-	public Desarrollador getDesarrollador() {
-		return desarrollador;
+	public Usuario getUsuario() {
+		return usuario;
 	}
 
-	public void setDesarrollador(Desarrollador desarrollador) {
-		this.desarrollador = desarrollador;
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public Estado_Reg_Horas getEstado() {
@@ -145,12 +145,8 @@ public class Proveedor_Reg_Horas {
 		this.estado = estado;
 	}
 
-	/**
-	 * 
-	 */
 	public Proveedor_Reg_Horas() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 

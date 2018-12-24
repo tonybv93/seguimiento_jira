@@ -93,18 +93,22 @@ public class JiraService implements IJiraService {
 		filtro = filtro + "&maxResults=10&fields=key,summary,assignee,issuetype,customfield_14851,customfield_14850";
 		jsoJiras = apiJira.busquedaJQL(filtro);	
 		
-		//Crear Respuesta		
-		List<Horas_X_Jira> lsthxj = new ArrayList<>();		
-		for (JsoJira j : jsoJiras) {
-			Horas_X_Jira hxj = new Horas_X_Jira();
-			hxj.setJira(j.getKey());
-			hxj.setDescripcion(j.getFields().getSummary());
-			hxj.setTipo(j.getFields().getIssuetype().getName());
-			hxj.setHoras_desarrollo(j.getFields().getCustomfield_14851());
-			hxj.setHoras_prueba(j.getFields().getCustomfield_14850());
-			lsthxj.add(hxj);
-		}
-		return lsthxj;
+		if (jsoJiras != null) {
+			//Crear Respuesta		
+			List<Horas_X_Jira> lsthxj = new ArrayList<>();
+			for (JsoJira j : jsoJiras) {
+				Horas_X_Jira hxj = new Horas_X_Jira();
+				hxj.setJira(j.getKey());
+				hxj.setDescripcion(j.getFields().getSummary());
+				hxj.setTipo(j.getFields().getIssuetype().getName());
+				hxj.setHoras_desarrollo(j.getFields().getCustomfield_14851());
+				hxj.setHoras_prueba(j.getFields().getCustomfield_14850());
+				lsthxj.add(hxj);
+				}
+			return lsthxj;
+		}else {
+			return null;
+		}		
 	}
 //====================================================================================
 //====================================================================================

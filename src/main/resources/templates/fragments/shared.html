@@ -96,96 +96,25 @@
         <!-- partial -->
         <!-- partial:../../partials/_sidebar.html -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar" th:fragment="sidebar">
-          <ul class="nav">
-
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#dashboard-dropdown" aria-expanded="false" aria-controls="dashboard-dropdown">
-                <i class="menu-icon mdi mdi-television"></i>
-                <span class="menu-title">Cavali</span>
-                <i class="menu-arrow"></i>
-              </a>
-              <div class="collapse" id="dashboard-dropdown">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" th:href="@{/seguimiento/cavalilista}">Jiras activos</a>
-                  </li>
-                  <!-- <li class="nav-item">
-                    <a class="nav-link" th:href="@{/gso/cavali/graficos}">Gráficos</a>
-                  </li> -->
-                  <!-- 
-                  <li class="nav-item">
-                    <a class="nav-link" th:href="@{/acuerdos/cavaliacuerdos}">Acuerdos</a>
-                  </li>
-                   -->
-                </ul>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#page-layouts" aria-expanded="false" aria-controls="page-layouts">
-                <i class="menu-icon mdi mdi-notification-clear-all"></i>
-                <span class="menu-title">BVL</span>
-                <i class="menu-arrow"></i>
-              </a>
-              <div class="collapse" id="page-layouts">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" th:href="@{/seguimiento/bolsalista}">Jiras activos</a>
-                  </li>
-                  <!-- 
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Gráficos</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Acuerdos</a>
-                  </li>
-                   -->
-                </ul>
-              </div>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#apps-dropdown" aria-expanded="false" aria-controls="apps-dropdown">
-                <i class="menu-icon mdi mdi-dna"></i>
-                <span class="menu-title">ADMINISTRACIÓN</span>
-                <i class="menu-arrow"></i>
-              </a>
-              <div class="collapse" id="apps-dropdown">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" th:href="@{/acuerdos/nuevoacuerdo}">Acuerdos</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" th:href="@{/seguimiento/fechas}">Fechas Jira</a>
-                  </li>                
-                </ul>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#sidebar-layouts" aria-expanded="false" aria-controls="sidebar-layouts">
-                <i class="menu-icon mdi mdi-texture"></i>
-                <span class="menu-title">Actas</span>
-                <i class="menu-arrow"></i>
-              </a>
-              <div class="collapse" id="sidebar-layouts">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" th:href="@{/actas/registro/horas}">Registrar horas</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" th:href="@{/actas/1}">Detalle acta</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" th:href="@{/actas/lista}">Lista actas</a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li class="nav-link">
-                <a class="btn btn-danger btn-block texto_rojo" th:href="@{/logout}">
+          <ul class="nav" id="contenedor_menu">
+            <li class="nav-item nav-profile">
+              <div class="nav-link">
+                <div class="user-wrapper">
+                  <div class="profile-image">
+                    <img th:src="@{/images/faces/face1.jpg}" alt="profile image"> </div>
+                  <div class="text-wrapper">
+                    <p class="profile-name"><span sec:authentication="name"></span></p>
+                    <div>
+                      <small class="designation text-muted"><span sec:authentication="principal.authorities[0]"></span></small>
+                      <span class="status-indicator online"></span>
+                    </div>
+                  </div>
+                </div>
+                <button onclick="cerrar_sesion()" class="btn btn-danger btn-block">
                   <i class="mdi mdi-logout"></i>Cerrar sesión
-                </a>
+                </button>
+              </div>
             </li>
-
           </ul>
         </nav>
         <!-- partial -->

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.auth.entity.Jira;
 import com.auth.service.IAcuerdosService;
 import com.auth.service.IJiraService;
-import com.auth.service.IMenuService;
 
 @Controller
 @RequestMapping("/seguimiento")
@@ -19,8 +18,6 @@ public class JiraController {
 	private IAcuerdosService acuerdoService;
 	@Autowired
 	private IJiraService jiraService;
-	@Autowired
-	private IMenuService menuService;
 	
 	// ACTUALIZAR BD
 	@GetMapping("/actualizar")

@@ -17,12 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.auth.auxiliar.HorasPorSemana;
+
 import com.auth.entity.Acuerdos;
-import com.auth.entity.Horas_X_Jira;
 import com.auth.entity.Jira;
 import com.auth.entity.Jira_Detalle;
-import com.auth.entity.Proveedor_Reg_Horas;
+import com.auth.entity.Menu;
 import com.auth.entity.Usuario;
 import com.auth.rest.RespAcuerdoTerminado;
 import com.auth.rest.RespFechas;
@@ -30,7 +29,7 @@ import com.auth.rest.RespGenerica;
 import com.auth.service.IAcuerdosService;
 import com.auth.service.IJiraDetalleService;
 import com.auth.service.IJiraService;
-import com.auth.service.IRegistroHorasService;
+import com.auth.service.IMenuService;
 import com.auth.service.IUsuarioService;
 
 
@@ -45,9 +44,9 @@ public class JRestController {
 	@Autowired
 	private IAcuerdosService acuerdoService;
 	@Autowired
-	IUsuarioService usuarioService;	
+	private IUsuarioService usuarioService;		
 	@Autowired
-	IRegistroHorasService registroService;
+	private IMenuService menuService;
 	
 // -------------------------------------------------------- JIRA--------------------------------------
 	// Enviar una lista: JIRAS
@@ -174,63 +173,16 @@ public class JRestController {
 	public int[] cavaliNoAtencion () {		
 		return jiraService.jirasNoAtendidosPorArea();
 	}
-	
-// -------------------------------------------------- REGISTRO DE HORAS ----------------------------
 
-	@PostMapping("/registrhoras")
-	public String registrarHoras (@RequestBody RespGenerica jsonAcuerdo) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
-		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
-		return registroService.registrarHoras(usuario, jsonAcuerdo);
-	}
-	
-	@PostMapping("/registro/eliminar")
-	public String eliminarRegistro(@RequestBody RespGenerica respuesta) {			
-		//VALIDACIÓN
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
-		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
-		return registroService.eliminarHoras(usuario, respuesta);
-	}
-	
-	@PostMapping("/registro/confirmar")
-	public String confirmarRegistro(@RequestBody RespGenerica respuesta) {			
-		//VALIDACIÓN
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
-		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
-		
-		Proveedor_Reg_Horas registro = registroService.buscarRegPorID((int)respuesta.getNumero1());
-		
-		if (registro.getDesarrollador().getUsuario() == usuario) {				 
-			return registroService.cambiarEstadoRegistro(registro,(int) respuesta.getNumero2());			
-		}else {
-			return "Error, no puede confirmar registros de otras personas";
-		}
-	}	
-	// Lista de actividad diaria por Desarrollador
-	@PostMapping("/horas/semana")
+// --------------------------------------------------CONSTRUIR MENU
+	@GetMapping("/sidemenu")
 	@ResponseBody
-	public List<HorasPorSemana> listaHorasDiarias(){
-		return registroService.listarDiasPorSemana(1);
-	}
-	
-	@GetMapping("/horastrabajadas/{jira}")
-	@ResponseBody
-	public double horasTrabajadasPorJira(@PathVariable(name="jira") String jira) {
-		return registroService.horasTrabajadas(jira);
-	}
-	
-	// Buscar HORAS X JIRAS
-	@GetMapping("/hxjira/{jira}")
-	@ResponseBody
-	public Horas_X_Jira buscarHXJira(@PathVariable(name="jira") String jira){
-		return registroService.buscarHXJira(jira);
-	}
-	
-	//BUSCAR JIRAS PARA ACTA
-	@GetMapping("/buscar/jira/{str}")
-	@ResponseBody
-	public List<Horas_X_Jira> buscarJirasPersonalizado(@PathVariable(name="str") String str){
-		return jiraService.BuscadorPersonalizado(str);
+	public List<Menu> hacerMenu(){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());
+		System.out.println(auth.getPrincipal().toString());
+		List<Menu> menus = menuService.listarMenuPorRol(usuario.getRoles().get(0).getId());		
+		return menus;
 	}
 }
 

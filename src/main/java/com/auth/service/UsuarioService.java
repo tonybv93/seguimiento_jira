@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 import com.auth.entity.Usuario;
 import com.auth.repository.IRolRepository;
 import com.auth.repository.IUsuarioRepository;
@@ -40,6 +39,11 @@ public class UsuarioService implements IUsuarioService {
 	@Override
 	public List<Usuario> listarUsuarios() {
 		return (List<Usuario>) userRepo.findAll();
+	}
+
+	@Override
+	public List<Usuario> listarUsuarioPorRol(int id_rol) {
+		return userRepo.usuariosPorRol(id_rol);
 	}
 
 }

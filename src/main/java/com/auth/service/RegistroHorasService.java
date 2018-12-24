@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.auth.auxiliar.HorasPorSemana;
-import com.auth.entity.Desarrollador;
 import com.auth.entity.Estado_Reg_Horas;
 import com.auth.entity.Horas_X_Jira;
 import com.auth.entity.JsoJira;
@@ -20,7 +19,6 @@ import com.auth.entity.Periodo;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Tipo_Actividad_Proveedor;
 import com.auth.entity.Usuario;
-import com.auth.repository.IDesarrolladorRepository;
 import com.auth.repository.IEstadoRegHorasRepository;
 import com.auth.repository.IHorasXJiraRepository;
 import com.auth.repository.IJiraRepository;
@@ -41,8 +39,6 @@ public class RegistroHorasService implements IRegistroHorasService {
 	IUsuarioRepository usuarioRepo;	
 	@Autowired
 	IPeriodoRepository periodoRepo;
-	@Autowired
-	IDesarrolladorRepository desarrolladorRepo;
 	@Autowired
 	IEstadoRegHorasRepository estadoRepo;
 	@Autowired
@@ -71,17 +67,17 @@ public class RegistroHorasService implements IRegistroHorasService {
 	}
 
 	@Override
-	public List<Proveedor_Reg_Horas> listarRegistrosEnviadosPorDesarrollador(Desarrollador desarrollador) {
+	public List<Proveedor_Reg_Horas> listarRegistrosEnviadosPorDesarrollador(Usuario desarrollador) {
 		return regHorasRepo.listarEnviadoPorUsuario(desarrollador.getId());
 	}
 	
 	@Override
-	public List<Proveedor_Reg_Horas> listarRegistrosConfirmadosPorDesarrollador(Desarrollador desarrollador) {
+	public List<Proveedor_Reg_Horas> listarRegistrosConfirmadosPorDesarrollador(Usuario desarrollador) {
 		return regHorasRepo.listarConfirmadosPorUsuario(desarrollador.getId());
 	}
 	
 	@Override
-	public List<Proveedor_Reg_Horas> listarRegistrosAprobadosPorDesarrollador(Desarrollador desarrollador) {
+	public List<Proveedor_Reg_Horas> listarRegistrosAprobadosPorDesarrollador(Usuario desarrollador) {
 		return regHorasRepo.listarAprobadosPorUsuario(desarrollador.getId());
 	}
 
@@ -103,37 +99,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 		return (List<Periodo>) periodoRepo.findAll();
 	}
 
-	@Override
-	public String registrarHoras(Usuario u, RespGenerica respuesta) {
-		Desarrollador desarrollador = desarrolladorRepo.findByUsuario(u);	
-
-			Proveedor_Reg_Horas registro = new Proveedor_Reg_Horas();
-			registro.setDesarrollador(desarrollador);
-			registro.setEstado(estadoRepo.findById(3).orElse(null)); 
-			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				Date date = format.parse(respuesta.getTexto2());
-				registro.setFecha_real_trabajo(date);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return "Error con la fecha!";
-			}			
-			registro.setFecha_registro(new Date());
-			registro.setJira(respuesta.getTexto1());
-			registro.setNro_horas(respuesta.getNumero1());
-			registro.setTipoActividad(tipoActividadRepo.findById((int) respuesta.getNumero2()).orElse(null));
-			registro.setComentario(respuesta.getTexto5());
-			registro.setTipojira(respuesta.getTexto3());
-			registro.setResumen(respuesta.getTexto4());
-			
-			Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
-			if((hxj.getHoras_desarrollo() - hxj.getConsumido_desarrollo()) > registro.getNro_horas()) {
-				registro = regHorasRepo.save(registro);
-				return registro.getId().toString();	
-			}else {
-				return "No quedan horas";
-			}	
-	}
+	
 
 	@Override
 	public Proveedor_Reg_Horas buscarRegPorID(int id) {
@@ -147,22 +113,12 @@ public class RegistroHorasService implements IRegistroHorasService {
 	}
 
 	@Override
-	public String confirmarRegistro(Proveedor_Reg_Horas registro) {
-		registro.setEstado(estadoRepo.findById(2).orElse(null));
-		regHorasRepo.save(registro);
-		
-		Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
-		hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo() + registro.getNro_horas());
-		hxjRepo.save(hxj);
-		return "Confirmado";
-	}
-
-	@Override
-	public List<HorasPorSemana> listarDiasPorSemana(int id) {
+	public List<HorasPorSemana> listarDiasPorSemana(int id_usuario) {
 		//Variables
-		Desarrollador d = desarrolladorRepo.findById(id).orElse(null);
-		Estado_Reg_Horas e = estadoRepo.findById(3).orElse(null);
-		List<HorasPorSemana> lstHoras = regHorasRepo.horasSemanales(d, e);
+		Usuario u = usuarioRepo.findById(id_usuario).orElse(null);
+		Estado_Reg_Horas e1 = estadoRepo.findById(1).orElse(null); //Estado 1: 1 = aprobado
+		Estado_Reg_Horas e2 = estadoRepo.findById(2).orElse(null); //Estado 2: 2 = confirmado
+		List<HorasPorSemana> lstHoras = regHorasRepo.horasSemanales(u,e1,e2);
 		List<HorasPorSemana> listaFinal = new ArrayList<>();
 		int j = 0; //Contador
 		
@@ -207,12 +163,15 @@ public class RegistroHorasService implements IRegistroHorasService {
 		return regHorasRepo.horasTrabajadas(jira);
 	}
 
+	
 	@Override
 	public Horas_X_Jira buscarHXJira(String jira) {
+		//PRIMERO: Verificar si existe en la base de datos
 		Horas_X_Jira hxj = hxjRepo.findByJira(jira);
 		if (hxj == null) {
-			hxj = new Horas_X_Jira();
-			JsoJira j = jiraResRepo.busquedaJQL("key="+jira).get(0);
+			//Si NO existe, se creará un registro nuevo
+			hxj = new Horas_X_Jira();			
+			JsoJira j = jiraResRepo.busquedaJQL("key="+jira).get(0); // Se consult al api			
 			if (j != null) {
 				hxj.setJira(j.getKey());
 				hxj.setDescripcion(j.getFields().getSummary());
@@ -225,26 +184,12 @@ public class RegistroHorasService implements IRegistroHorasService {
 				return null;
 			}
 		}else {
+			//Si SÍ existe, se retorne el registro
 			return hxj;
 		}
 	}
 
-	@Override
-	public String eliminarHoras(Usuario u, RespGenerica respuesta) {
-		
-		Proveedor_Reg_Horas registro = regHorasRepo.findById((int)respuesta.getNumero1()).orElse(null);
-		
-		if (registro.getDesarrollador().getUsuario() == u) {
-			regHorasRepo.deleteById((int)respuesta.getNumero1()); 
-			Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
-			hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo() - registro.getNro_horas());
-			hxjRepo.save(hxj);
-			return "Eliminado";			
-		}else {
-			return "Error, no puede eliminar registros de otras personas";
-		}
-
-	}
+	
 
 	@Override
 	public List<Tipo_Actividad_Proveedor> listarTiposActividad() {
@@ -256,14 +201,72 @@ public class RegistroHorasService implements IRegistroHorasService {
 		return tipoActividadRepo.findById(id).orElse(null);
 	}
 
+// TABLA DE REGISTROS DESARROLLADOR
+	//primer registro
+	@Override
+	public String registrarHoras(Usuario u, RespGenerica respuesta) {
+
+			Proveedor_Reg_Horas registro = new Proveedor_Reg_Horas();
+			registro.setUsuario(u);
+			registro.setEstado(estadoRepo.findById(3).orElse(null)); 
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				Date date = format.parse(respuesta.getTexto2());
+				registro.setFecha_real_trabajo(date);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return "Error con la fecha!";
+			}			
+			registro.setFecha_registro(new Date());
+			registro.setJira(respuesta.getTexto1());
+			registro.setNro_horas(respuesta.getNumero1());
+			registro.setTipoActividad(tipoActividadRepo.findById((int) respuesta.getNumero2()).orElse(null));
+			registro.setComentario(respuesta.getTexto5());
+			registro.setTipojira(respuesta.getTexto3());
+			registro.setResumen(respuesta.getTexto4());
+			
+			Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
+			
+			// Si las horas son desarrollo o mejora, se SUMAN de las horas CONSUMIDAS
+			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1) {
+				if((hxj.getHoras_desarrollo() - hxj.getConsumido_desarrollo()) > registro.getNro_horas()) {
+					registro = regHorasRepo.save(registro);
+					hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo() + registro.getNro_horas());
+					hxjRepo.save(hxj);
+					return registro.getId().toString();	
+				}else {
+					return "No quedan horas";
+				}
+			}else {
+				registro = regHorasRepo.save(registro);
+				return registro.getId().toString();	
+			}
+	}
+	
+	// CAMBIAR ESTADOS
 	@Override
 	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro, int id_estado) {
 		registro.setEstado(estadoRepo.findById(id_estado).orElse(null));
-		regHorasRepo.save(registro);		
-		Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
-		hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo() + registro.getNro_horas());
-		hxjRepo.save(hxj);
+		regHorasRepo.save(registro);	
 		return "Confirmado";
 	}
 	
+	//ELIMINAR
+	@Override
+	public String eliminarHoras(Usuario u, RespGenerica respuesta) {		
+		Proveedor_Reg_Horas registro = regHorasRepo.findById((int)respuesta.getNumero1()).orElse(null);		
+		if (registro.getUsuario() == u) {
+			regHorasRepo.deleteById((int)respuesta.getNumero1());
+			Horas_X_Jira hxj = hxjRepo.findByJira(registro.getJira());
+			// Si las horas son desarrollo o mejora, se restan de las horas CONSUMIDAS 
+			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1) { //4- Mejora | 1- Desarrollo 
+				hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo() - registro.getNro_horas());
+				hxjRepo.save(hxj);
+			}
+			return "Eliminado";			
+		}else {
+			return "Error, no puede eliminar registros de otras personas";
+		}
+
+	}	
 }
