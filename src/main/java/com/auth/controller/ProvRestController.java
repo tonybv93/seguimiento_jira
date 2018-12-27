@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.auth.auxiliar.DetalleActaPre;
 import com.auth.auxiliar.HorasPorSemana;
-import com.auth.entity.Horas_X_Jira;
+import com.auth.entity.HJira;
 import com.auth.entity.Proveedor_Reg_Horas;
+import com.auth.entity.Rol;
 import com.auth.entity.Usuario;
 import com.auth.rest.RespGenerica;
+import com.auth.service.IActaService;
 import com.auth.service.IJiraService;
 import com.auth.service.IRegistroHorasService;
 import com.auth.service.IUsuarioService;
@@ -31,6 +34,23 @@ public class ProvRestController {
 	private IRegistroHorasService registroService;
 	@Autowired
 	private IJiraService jiraService;
+	@Autowired
+	private IActaService actaService;
+//--------------------------------------------------- REGISTRO DE ACTA ----------------------------
+		//CREAR UNA NUEVA ACTA
+		@PostMapping("/acta/nueva")
+		@ResponseBody
+		public Integer registrarActaNueva(@RequestBody RespGenerica respuesta){			
+			return actaService.registrarNuevaActa(respuesta).getId();
+		}
+		// Lista pre de jiras por acta
+		@PostMapping("/acta/jiraspre")
+		@ResponseBody
+		public List<DetalleActaPre> listaJirasPreActa(@RequestBody RespGenerica respuesta){
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());						
+			return actaService.listarDetalleActaPRE(usuario,respuesta);
+		}
 // -------------------------------------------------- REGISTRO DE HORAS ----------------------------
 
 		@PostMapping("/registro/nuevo")
@@ -55,14 +75,14 @@ public class ProvRestController {
 			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
 			//Encontrar registro
 			Proveedor_Reg_Horas registro = registroService.buscarRegPorID((int)respuesta.getNumero1());		
-			if (registro.getUsuario() == usuario) {				 
+			Rol rol = usuarioService.buscarRolPorId(4); //SI EL ROL ES JEFE DE PROVEEDORES, SI PUEDE CAMBIAR ESTADO DE OTRAS PERSONAS
+			if (registro.getUsuario() == usuario || usuario.getRoles().contains(rol)) {				 
 				return registroService.cambiarEstadoRegistro(registro,(int) respuesta.getNumero2());
 			}else {
 				return "Error, no puede confirmar registros de otras personas";
 			}	
-		}	
-		
-		
+		}			
+				
 		// Lista de actividad diaria por Desarrollador [GRÁFICO DE BARRAS]
 		@PostMapping("/horas/semana")
 		@ResponseBody
@@ -70,13 +90,20 @@ public class ProvRestController {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
 			return registroService.listarDiasPorSemana(usuario.getId());
-		}
-		
+		}		
 		// Lista de actividad diaria por Desarrollador [GRÁFICO DE BARRAS]
 		@PostMapping("/horas/semana/desarrollador")
 		@ResponseBody
 		public List<HorasPorSemana> listarHorasDiariasPorDesarrollador(@RequestBody RespGenerica respuesta){
 			return registroService.listarDiasPorSemana((int) respuesta.getNumero1());
+		}
+		// Lista de actividad diaria por Desarrollador [REGISTROS]
+		@PostMapping("/registros/semana/desarrollador")
+		@ResponseBody
+		public List<Proveedor_Reg_Horas> listarRegistrosDiariosPorDesarrollador(@RequestBody RespGenerica respuesta){
+					
+			Usuario usuario = usuarioService.buscarPorId((int)respuesta.getNumero1());	
+			return registroService.listarRegistrosConfirmadosPorDesarrollador(usuario);
 		}
 		
 		// 
@@ -89,17 +116,47 @@ public class ProvRestController {
 		// Buscar HORAS X JIRAS
 		@GetMapping("/hxjira/{jira}")
 		@ResponseBody
-		public Horas_X_Jira buscarHXJira(@PathVariable(name="jira") String jira){
+		public HJira buscarHXJira(@PathVariable(name="jira") String jira){
 			return registroService.buscarHXJira(jira);
+		}
+		
+		// Buscar HORAS X JIRAS
+		@GetMapping("/hxjiraxfab/{jira}")
+		@ResponseBody
+		public HJira buscarHXJiraXFab(@PathVariable(name="jira") String jira){
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());
+			String fabrica = usuario.getFabrica().getNombre(); 
+			return registroService.buscarHXJiraXFab(jira,fabrica);
 		}
 		
 		//BUSCAR JIRAS PARA ACTA
 		@GetMapping("/buscar/jira/{str}")
 		@ResponseBody
-		public List<Horas_X_Jira> buscarJirasPersonalizado(@PathVariable(name="str") String str){
-			List<Horas_X_Jira> respuesta =  jiraService.BuscadorPersonalizado(str);
+		public List<HJira> buscarJirasPersonalizado(@PathVariable(name="str") String str){
+			List<HJira> respuesta =  jiraService.BuscadorPersonalizado(str);
 			return respuesta;
 		}
+		//BUSCAR JIRAS PARA ACTA
+		@GetMapping("/buscarxfab/jira/{str}")
+		@ResponseBody
+		public List<HJira> buscarJirasPersonalizadoPorFabrica(@PathVariable(name="str") String str){
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());
+			String fabrica = usuario.getFabrica().getNombre();
+			List<HJira> respuesta =  jiraService.buscarJiraPorFabrica(str, fabrica);
+			return respuesta;
+		}
+		
+		//LISTA DE REGISTROS PARA APROBAR
+		@PostMapping("/registros/poraprobar")
+		@ResponseBody
+		public List<Proveedor_Reg_Horas> listaRegistrosPorAprobar(@RequestBody RespGenerica respuesta){
+			Usuario u = usuarioService.buscarPorId((int)respuesta.getNumero1());
+			return registroService.listarRegistrosAprobadosPorDesarrollador(u);
+		}
+		
+		
 
 
 }

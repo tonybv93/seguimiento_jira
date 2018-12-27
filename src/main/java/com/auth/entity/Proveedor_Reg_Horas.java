@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -28,26 +29,38 @@ public class Proveedor_Reg_Horas {
 	@SequenceGenerator(sequenceName="acta_seq", allocationSize=1, name="acta_seq")
 	private Integer id;
 
-	private String jira;
-	private String tipojira;
-	private String resumen;
 	private Date fecha_registro;	
 	private Date fecha_real_trabajo;
+	private Date fecha_facturacion; 
 	private double nro_horas;
 	private boolean flagfacturar;
 	private String comentario;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
+
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_tipo_actividad_prov")
 	private Tipo_Actividad_Proveedor tipoActividad;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_hjira")
+	private HJira hjira;
+
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_usuario")
 	private Usuario usuario;
 	
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_estado_reg_horas")
 	private Estado_Reg_Horas estado;
+
+	
+	public Date getFecha_facturacion() {
+		return fecha_facturacion;
+	}
+
+	public void setFecha_facturacion(Date fecha_facturacion) {
+		this.fecha_facturacion = fecha_facturacion;
+	}
 
 	public Integer getId() {
 		return id;
@@ -56,29 +69,13 @@ public class Proveedor_Reg_Horas {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public String getJira() {
-		return jira;
+	
+	public HJira getHjira() {
+		return hjira;
 	}
 
-	public void setJira(String jira) {
-		this.jira = jira;
-	}
-
-	public String getTipojira() {
-		return tipojira;
-	}
-
-	public void setTipojira(String tipojira) {
-		this.tipojira = tipojira;
-	}
-
-	public String getResumen() {
-		return resumen;
-	}
-
-	public void setResumen(String resumen) {
-		this.resumen = resumen;
+	public void setHjira(HJira hjira) {
+		this.hjira = hjira;
 	}
 
 	public Date getFecha_registro() {

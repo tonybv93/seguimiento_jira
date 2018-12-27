@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.*;
 import org.hibernate.annotations.DynamicInsert;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @DynamicInsert
 public class Usuario {
@@ -18,6 +20,16 @@ public class Usuario {
 	private String descripcion;
 	private int enable;
 	
+	@JsonIgnore
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_empresa")
+	private Empresa empresa;
+	
+	@JsonIgnore
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_fabrica")
+	private Fabrica fabrica;
+	
 	@ManyToMany
 	@JoinTable(name = "usuario_rol",
     joinColumns = { @JoinColumn(name = "id_user") },
@@ -26,6 +38,23 @@ public class Usuario {
 
 	public Usuario() {
 		super();
+	}
+	
+	
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
+
+	public Fabrica getFabrica() {
+		return fabrica;
+	}
+
+	public void setFabrica(Fabrica fabrica) {
+		this.fabrica = fabrica;
 	}
 
 	public Integer getId() {

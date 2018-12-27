@@ -2,7 +2,7 @@ package com.auth.service;
 
 import java.util.List;
 
-import com.auth.entity.Horas_X_Jira;
+import com.auth.entity.HJira;
 import com.auth.entity.Jira;
 
 public interface IJiraService {
@@ -18,6 +18,8 @@ public interface IJiraService {
 	
 	public void actualizarBD();
 	
-	public List<Horas_X_Jira> BuscadorPersonalizado(String str);
+	public List<HJira> BuscadorPersonalizado(String str);
+	
+	public List<HJira> buscarJiraPorFabrica(String str, String fabrica);
 	
 }

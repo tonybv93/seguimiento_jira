@@ -44,6 +44,7 @@ function seleccionar_tr(tr_seleccionado){
 function cambiar_estado(btn,id_nuevo_estado){
 	var fila = btn.parentNode.parentNode.parentNode;	
 	id = fila.children[0].innerHTML;
+	console.log(id);
 	objjson = {};
 	//Cambiar estado
 	objjson.numero1 = id;	//Id de registro
@@ -99,7 +100,7 @@ function cargarGraficoBarras(){
 				}
 			}
         	var gbarras = c3.generate({
-        		bindto : '#c3_barras',
+        		bindto : '#c3_barras',        		
         		data : {
         			columns : 	[ 
         					[ 'Trabajado', t[13], t[12], t[11], t[10], t[9], t[8], t[7], t[6], t[5], t[4], t[3], t[2], t[1], t[0]	], 				
@@ -107,6 +108,23 @@ function cargarGraficoBarras(){
         					[ 'Exceso', e[13], e[12], e[11], e[10], e[9], e[8], e[7], e[6], e[5], e[4], e[3], e[2], e[1], e[0]	] 
         				],
         				type : 'bar',
+        				onmouseover: function (d, i) { 
+        					var datos = rep[13 - d.x].fecha;            					
+        					var tabla = document.getElementById("detalle_registros");        					
+        					for (var i = 0; i < tabla.rows.length; i++) { 
+        						console.log(datos.substring(0, 10) + ' =? ' + tabla.rows[i].children[8].innerHTML);
+        						if (datos.substring(0, 10) == tabla.rows[i].children[8].innerHTML) {
+        							 tabla.children[i].classList.add('fondo_rojo');
+								}							
+        					}
+        					},
+        				onmouseout: function () { 
+        					var tabla = document.getElementById("detalle_registros"); 
+        					for (var i = 0; i < tabla.rows.length; i++) {         						
+        						tabla.children[i].classList.remove('fondo_rojo');
+        					}
+											
+        				},
         				groups: [
         			         ['Trabajado','Faltante','Exceso']
         			     ],
@@ -162,11 +180,28 @@ function cargarGraficoBarras(){
     });
 //------------------------------ ACTUALIZAR LISTA
 	$.ajax({
-        url : '/provrest/horas/semana/desarrollador',  	        
+        url : '/provrest/registros/semana/desarrollador',  	        
         contentType:'application/json',
         method : 'post',
       	data : data,	 //La misma información del gráfico de barras
         success : function(rep){  
+        	var tabla = document.getElementById("detalle_registros");
+        	limpiarTabla(tabla);
+        	for (var i = 0; i < rep.length; i++) {        		
+        		var tr = document.createElement('tr');
+        		tr.appendChild(crearTDoculto(rep[i].id));
+        		tr.appendChild(crearTD(rep[i].jira));
+        		tr.appendChild(crearTD(rep[i].tipojira));
+        		tr.appendChild(crearTD(rep[i].resumen));
+        		tr.appendChild(crearTD(rep[i].usuario.descripcion));
+        		tr.appendChild(crearTD(rep[i].tipoActividad.descripcion));
+        		tr.appendChild(crearTD(rep[i].nro_horas));
+        		tr.appendChild(crearTD(rep[i].fecha_registro.substring(0, 10)));
+        		tr.appendChild(crearTD(rep[i].fecha_real_trabajo.substring(0, 10)));
+        		tr.appendChild(crearTD(rep[i].comentario));
+        		tr.appendChild(crearBotonX());
+        		tabla.appendChild(tr);        		
+			}
         	
         }
 	});
@@ -174,4 +209,57 @@ function cargarGraficoBarras(){
 }
 /*------------------------- AL CARGAR LA PÁGINA ------------------*/
 cargarGraficoBarras();
+/*---------------------------- AUXILIAR ------------------------*/
+function crearTD(valor1){
+	td = document.createElement('td');
+	td.innerHTML = valor1;
+	return td;
+}
+function limpiarTabla(a){
+	while(a.hasChildNodes())
+		a.removeChild(a.firstChild);
+}
+function crearTDoculto(valor1){
+	td = document.createElement('td');
+	td.innerHTML = valor1;
+	td.setAttribute('class','no_mostrar');
+	return td;
+}
+function crearBotonX(){
+	btn1 = document.createElement('button');
+	btn2 = document.createElement('button');
+	i1 = document.createElement('i');
+	i1.setAttribute('class','mdi mdi-checkbox-marked-circle-outline');
+	i2 = document.createElement('i');
+	i2.setAttribute('class','mdi mdi-close');
+	btn1.appendChild(i1);
+	btn2.appendChild(i2);
+	
+	btn1.setAttribute('class','btn btn-icons btn-inverse-success btn-ico');
+	btn1.setAttribute('onclick','cambiar_estado(this,1)');
+	
+	btn2.setAttribute('class','btn btn-icons btn-inverse-danger btn-ico');
+	btn2.setAttribute('onclick','cambiar_estado(this,4)');	
+	
+	td = document.createElement('td');
+	contenido = document.createElement('div');
+	contenido.setAttribute('class','texto_derecha');
+	contenido.appendChild(btn1);
+	contenido.appendChild(btn2);
+	td.appendChild(contenido);
+	return td;
+}
 
+//------------------------------
+function prueba(){
+	var elemento = document.getElementsByClassName("c3-shapes c3-shapes-Trabajado c3-bars c3-bars-Trabajado");
+	elemento[0].children[3].style.fill = "#12c03b";
+}
+function prueba2(){
+	var elemento = document.getElementsByClassName("c3-shapes c3-shapes-Trabajado c3-bars c3-bars-Trabajado");
+	elemento[0].children[3].style.fill = "rgb(33, 150, 243)";
+}
+function prueba3(){
+	var elemento = document.getElementsByClassName("c3-xgrid-focus");
+	console.log(elemento)
+}

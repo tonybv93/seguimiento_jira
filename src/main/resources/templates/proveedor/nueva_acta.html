@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <link rel="stylesheet" th:href="@{/css/select2.min.css}">
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> 
+  </head>
+
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------REGISTRO  ------------------------------------------------------->
+			<div class="col-12 grid-margin">
+	            <div class="card">                
+	            	<div class="card-body"> 
+	              		<h4>Nueva acta</h4>
+	              		<div class="grupo_datos grupo_enmarcado">      
+                      <div class="row">
+                       <div class="col-md-7">
+                       <div class="row">                    	
+                        <div class="col-md-12">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label texto_derecha">Fábrica:</label>
+                            <div class="col-sm-9">
+                            	<input id="acta_fabrica_id" type="hidden" th:value="${fabrica.id}">
+								<span class="fecha_plomo" th:text="${fabrica.nombre}"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">                    	
+                        <div class="col-md-12">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label texto_derecha">Cliente:</label>
+                            <div class="col-sm-9">
+                            	<select id="acta_cliente_id" class="form-control border-primary">
+									<option th:each="opcion:${listaEmpresas}" th:value="${opcion.id}" th:text="${opcion.nombrecorto}"></option>							
+								</select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">                    	
+                        <div class="col-md-12">
+                          <div class="form-group row">
+                            <label class="col-sm-3 col-form-label texto_derecha">Tipo:</label>
+                            <div class="col-sm-9">
+                            	<select id="acta_tipo_id" class="form-control border-primary">
+									<option th:each="opcion:${listaTiposActa}" th:value="${opcion.id}" th:text="${opcion.descripcion}"></option>							
+								</select>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                       	<div class="row">                      	
+	                        <div class="col-md-12">
+	                          <div class="form-group row">
+	                            <label class="col-sm-3 col-form-label texto_derecha">Periodo:</label>
+	                            <div class="col-sm-9">
+		                            <div class="d-flex">
+		                               <select id="select_periodo" class="form-control border-primary">
+											<option th:each="opcion:${listaPeriodos}" th:value="${opcion.id}" th:text="${opcion.codigo}"></option>							
+										</select>
+		                               <button onclick="buscarJiras()" class="btn btn-primary mr-2">Buscar</button>                             	
+		                           	</div>
+		                           	 <span id="alerta_jira" class="alerta_forms"></span>
+		                           	<div class="mensaje_resultado" id="resultado"></div>
+	                            </div>
+	                          </div>
+	                        </div>
+	                 	</div>  
+                      </div>
+<!----------------------------------------------------------------------- pie  ------------------------------------------------------->
+                       <div class="col-md-5">
+                       	<div class="grafico_horas">
+                       		<h6 class="titulo_pie"></h6>
+                       	</div>
+                       </div>
+                      </div> 
+<!-----------------------------------------------------------------------Sección 2  ------------------------------------------------------->      	                 	
+	                 	<div class="row">                      	
+	                        <div class="col-md-10">
+	                          <div class="form-group row">
+	                            <label class="col-sm-3 col-form-label texto_derecha">Descripción:</label>
+	                            <div class="col-sm-9">
+	                               <textarea id="txa_descripcion" class="form-control"></textarea>
+	                            </div>	
+	                          </div>
+	                        </div>
+	                 	</div>
+	                 	<h4>Detalle</h4>
+	              		<div class="div_fondo_blanco">
+	              			<table class="table table-hover">
+	              				<thead>
+	              					<tr>
+		              					<th>Jira</th>
+		              					<th>Tipo</th>
+		              					<th>Resumen</th>
+		              					<th>C. Costo</th>
+		              					<th>Total Horas</th>
+		              					<th>Tarifa</th>
+		              					<th>¿Considerar?</th>
+	              					</tr>
+	              				</thead>
+	              				<tbody id="cuerpo_tabla">
+	              				</tbody>
+	              			</table>							
+						</div> 	  
+                    </div> 
+                    <div class="div_derecha">
+                    	<button class="btn btn-secondary mr-2">Cancelar</button>  
+	              		<button class="btn btn-primary mr-2" onclick="enviar_acta()">Enviar</button>    
+                    </div>         		       	 
+					</div>
+	            </div>
+			</div>
+<!------------------------------------------------------------------------------------------------------------>
+         </div> 
+      </div>
+   	</div>
+ 	</div>	
+<!------------------------------------------------------------------------------------------------------------>
+
+
+
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>    
+    <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>    
+    
+    <script th:src="@{/js/nueva_acta.js}"></script> 
+    <script th:src="@{/js/menus.js}"></script>    
+    <script type="text/javascript">
+    	cargar_menus();
+	</script>
+</body>
+</html>

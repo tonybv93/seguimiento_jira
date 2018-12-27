@@ -1,7 +1,5 @@
 package com.auth.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,8 +19,8 @@ public class Periodo {
 	private Integer id;
 	
 	private String codigo;
-	private Date inicio;
-	private Date fin;
+	private String inicio;
+	private String fin;
 	
 	public Integer getId() {
 		return id;
@@ -35,20 +33,19 @@ public class Periodo {
 	}
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
-	}
-	public Date getInicio() {
+	}	
+	public String getInicio() {
 		return inicio;
 	}
-	public void setInicio(Date inicio) {
+	public void setInicio(String inicio) {
 		this.inicio = inicio;
 	}
-	public Date getFin() {
+	public String getFin() {
 		return fin;
 	}
-	public void setFin(Date fin) {
+	public void setFin(String fin) {
 		this.fin = fin;
 	}
-
 	public Periodo() {
 
 	}

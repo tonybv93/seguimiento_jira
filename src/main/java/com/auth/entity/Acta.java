@@ -32,7 +32,7 @@ public class Acta {
 	private String version;		
 	private String razon_social_proveedor;
 	private String descripcion_servicio;
-	private long tatal_horas;
+	private long total_horas;
 	private long tarifa;
 	private long monto_bruto;
 	private long monto_neto;
@@ -42,7 +42,7 @@ public class Acta {
 	private boolean flagaprobado;
 		
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_estado")
+	@JoinColumn(name="id_acta_estado")
 	private Acta_Estado estado;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -50,8 +50,8 @@ public class Acta {
 	private Periodo periodo;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_tipo_acta")
-	private Acta_Tipo tipo;
+	@JoinColumn(name="id_indicador_contable")
+	private Indicador_Contable indicador;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_empresa")
@@ -105,13 +105,13 @@ public class Acta {
 	public void setDescripcion_servicio(String descripcion_servicio) {
 		this.descripcion_servicio = descripcion_servicio;
 	}
-
-	public long getTatal_horas() {
-		return tatal_horas;
+	
+	public long getTotal_horas() {
+		return total_horas;
 	}
 
-	public void setTatal_horas(long tatal_horas) {
-		this.tatal_horas = tatal_horas;
+	public void setTotal_horas(long total_horas) {
+		this.total_horas = total_horas;
 	}
 
 	public long getTarifa() {
@@ -185,13 +185,13 @@ public class Acta {
 	public void setPeriodo(Periodo periodo) {
 		this.periodo = periodo;
 	}
-
-	public Acta_Tipo getTipo() {
-		return tipo;
+	
+	public Indicador_Contable getIndicador() {
+		return indicador;
 	}
 
-	public void setTipo(Acta_Tipo tipo) {
-		this.tipo = tipo;
+	public void setIndicador(Indicador_Contable indicador) {
+		this.indicador = indicador;
 	}
 
 	public Empresa getEmpresa() {

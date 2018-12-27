@@ -1,5 +1,8 @@
 package com.auth.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -14,11 +17,29 @@ public class RespGenerica {
 	private String texto3;
 	private String texto4;
 	private String texto5;
+	private List<String> arregloStr = new ArrayList<>();
+	private List<Integer> arregloInt = new ArrayList<>();
 	
 	public RespGenerica() {
 		
 	}	
 	
+	public List<String> getArregloStr() {
+		return arregloStr;
+	}
+
+	public void setArregloStr(List<String> arregloStr) {
+		this.arregloStr = arregloStr;
+	}
+
+	public List<Integer> getArregloInt() {
+		return arregloInt;
+	}
+
+	public void setArregloInt(List<Integer> arregloInt) {
+		this.arregloInt = arregloInt;
+	}
+
 	public String getTexto3() {
 		return texto3;
 	}

@@ -2,7 +2,7 @@
 function buscar_jiras(){
 	str = document.getElementById("jira_buscador").value;
 	tabla = document.getElementById("tabla_buscar");
-	var str_busqueda = '../../provrest/buscar/jira/' + str;
+	var str_busqueda = '../../provrest/buscarxfab/jira/' + str;
 	$.get(str_busqueda)
 	.done(function( data ) {
 		limpiarTablaBusqueda();
@@ -324,6 +324,11 @@ function quitarElemento(btn){
 	        method : 'post',
 	      	data : data,
 	        success : function(respuesta){
+	        	if (document.getElementById("id_input").value != ''){
+	        		console.log("adasdas");
+	        		donut();
+	        	}
+	        	fila.parentNode.removeChild(fila);
 	        },
 	        error: function(error,sm1,sm2){
 	        	alert("Se prodjo un error");
@@ -332,11 +337,7 @@ function quitarElemento(btn){
 	        }  	        
 	    });
 	
-	if (document.getElementById("id_input").value != ''){
-		console.log("adasdas");
-		donut();
-	}
-	fila.parentNode.removeChild(fila);
+	
 }
 
 function enviarElemento(btn){
@@ -367,9 +368,8 @@ function enviarElemento(btn){
 $( function() {
     $("#id_input").change( function() {
     	var jira = document.getElementById("id_input").value;
-    	var str_busqueda = '../../provrest/hxjira/' + jira    	
+    	var str_busqueda = '../../provrest/hxjiraxfab/' + jira    	
     	$.get(str_busqueda).done(function( data ) {	  
-    		console.log(data);
     		if (data != null){
     			cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo); 
     			document.getElementById("resultado").innerHTML = data.descripcion;
@@ -377,13 +377,15 @@ $( function() {
     	})
     	.fail(function () {
     		document.getElementById("resultado").innerHTML = "No encontrado.";
+    		var div_cont = document.getElementById("c3-pie-chart1");
+    		div_cont.innerHTML = "No encontrado.";	
         });	
     });
 });
 //Invocar manualmente el cambio de donut
 function donut(){
 	var jira = document.getElementById("id_input").value;
-	var str_busqueda = '../../provrest/hxjira/' + jira    	
+	var str_busqueda = '../../provrest/hxjiraxfab/' + jira    	
 	$.get(str_busqueda).done(function( data ) {	  
 		if (data != null){
 			cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo); 
@@ -435,9 +437,13 @@ function cargarGraficoDonut(totales,consumidos){
 	    });
 	}else{
 		var div_cont = document.getElementById("c3-pie-chart1");
-		div_cont.innerHTML = "No existe data para mostrar en este requerimiento. No se han aprobado horas de dsarrollo.";			
+		div_cont.innerHTML = "No existe data para mostrar en este requerimiento. No se han aprobado horas de desarrollo.";			
 	}			
 }
 
 
-
+//================================== PRUEBA
+function prueba3(){
+	var elemento = document.getElementsByClassName("c3-xgrid-focus");
+	console.log(elemento.lenght)
+}

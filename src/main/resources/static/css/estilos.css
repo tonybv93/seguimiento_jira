@@ -224,6 +224,11 @@
 	text-align: right;
 	float: right;
 }
+.div_derecha{
+	width: 100%;
+	text-align: right;
+
+}
 .texto-abajo{
 	vertical-align: bottom;
 }
@@ -618,4 +623,10 @@ textarea
 .ico_creado{
 	color: #2196f3;
 	font-size:16px; 
+}
+.div_fondo_blanco{
+	background-color: #fff;
+}
+.fondo_rojo{
+	border: solid 2px #aa0000;
 }

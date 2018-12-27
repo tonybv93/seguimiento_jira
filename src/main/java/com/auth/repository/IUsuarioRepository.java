@@ -16,6 +16,6 @@ public interface IUsuarioRepository extends CrudRepository<Usuario, Integer> {
 	@Query(value ="INSERT INTO JIRABD(PASSWORD, ENABLE, USERNAME) VALUES (pass , flag , us)",nativeQuery = true)
 	public Usuario registrar(@Param("insertLink") String us,@Param("insertLink") String pass,@Param("insertLink") int flag,@Param("insertLink") int id);
 	
-	@Query(value="SELECT u.ID, u.PASSWORD, u.ENABLE, u.USERNAME,u.DESCRIPCION FROM BVLSEGDB.USUARIO u RIGHT JOIN BVLSEGDB.USUARIO_ROL ur ON u.id = ur.ID_USER WHERE ur.ID_ROL = ?1",nativeQuery = true)
+	@Query(value="SELECT u.ID, u.PASSWORD, u.ENABLE, u.USERNAME,u.DESCRIPCION,u.ID_FABRICA, u.ID_EMPRESA FROM BVLSEGDB.USUARIO u RIGHT JOIN BVLSEGDB.USUARIO_ROL ur ON u.id = ur.ID_USER WHERE ur.ID_ROL = ?1",nativeQuery = true)
 	public List<Usuario> usuariosPorRol(int id_rol);
 }

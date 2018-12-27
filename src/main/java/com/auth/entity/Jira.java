@@ -21,6 +21,7 @@ public class Jira {
 	private String informador;
 	private String asignado;
 	private String responsable;	
+	private String centro_costo;
 	private double horas_cert;
 	private double horas_des;
 	private double monto_cert;
@@ -193,6 +194,12 @@ public class Jira {
 	}
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
+	}	
+	public String getCentro_costo() {
+		return centro_costo;
+	}
+	public void setCentro_costo(String centro_costo) {
+		this.centro_costo = centro_costo;
 	}
 	public Jira() {
 		super();

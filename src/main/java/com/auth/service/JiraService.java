@@ -14,7 +14,7 @@ import com.auth.entity.Empresa;
 import com.auth.entity.Estado_Jira;
 import com.auth.entity.Etiqueta;
 import com.auth.entity.Fabrica;
-import com.auth.entity.Horas_X_Jira;
+import com.auth.entity.HJira;
 import com.auth.entity.Indicador_Contable;
 import com.auth.entity.Jira;
 import com.auth.entity.Jira_Detalle;
@@ -26,7 +26,7 @@ import com.auth.repository.IEmpresaRepository;
 import com.auth.repository.IEstadoJiraRepository;
 import com.auth.repository.IEtiquetaRepository;
 import com.auth.repository.IFabricaRepository;
-import com.auth.repository.IHorasXJiraRepository;
+import com.auth.repository.IHJiraRepository;
 import com.auth.repository.IIndicadorContableRepository;
 import com.auth.repository.IJiraDetalleRepository;
 import com.auth.repository.IJiraRepository;
@@ -55,7 +55,7 @@ public class JiraService implements IJiraService {
 	@Autowired
 	IEmpresaRepository empresaRepo;
 	@Autowired
-	IHorasXJiraRepository horasJiraRepo;
+	IHJiraRepository horasJiraRepo;
 
 	@Override
 	public Jira buscarPorId(Integer id) {
@@ -85,7 +85,7 @@ public class JiraService implements IJiraService {
 			return null;
 	}
 //============================== BUSCADOR PARA ACTAS ================================	
-	public List<Horas_X_Jira> BuscadorPersonalizado(String str){
+	public List<HJira> BuscadorPersonalizado(String str){
 		//Usar JIRA API REST
 		List<JsoJira> jsoJiras = new ArrayList<>();
 		String filtro;
@@ -95,9 +95,9 @@ public class JiraService implements IJiraService {
 		
 		if (jsoJiras != null) {
 			//Crear Respuesta		
-			List<Horas_X_Jira> lsthxj = new ArrayList<>();
+			List<HJira> lsthxj = new ArrayList<>();
 			for (JsoJira j : jsoJiras) {
-				Horas_X_Jira hxj = new Horas_X_Jira();
+				HJira hxj = new HJira();
 				hxj.setJira(j.getKey());
 				hxj.setDescripcion(j.getFields().getSummary());
 				hxj.setTipo(j.getFields().getIssuetype().getName());
@@ -110,7 +110,34 @@ public class JiraService implements IJiraService {
 			return null;
 		}		
 	}
-//====================================================================================
+	
+	//============================== BUSCADOR PARA ACTAS ================================	
+	@Override	
+	public List<HJira> buscarJiraPorFabrica(String str, String fabrica){
+			//Usar JIRA API REST
+			List<JsoJira> jsoJiras = new ArrayList<>();
+			String filtro;
+			filtro = "project=rsis18+and(text~'" +str+ "+'+or+summary~'" +str+ "')+and+fabrica="+fabrica+ "+and+issuetype+in+standardIssueTypes()+and+issuetype+in+('Mantenimiento+de+Sistemas','Error+en+Sistema',Requerimiento)";
+			filtro = filtro + "&maxResults=10&fields=key,summary,assignee,issuetype,customfield_14851,customfield_14850";
+			jsoJiras = apiJira.busquedaJQL(filtro);	
+			
+			if (jsoJiras != null) {
+				//Crear Respuesta		
+				List<HJira> lsthxj = new ArrayList<>();
+				for (JsoJira j : jsoJiras) {
+					HJira hxj = new HJira();
+					hxj.setJira(j.getKey());
+					hxj.setDescripcion(j.getFields().getSummary());
+					hxj.setTipo(j.getFields().getIssuetype().getName());
+					hxj.setHoras_desarrollo(j.getFields().getCustomfield_14851());
+					hxj.setHoras_prueba(j.getFields().getCustomfield_14850());
+					lsthxj.add(hxj);
+					}
+				return lsthxj;
+			}else {
+				return null;
+			}		
+		}//====================================================================================
 //====================================================================================
 //====================================================================================
 	@Override
@@ -198,7 +225,11 @@ public class JiraService implements IJiraService {
 			if (noEsNuloOVacio(jsonJira.getFields().getCustomfield_11483())) {
 				Indicador_Contable indicador =   indicadorExisteOnuevo(jsonJira.getFields().getCustomfield_11483().getValue());
 				bdJira.setIndicador(indicador);
-			}		
+			}	
+			// INDICADOR CONTABLE
+			if (noEsNuloOVacio(jsonJira.getFields().getCustomfield_17050())) {
+				bdJira.setCentro_costo(jsonJira.getFields().getCustomfield_17050().getValue());
+			}
 			// TIPO DE REQUERIMIENTO
 			if (noEsNuloOVacio(jsonJira.getFields().getIssuetype())) {
 				Tipo_Requerimiento tipo = tipoExisteOnuevo(jsonJira.getFields().getIssuetype().getName());
@@ -210,15 +241,20 @@ public class JiraService implements IJiraService {
 				bdJira.setEstadoJira(estado);	
 			}		
 			jiraRepo.save(bdJira);
-			Horas_X_Jira hxj;
+						
+			// GUARDAR JIRA HISTÓRICO
+			HJira hxj;
 			hxj = horasJiraRepo.findByJira(bdJira.getJira());
 			if(hxj == null) {
-				hxj = new Horas_X_Jira();
+				hxj = new HJira();
 				hxj.setJira(bdJira.getJira());
 				hxj.setDescripcion(bdJira.getResumen());
 				hxj.setTipo(bdJira.getTipoRequerimiento().getNombre());
 				hxj.setHoras_desarrollo(bdJira.getHoras_des());
 				hxj.setHoras_prueba(bdJira.getHoras_cert());
+				hxj.setEmpresa(bdJira.getEmpresa());
+				hxj.setFabrica(bdJira.getFabrica());
+				hxj.setIndicador(bdJira.getIndicador());
 			}else {
 				hxj.setHoras_desarrollo(bdJira.getHoras_des());
 				hxj.setHoras_prueba(bdJira.getHoras_cert());
@@ -234,7 +270,7 @@ public class JiraService implements IJiraService {
 	private List<JsoJira> getListaJsonJiraActualizada(String filtro) {
 		List<JsoJira> jsoJiras = new ArrayList<>();
 		// Complementa la cadena de búsqueda de JIRA REST para reducir los campos
-		filtro = filtro + "&maxResults=500&fields=key,customfield_10800,customfield_11483,issuetype,summary,status,assignee,reporter,created,updated,customfield_11016,customfield_14851,customfield_14850,priority,parent,labels,customfield_11236";
+		filtro = filtro + "&maxResults=500&fields=key,customfield_10800,customfield_11483,issuetype,summary,status,assignee,reporter,created,updated,customfield_11016,customfield_14851,customfield_14850,priority,parent,labels,customfield_11236,customfield_17050";
 		jsoJiras = apiJira.busquedaJQL(filtro);
 		
 		//Actualizar hijos

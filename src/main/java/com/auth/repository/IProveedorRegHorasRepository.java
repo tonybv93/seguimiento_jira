@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+
 import com.auth.auxiliar.HorasPorSemana;
 import com.auth.entity.Estado_Reg_Horas;
 import com.auth.entity.Proveedor_Reg_Horas;
@@ -35,7 +36,7 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 				" GROUP BY pr.fecha_real_trabajo" +
 				" ORDER BY pr.fecha_real_trabajo DESC"
 				,nativeQuery= false)
-	public List<HorasPorSemana> horasSemanales(Usuario usuario, Estado_Reg_Horas e1, Estado_Reg_Horas e2);	
+	public List<HorasPorSemana> horasSemanales(Usuario usuario, Estado_Reg_Horas e1, Estado_Reg_Horas e2);
 	
 	@Query(value="SELECT sum(NRO_HORAS) FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE jira = ?1", nativeQuery = true)
 	public long horasTrabajadas(String jira);

@@ -63,32 +63,11 @@
 	                      				<th>Confirmación</th>	
 	                  			</tr>
 	                  		</thead>
-	                  		<tbody id="detalle_registros">
-	                  			<tr  th:each="registro:${listaRegistrosConfirmados}">                   				
-	                  				<td class="no_mostrar"  th:text="${registro.id}"></td>                   				
-	                      			<td  th:text="${registro.jira}"></td>
-	                      			<td  th:text="${registro.tipojira}"></td>
-	                      			<td  th:text="${registro.resumen}"></td>	
-	                      			<td  th:text="${registro.usuario.descripcion}"></td>                      				
-	                      			<td  th:text="${registro.tipoActividad.descripcion}"></td>
-	                      			<td  th:text="${registro.nro_horas}"></td>
-	                      			<td  th:text="${#dates.format(registro.fecha_registro, 'dd-MM-yyyy')}"></td>
-	                      			<td  th:text="${#dates.format(registro.fecha_real_trabajo, 'dd-MM-yyyy')}"></td>
-	                      			<td  th:text="${registro.comentario}"></td>	                      			
-	                      			<td>
-	                      				<div class="texto_derecha">
-	                      					<button class="btn btn-icons btn-inverse-success btn-ico" onclick="cambiar_estado(this,1)">
-	                      						<i class="mdi mdi-checkbox-marked-circle-outline"></i>
-	                      					</button>
-	                      					<button class="btn btn-icons btn-inverse-danger btn-ico" onclick="cambiar_estado(this,4)">
-	                      						<i class="mdi mdi-close"></i>
-	                      					</button>	                      						
-	                      				</div>
-	                      			</td>
-	                  			</tr>
+	                  		<tbody id="detalle_registros">	                  		
 	                  		</tbody>
-	                  	</table>   	 
+	                  	</table>   
 					</div>
+					
 	            </div>
 			</div>
 <!------------------------------------------------------------------------------------------------------------>

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Usuario;
+import com.auth.service.IActaService;
 import com.auth.service.IJiraService;
 import com.auth.service.IRegistroHorasService;
 import com.auth.service.IUsuarioService;
@@ -24,13 +25,23 @@ public class ProveedorController {
 	IRegistroHorasService regHorasService;
 	@Autowired
 	IUsuarioService usuarioService;	
+	@Autowired
+	IActaService actaService;
 
 // -------------- DESARROLLADOR	
+	@GetMapping("/desarrollo/historialregistros")
+	public String historialRegistros(Model model) {		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());			
+		model.addAttribute("usuario",usuario);
+		model.addAttribute("listaRegistrosConfirmados",regHorasService.listarRegistrosConfirmadosPorDesarrollador(usuario));
+		model.addAttribute("listaRegistrosAprobados",regHorasService.listarRegistrosAprobadosPorDesarrollador(usuario));
+		return "proveedor/historial_registros";
+	}
 	@GetMapping("/desarrollo/registrohoras")
 	public String registrarHoras(Model model) {		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
-		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
-		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());			
 		model.addAttribute("usuario",usuario);
 		model.addAttribute("listaRegistros",regHorasService.listarRegistrosEnviadosPorDesarrollador(usuario));
 		model.addAttribute("listaRegistrosConfirmados",regHorasService.listarRegistrosConfirmadosPorDesarrollador(usuario));
@@ -51,11 +62,28 @@ public class ProveedorController {
 		}
 		return "redirect:/proveedor/desarrollo/registrohoras";
 	}
+	
 // ------------ GESTION PROVEEDOR
 	@GetMapping("/gestion/aprobacionhoras")
 	public String aprobacionHoras(Model model) {
 		model.addAttribute("listaDesarrolladores",usuarioService.listarUsuarioPorRol(3));
 		model.addAttribute("listaRegistros","");
 		return "proveedor/control_horas";
+	}
+	@GetMapping("/gestion/listaactas")
+	public String listarActasEnviadas(Model model) {
+		model.addAttribute("listaActas",actaService.listarTodoActas());
+		return "proveedor/historial_actas";
+	}
+	@GetMapping("/gestion/nuevaacta")
+	public String nuevaActa(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
+		
+		model.addAttribute("listaPeriodos",actaService.listarPeriodos());
+		model.addAttribute("listaEmpresas",actaService.listarEmpresas());
+		model.addAttribute("listaTiposActa",actaService.listarIndicadorContable());
+		model.addAttribute("fabrica",usuario.getFabrica());
+		return "proveedor/nueva_acta";
 	}
 }

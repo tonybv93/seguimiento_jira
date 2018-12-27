@@ -21,6 +21,7 @@ public class JsoFields {
 	private JsoPersonalizado customfield_10800; 	//Area Solicitante
 	private JsoPersonalizado customfield_11483; 	//Indicador
 	private JsoPersonalizado customfield_11016; 	//Fabrica
+	private JsoPersonalizado customfield_17050;		//Centro de costo
 	
 	private JsoAtributoG issuetype;					//Tipo de incidencia	
 	private JsoAtributoG status;					//Estado
@@ -45,7 +46,13 @@ public class JsoFields {
     private List<JsoJira> subTareas = new ArrayList<>();	//Jiras hijo
 	
     
-    public String getEmpresa() {
+    public JsoPersonalizado getCustomfield_17050() {
+		return customfield_17050;
+	}
+	public void setCustomfield_17050(JsoPersonalizado customfield_17050) {
+		this.customfield_17050 = customfield_17050;
+	}
+	public String getEmpresa() {
 		return empresa;
 	}
 	public void setEmpresa(String empresa) {

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.auth.auxiliar.HorasPorSemana;
 import com.auth.entity.Estado_Reg_Horas;
-import com.auth.entity.Horas_X_Jira;
+import com.auth.entity.HJira;
 import com.auth.entity.Periodo;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Tipo_Actividad_Proveedor;
@@ -34,7 +34,8 @@ public interface IRegistroHorasService {
 	public List<HorasPorSemana> listarDiasPorSemana(int id_usuario);
 	public double horasTrabajadas(String jira);
 	//------------------ HX JIRA
-	public Horas_X_Jira buscarHXJira(String jira);
+	public HJira buscarHXJira(String jira);
+	public HJira buscarHXJiraXFab(String jira, String fabrica);
 	//----------------- TIPO ACTIVIDAD
 	public List<Tipo_Actividad_Proveedor> listarTiposActividad();
 	public Tipo_Actividad_Proveedor buscarTipoActividadPorID(int id);

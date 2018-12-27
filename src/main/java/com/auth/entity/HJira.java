@@ -2,9 +2,12 @@ package com.auth.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -16,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @DynamicInsert
 @DynamicUpdate
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Horas_X_Jira {
+public class HJira {
 	@Id
 	@Column(name="ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "HORAS_X_JIRA_SEQ")
@@ -30,7 +33,37 @@ public class Horas_X_Jira {
 	private double consumido_prueba;
 	private double consumido_desarrollo;
 	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_fabrica")
+	private Fabrica fabrica;
 	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_indicador_contable")
+	private Indicador_Contable indicador;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_empresa")
+	private Empresa empresa;
+	
+		
+	public Fabrica getFabrica() {
+		return fabrica;
+	}
+	public void setFabrica(Fabrica fabrica) {
+		this.fabrica = fabrica;
+	}
+	public Indicador_Contable getIndicador() {
+		return indicador;
+	}
+	public void setIndicador(Indicador_Contable indicador) {
+		this.indicador = indicador;
+	}
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
 	public String getDescripcion() {
 		return descripcion;
 	}
@@ -49,7 +82,7 @@ public class Horas_X_Jira {
 	public void setJira(String jira) {
 		this.jira = jira;
 	}
-	public Horas_X_Jira() {
+	public HJira() {
 		super();
 	}
 	public Integer getId() {

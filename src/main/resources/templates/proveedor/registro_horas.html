@@ -54,7 +54,7 @@
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label texto_derecha">Fábrica:</label>
                             <div class="col-sm-9">
-                            	<!--span class="fecha_plomo" th:text="${desarrollador.fabrica.nombre}"></span-->
+                            	<span class="fecha_plomo" th:text="${usuario.fabrica.nombre}"></span>
                             </div>
                           </div>
                         </div>
@@ -173,7 +173,7 @@
 	                      				</td>
 	                      			</tr>
 	                      		</tbody>
-	                      	</table>   	                      	                 	
+	                      	</table>                      	                 	
                       	</div>                      	
                       </div> 
                     </div>                     
@@ -190,66 +190,6 @@
                 </div>
    			</div>
 <!----------------------------------------------------------------------- CONFIRMADAS  ------------------------------------------------------->
-			<div class="col-12 grid-margin">
-	            <div class="card">                
-	              <div class="card-body"> 
-	              <h4>Horas confirmadas</h4>           
-	                 	<table class="table table-striped table-hover">
-	                  		<thead>
-	                  			<tr>
-	                  				<th>Jira</th>
-	                  				<th>Tipo</th>
-	                  				<th>Resumen</th>	                      				
-	                  				<th>Fecha</th>
-	                  				<th>H/H</th>	
-	                  			</tr>
-	                  		</thead>
-	                  		<tbody id="detalle_registros">
-	                  			<tr  th:each="registro:${listaRegistrosConfirmados}">  
-	                  				<td class="no_mostrar"  th:text="${registro.id}"></td>                   				
-	                  				<td  th:text="${registro.jira}"></td>
-	                  				<td  th:text="${registro.tipojira}"></td>
-	                  				<td  th:text="${registro.resumen}"></td>
-	                  				<td  th:text="${#dates.format(registro.fecha_real_trabajo, 'dd-MM-yyyy')}"></td>
-	                  				<td  th:text="${registro.nro_horas}"></td>
-	                  			</tr>
-	                  		</tbody>
-	                  	</table>   	                      	                 	
-	                  
-	              </div>
-	            </div>
-			</div>
-<!----------------------------------------------------------------------- APROBADAS  ------------------------------------------------------->
-			<div class="col-12 grid-margin">
-	            <div class="card">                
-	              <div class="card-body"> 
-	              <h4>Horas Aprobadas</h4>           
-	                 	<table class="table table-striped table-hover">
-	                  		<thead>
-	                  			<tr>
-	                  				<th>Jira</th>
-	                  				<th>Tipo</th>
-	                  				<th>Resumen</th>	                      				
-	                  				<th>Fecha</th>
-	                  				<th>H/H</th>	
-	                  			</tr>
-	                  		</thead>
-	                  		<tbody id="detalle_registros">
-	                  			<tr  th:each="registro:${listaRegistrosAprobados}">  
-	                  				<td class="no_mostrar"  th:text="${registro.id}"></td>                   				
-	                  				<td  th:text="${registro.jira}"></td>
-	                  				<td  th:text="${registro.tipojira}"></td>
-	                  				<td  th:text="${registro.resumen}"></td>
-	                  				<td  th:text="${#dates.format(registro.fecha_real_trabajo, 'dd-MM-yyyy')}"></td>
-	                  				<td  th:text="${registro.nro_horas}"></td>
-	                  			</tr>
-	                  		</tbody>
-	                  	</table>   	                      	                 	
-	                  
-	              </div>
-	            </div>
-			</div>
-<!------------------------------------------------------------------------------------------------------------>
          </div> 
       </div>
    	</div>
