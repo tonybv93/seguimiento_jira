@@ -115,30 +115,31 @@ public class JiraService implements IJiraService {
 	//============================== BUSCADOR PARA ACTAS ================================	
 	@Override	
 	public List<HJira> buscarJiraPorFabrica(String str, String fabrica){
-			//Usar JIRA API REST
-			List<JsoJira> jsoJiras = new ArrayList<>();
-			String filtro;
-			filtro = "project=rsis18+and(text~'" +str+ "+'+or+summary~'" +str+ "')+and+fabrica="+fabrica+ "+and+issuetype+in+standardIssueTypes()+and+issuetype+in+('Mantenimiento+de+Sistemas','Error+en+Sistema',Requerimiento)";
-			filtro = filtro + "&maxResults=10&fields=key,summary,assignee,issuetype,customfield_14851,customfield_14850";
-			jsoJiras = apiJira.busquedaJQL(filtro);	
-			
-			if (jsoJiras != null) {
-				//Crear Respuesta		
-				List<HJira> lsthxj = new ArrayList<>();
-				for (JsoJira j : jsoJiras) {
-					HJira hxj = new HJira();
-					hxj.setJira(j.getKey());
-					hxj.setDescripcion(j.getFields().getSummary());
-					hxj.setTipo(j.getFields().getIssuetype().getName());
-					hxj.setHoras_desarrollo(BigDecimal.valueOf(j.getFields().getCustomfield_14851()));
-					hxj.setHoras_prueba(BigDecimal.valueOf(j.getFields().getCustomfield_14850()));
-					lsthxj.add(hxj);
-					}
-				return lsthxj;
-			}else {
-				return null;
-			}		
-		}//====================================================================================
+		//Usar JIRA API REST
+		List<JsoJira> jsoJiras = new ArrayList<>();
+		String filtro;
+		filtro = "project=rsis18+and(text~'" +str+ "+'+or+summary~'" +str+ "')+and+fabrica="+fabrica+ "+and+issuetype+in+standardIssueTypes()+and+issuetype+in+('Mantenimiento+de+Sistemas','Error+en+Sistema',Requerimiento)";
+		filtro = filtro + "&maxResults=10&fields=key,summary,assignee,issuetype,customfield_14851,customfield_14850";
+		jsoJiras = apiJira.busquedaJQL(filtro);	
+		
+		if (jsoJiras != null) {
+			//Crear Respuesta		
+			List<HJira> lsthxj = new ArrayList<>();
+			for (JsoJira j : jsoJiras) {
+				HJira hxj = new HJira();
+				hxj.setJira(j.getKey());
+				hxj.setDescripcion(j.getFields().getSummary());
+				hxj.setTipo(j.getFields().getIssuetype().getName());
+				hxj.setHoras_desarrollo(BigDecimal.valueOf(j.getFields().getCustomfield_14851()));
+				hxj.setHoras_prueba(BigDecimal.valueOf(j.getFields().getCustomfield_14850()));
+				lsthxj.add(hxj);
+				}
+			return lsthxj;
+		}else {
+			return null;
+		}		
+	}
+//====================================================================================
 //====================================================================================
 //====================================================================================
 	@Override
@@ -243,23 +244,21 @@ public class JiraService implements IJiraService {
 			}		
 			jiraRepo.save(bdJira);
 						
-			// GUARDAR JIRA HISTÓRICO
+			// GUARDAR y actualizar JIRA HISTÓRICO
 			HJira hxj;
 			hxj = horasJiraRepo.findByJira(bdJira.getJira());
-			if(hxj == null) {
+			if(hxj == null) 
 				hxj = new HJira();
-				hxj.setJira(bdJira.getJira());
-				hxj.setDescripcion(bdJira.getResumen());
-				hxj.setTipo(bdJira.getTipoRequerimiento().getNombre());
-				hxj.setHoras_desarrollo(bdJira.getHoras_des());
-				hxj.setHoras_prueba(bdJira.getHoras_cert());
-				hxj.setEmpresa(bdJira.getEmpresa());
-				hxj.setFabrica(bdJira.getFabrica());
-				hxj.setIndicador(bdJira.getIndicador());
-			}else {
-				hxj.setHoras_desarrollo(bdJira.getHoras_des());
-				hxj.setHoras_prueba(bdJira.getHoras_cert());
-			}	
+			hxj.setJira(bdJira.getJira());
+			hxj.setDescripcion(bdJira.getResumen());
+			hxj.setTipo(bdJira.getTipoRequerimiento().getNombre());
+			hxj.setHoras_desarrollo(bdJira.getHoras_des());
+			hxj.setHoras_prueba(bdJira.getHoras_cert());
+			hxj.setEmpresa(bdJira.getEmpresa());
+			hxj.setFabrica(bdJira.getFabrica());
+			hxj.setIndicador(bdJira.getIndicador());
+			hxj.setCentro_costo(bdJira.getCentro_costo());
+
 			horasJiraRepo.save(hxj);
 			id++;
 		}

@@ -19,6 +19,7 @@ public class Periodo {
 	private Integer id;
 	
 	private String codigo;
+	private String periodo;
 	private String inicio;
 	private String fin;
 	
@@ -45,6 +46,13 @@ public class Periodo {
 	}
 	public void setFin(String fin) {
 		this.fin = fin;
+	}
+	
+	public String getPeriodo() {
+		return periodo;
+	}
+	public void setPeriodo(String periodo) {
+		this.periodo = periodo;
 	}
 	public Periodo() {
 

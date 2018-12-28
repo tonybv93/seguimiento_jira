@@ -192,7 +192,7 @@ function agregar(){
 	var str_busqueda = '../../provrest/hxjiraxfab/' + jira;
 	var alerta = document.getElementById("alerta_horas");
 	var alertajira = document.getElementById("alerta_jira");
-	var tipo_reg = document.getElementById("cbx_tipo_registro").value;
+	var tipo_reg = document.getElementById("cbx_tipo_registro");
 	var comentario = document.getElementById("txa_comentario").value;
 	var resultado = document.getElementById("resultado");
 	
@@ -207,16 +207,16 @@ function agregar(){
 		}else if(nro_horas < 0.5 || nro_horas > 24){
 			alerta.innerHTML = "*Las horas deben estar entre 1 y 24.";
 		}else{
-			//Buscar jira en la tabla HXJ (Data = Un jira) 
+			//Buscar jira en la tabla HXJ (Data = Un hjira) 
 			$.get(str_busqueda).done(function( data ) {	  
 				//Comprobar que hayan Horas disponibles : [SALIR]
-				if (data.horas_desarrollo < nro_horas){
+				if (data.horas_desarrollo <= nro_horas*1.1){
 					alert("No hay horas disponibles");
 				}else{
 					//Si hay horas disponibles, construir el REGISTRO
 					var objjson = {};
 					objjson.numero1 = nro_horas;
-					objjson.numero2 = tipo_reg;
+					objjson.numero2 = tipo_reg.value;
 					objjson.texto1 = jira;
 					objjson.texto2 = fechajs;	
 					objjson.texto3 = data.tipo;	
@@ -235,12 +235,13 @@ function agregar(){
 					        	if (!isNaN(respuesta)){
 					        		//Si la respuesta es correcta, crear la fila y agregarla a la tabla
 						        	tr.appendChild(crearTDoculto(respuesta));
-						        	tr.appendChild(crearTD('Creado'));
+						        	tr.appendChild(crearTD('<i class="mdi mdi-creation ico_creado"></i>'));
 									tr.appendChild(crearTD(jira));
 									tr.appendChild(crearTD(data.tipo));
 									tr.appendChild(crearTD(data.descripcion));
-									tr.appendChild(crearTD(tipo_reg));							
-									tr.appendChild(crearTD(nro_horas));
+									tr.appendChild(crearTD(tipo_reg.options[tipo_reg.selectedIndex].text));							
+									tr.appendChild(crearTD(nro_horas));									
+									tr.appendChild(crearTD(''));
 									tr.appendChild(crearTD(fechastr));
 									tr.appendChild(crearTD(comentario));
 									tr.appendChild(crearBotonX());	

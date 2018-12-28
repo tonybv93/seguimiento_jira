@@ -29,6 +29,7 @@ public class HJira {
 	private String jira;
 	private String descripcion;
 	private String tipo;
+	private String centro_costo;
 	private BigDecimal horas_desarrollo;
 	private BigDecimal horas_prueba;
 	private BigDecimal consumido_prueba;
@@ -48,6 +49,12 @@ public class HJira {
 	private Empresa empresa;
 	
 	
+	public String getCentro_costo() {
+		return centro_costo;
+	}
+	public void setCentro_costo(String centro_costo) {
+		this.centro_costo = centro_costo;
+	}
 	public Fabrica getFabrica() {
 		return fabrica;
 	}

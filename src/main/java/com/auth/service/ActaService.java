@@ -24,6 +24,7 @@ import com.auth.repository.IEmpresaRepository;
 import com.auth.repository.IEstadoActaRepository;
 import com.auth.repository.IFabricaRepository;
 import com.auth.repository.IHJiraRepository;
+import com.auth.repository.IHorasGestionDemandaRepository;
 import com.auth.repository.IIndicadorContableRepository;
 import com.auth.repository.IPeriodoRepository;
 import com.auth.rest.RespGenerica;
@@ -47,6 +48,8 @@ public class ActaService implements IActaService {
 	IActaDetalleRepository actaDetalleRepo;
 	@Autowired
 	IHJiraRepository hjiraRepo;
+	@Autowired
+	IHorasGestionDemandaRepository gestionDemandRepo;
 	
 	@Override
 	public List<Acta> listarTodoActas() {

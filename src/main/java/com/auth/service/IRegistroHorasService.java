@@ -5,6 +5,7 @@ import java.util.List;
 import com.auth.auxiliar.HorasPorSemana;
 import com.auth.entity.Estado_Reg_Horas;
 import com.auth.entity.HJira;
+import com.auth.entity.Horas_Gestion_Demanda;
 import com.auth.entity.Periodo;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Tipo_Actividad_Proveedor;
@@ -18,11 +19,13 @@ public interface IRegistroHorasService {
 	public void eliminarRegistro (int id);
 	public List<Proveedor_Reg_Horas> listarRegistrosEnviadosPorDesarrollador(Usuario usuario);
 	public List<Proveedor_Reg_Horas> listarRegistrosConfirmadosPorDesarrollador(Usuario usuario);
+	public List<Proveedor_Reg_Horas> listarRegistrosConfirmadosPorDesarrolladorMes(Usuario usuario);
 	public List<Proveedor_Reg_Horas> listarRegistrosAprobadosPorDesarrollador(Usuario usuario);
 	public List<Proveedor_Reg_Horas> listarRegistrisPorJira(String jira);
 	public List<Proveedor_Reg_Horas> listarRegistrosPorEstado(Estado_Reg_Horas estado);
 	//----------------- PERIODO
 	public List<Periodo> listarPeriodos();
+	public Periodo periodoActual();
 	//----------------- DESARROLLADOR
 	
 	//----------------- ESTADOS
@@ -32,10 +35,14 @@ public interface IRegistroHorasService {
 	public String eliminarHoras(Usuario u, RespGenerica objeto);
 	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro,int id_estado);
 	public List<HorasPorSemana> listarDiasPorSemana(int id_usuario);
+	public List<HorasPorSemana> listarDiasdelMes(int id_usuario, String periodo);
 	public double horasTrabajadas(String jira);
 	//------------------ HX JIRA	
 	public HJira buscarHXJiraXFab(String jira, String fabrica);
 	//----------------- TIPO ACTIVIDAD
 	public List<Tipo_Actividad_Proveedor> listarTiposActividad();
 	public Tipo_Actividad_Proveedor buscarTipoActividadPorID(int id);
+	//------------------ HORAS GESTION DEMANDA
+	public Horas_Gestion_Demanda buscarHGDemandaPorUsuario(int u, int p);
+	
 }

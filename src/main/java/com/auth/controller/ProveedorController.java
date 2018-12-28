@@ -43,9 +43,7 @@ public class ProveedorController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());			
 		model.addAttribute("usuario",usuario);
-		model.addAttribute("listaRegistros",regHorasService.listarRegistrosEnviadosPorDesarrollador(usuario));
-		model.addAttribute("listaRegistrosConfirmados",regHorasService.listarRegistrosConfirmadosPorDesarrollador(usuario));
-		model.addAttribute("listaRegistrosAprobados",regHorasService.listarRegistrosAprobadosPorDesarrollador(usuario));
+		model.addAttribute("listaRegistros",regHorasService.listarRegistrosEnviadosPorDesarrollador(usuario));		
 		model.addAttribute("listaTiposRegistro",regHorasService.listarTiposActividad());
 		return "proveedor/registro_horas";
 	}
@@ -66,8 +64,13 @@ public class ProveedorController {
 // ------------ GESTION PROVEEDOR
 	@GetMapping("/gestion/aprobacionhoras")
 	public String aprobacionHoras(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
+		model.addAttribute("gestdem",regHorasService.buscarHGDemandaPorUsuario(usuario.getId(),regHorasService.periodoActual().getId()));
 		model.addAttribute("listaDesarrolladores",usuarioService.listarUsuarioPorRol(3));
+		model.addAttribute("listaPeriodos",regHorasService.listarPeriodos());
 		model.addAttribute("listaRegistros","");
+		
 		return "proveedor/control_horas";
 	}
 	@GetMapping("/gestion/listaactas")

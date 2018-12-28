@@ -97,15 +97,16 @@ function cargarGraficoBarras(){
 	objjson.numero1 = id_des;	//Id de desarrollador
 	data = JSON.stringify(objjson);
 	$.ajax({
-        url : '/provrest/horas/semana/desarrollador',  	        
+        url : '/provrest/horas/mes/desarrollador',  	        
         contentType:'application/json',
         method : 'post',
       	data : data,
-        success : function(rep){  			
+        success : function(rep){  	
+        	console.log(rep);
         	var t = [];
         	var f = [];
         	var e = [];
-        	for (var i = 0; i < 14; i++) {
+        	for (var i = 0; i < 31; i++) {
 				if (rep[i].total < 8 ){
 					t[i] = rep[i].total;
 					f[i] = 8 - t[i];
@@ -120,13 +121,13 @@ function cargarGraficoBarras(){
         		bindto : '#c3_barras',        		
         		data : {
         			columns : 	[ 
-        					[ 'Trabajado', t[13], t[12], t[11], t[10], t[9], t[8], t[7], t[6], t[5], t[4], t[3], t[2], t[1], t[0]	], 				
-        					[ 'Faltante', f[13], f[12], f[11], f[10], f[9], f[8], f[7], f[6], f[5], f[4], f[3], f[2], f[1], f[0]	], 
-        					[ 'Exceso', e[13], e[12], e[11], e[10], e[9], e[8], e[7], e[6], e[5], e[4], e[3], e[2], e[1], e[0]	] 
+        					[ 'Trabajado', t[0], t[1], t[2], t[3], t[4], t[5], t[6], t[7], t[8], t[9], t[10], t[11], t[12], t[13], t[14], t[15], t[16], t[17], t[18], t[19], t[20], t[21], t[22], t[23], t[24], t[25], t[26], t[27], t[28], t[29], t[30] ], 				
+        					[ 'Faltante',f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8], f[9], f[10], f[11], f[12], f[13], f[14], f[15], f[16], f[17], f[18], f[19], f[20], f[21], f[22], f[23], f[24], f[25], f[26], f[27], f[28], f[29], f[30]], 
+        					[ 'Exceso', e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[13], e[14], e[15], e[16], e[17], e[18], e[19], e[20], e[21], e[22], e[23], e[24], e[25], e[26], e[27], e[28], e[29], e[30]] 
         				],
         				type : 'bar',
         				onmouseover: function (d, i) { 
-        					var datos = rep[13 - d.x].fecha;            					
+        					var datos = rep[d.x].fecha;            					
         					var tabla = document.getElementById("detalle_registros");        					
         					for (var i = 0; i < tabla.rows.length; i++) {         					
         						if (datos.substring(0, 10) == tabla.rows[i].children[5].innerHTML) {
@@ -147,38 +148,16 @@ function cargarGraficoBarras(){
         			     order: 'null'
         			},
         			legend: {
-        		        position: 'right'
+        		        position: 'bottom'
         		    },
         			size : {
         				height : 200,
-        				width : 800
+        				width : 850
         			},
         			color : {
         				pattern : [  '#2196f3', '#b1d5e2', '#c15456']
         			},
-        			axis: {
-        				x: {
-        			    	label: {
-        			    		text: 'Diciembre',
-        		                position: 'outer-center',        		                
-        			    	},
-        			    	type: 'category',
-    		                categories: [	'Lun ' + rep[13].leyenda,
-		        				'Mar ' + rep[12].leyenda,
-		        				'Mie ' + rep[11].leyenda,
-		        				'Jue ' + rep[10].leyenda,
-		        				'Vie ' + rep[9].leyenda,
-		        				'Sab ' + rep[8].leyenda,
-		        				'Dom ' + rep[7].leyenda,
-		        				'Lun ' + rep[6].leyenda,
-		        				'Mar ' + rep[5].leyenda,
-		        				'Mie ' + rep[4].leyenda,
-		        				'Jue ' + rep[3].leyenda,
-		        				'Vie ' + rep[2].leyenda,
-		        				'Sab ' + rep[1].leyenda,
-		        				'Dom ' + rep[0].leyenda
-		        			]
-        			    },	
+        			axis: {       					
         			    y: {
         			    	label: {
         			    		text: 'Horas',
@@ -201,14 +180,21 @@ function cargarGraficoBarras(){
         method : 'post',
       	data : data,	 //La misma información del gráfico de barras
         success : function(rep){  
+        	var strfact;
         	var tabla = document.getElementById("detalle_registros");
         	limpiarTabla(tabla);
         	for (var i = 0; i < rep.length; i++) {        		
         		var tr = document.createElement('tr');
         		tr.appendChild(crearTDoculto(rep[i].id));        		
         		tr.appendChild(crearTD(rep[i].tipoActividad.descripcion));
-        		tr.appendChild(crearTD(rep[i].flagfacturar));
+        		if (rep[i].flagfacturar == true){
+        			strfact='Sí';
+        		}else{
+        			strfact='No';
+        		}        		
+        		tr.appendChild(crearTD(strfact));
         		tr.appendChild(crearTD(rep[i].nro_horas));
+        		tr.appendChild(crearTD(rep[i].nro_horas_gestion));
         		tr.appendChild(crearTD(rep[i].fecha_registro.substring(0, 10)));
         		tr.appendChild(crearTD(rep[i].fecha_real_trabajo.substring(0, 10)));
         		tr.appendChild(crearTD(rep[i].hjira.jira));  

@@ -75,7 +75,7 @@ public class ProvRestController {
 			//VALIDACIÓN
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
-			//Encontrar registro
+			//ENCONTRAR REGISTRO
 			Proveedor_Reg_Horas registro = registroService.buscarRegPorID((int)respuesta.getNumero1());		
 			Rol rol = usuarioService.buscarRolPorId(4); //SI EL ROL ES JEFE DE PROVEEDORES, SI PUEDE CAMBIAR ESTADO DE OTRAS PERSONAS
 			if (registro.getUsuario() == usuario || usuario.getRoles().contains(rol)) {				 
@@ -99,6 +99,13 @@ public class ProvRestController {
 		public List<HorasPorSemana> listarHorasDiariasPorDesarrollador(@RequestBody RespGenerica respuesta){
 			return registroService.listarDiasPorSemana((int) respuesta.getNumero1());
 		}
+		// Lista de actividad diaria por Desarrollador [GRÁFICO DE BARRAS]
+		@PostMapping("/horas/mes/desarrollador")
+		@ResponseBody
+		public List<HorasPorSemana> listarHorasMesPorDesarrollador(@RequestBody RespGenerica respuesta){
+			return registroService.listarDiasdelMes((int) respuesta.getNumero1(), respuesta.getTexto1());
+		}
+				
 		// Lista de actividad diaria por Desarrollador [REGISTROS]
 		@PostMapping("/registros/semana/desarrollador")
 		@ResponseBody
@@ -106,6 +113,13 @@ public class ProvRestController {
 					
 			Usuario usuario = usuarioService.buscarPorId((int)respuesta.getNumero1());	
 			return registroService.listarRegistrosConfirmadosPorDesarrollador(usuario);
+		}
+		// Lista de actividad diaria por Desarrollador [REGISTROS]
+		@PostMapping("/registros/mes/desarrollador")
+		@ResponseBody
+		public List<Proveedor_Reg_Horas> listarRegistrosMesPorDesarrollador(@RequestBody RespGenerica respuesta){					
+			Usuario usuario = usuarioService.buscarPorId((int)respuesta.getNumero1());	
+			return registroService.listarRegistrosConfirmadosPorDesarrolladorMes(usuario);
 		}
 		
 		// 

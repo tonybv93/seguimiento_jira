@@ -142,7 +142,8 @@
 	                      				<th>Tipo Jira</th>
 	                      				<th>Resumen Jira</th>	   
 	                      				<th>Tipo tarea</th>	                  				
-	                      				<th>Horas</th>	
+	                      				<th>Hs trabajo</th>	
+	                      				<th>Hs Gestion</th>	
 	                      				<th>Fecha</th>   
 	                      				<th>Observaciones</th>
 	                      				<th>Confirmación</th>
@@ -159,6 +160,7 @@
 	                      				<td  th:text="${registro.hjira.descripcion}"></td>	                      				
 	                      				<td  th:text="${registro.tipoActividad.descripcion}"></td>
 	                      				<td  th:text="${registro.nro_horas}"></td>
+	                      				<td  th:text="${registro.nro_horas_gestion}"></td>
 	                      				<td  th:text="${#dates.format(registro.fecha_real_trabajo, 'dd-MM-yyyy')}"></td>
 	                      				<td  th:text="${registro.comentario}"></td>	                      			
 	                      				<td>

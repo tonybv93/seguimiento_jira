@@ -8,11 +8,11 @@ public class DetalleActaPre {
 	private String resumen;
 	private BigDecimal totalHoras;
 
-	public DetalleActaPre(String jira, String tipoJira, String resumen, double totalHoras) {
+	public DetalleActaPre(String jira, String tipoJira, String resumen, BigDecimal totalHoras) {
 		this.jira = jira;
 		this.tipoJira = tipoJira;
 		this.resumen = resumen;
-		this.totalHoras = new BigDecimal(totalHoras);
+		this.totalHoras = totalHoras;
 	}
 	public DetalleActaPre() {
 	}

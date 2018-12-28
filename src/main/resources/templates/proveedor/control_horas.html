@@ -35,14 +35,20 @@
 			<div class="col-12 grid-margin">
 	            <div class="card">                
 	              <div class="card-body"> 
-	              <h4>Confirmación de horas</h4>      
-	             		<div class="input-group texto-peque">
-							<label class="col-form-label">Desarrollador:</label>
-							<div class="ancho_corto">
-							<select id="filtro_desarrollador" onchange="filtrar()" name="filtro" class="form-control border-primary">
-								<option th:each="desarrollador:${listaDesarrolladores}" th:value="${desarrollador.id}" th:text="${desarrollador.descripcion}"></option>							
-							</select>
-							</div>
+	              <h4>Confirmación de horas por desarrollador</h4>      
+	             		<div class="input-group texto-peque col-12">	
+	             			<div class="col-6">
+		             			<label class="col-form-label">Desarrollador:</label>
+		             			<select id="filtro_desarrollador" onchange="filtrar()" name="filtro" class="form-control border-primary">
+									<option th:each="desarrollador:${listaDesarrolladores}" th:value="${desarrollador.id}" th:text="${desarrollador.descripcion}"></option>							
+								</select>
+	             			</div>
+	             			<div class="col-6">
+		             			<label class="col-form-label">Periodo:</label>
+		             			<select id="filtro_desarrollador" onchange="filtrar()" name="filtro" class="form-control border-primary">
+									<option th:each="periodo:${listaPeriodos}" th:value="${periodo.id}" th:text="${periodo.codigo}"></option>							
+								</select>
+	             			</div>
 						</div> 
 						<div class="cont_graf_barras">
 							<div class="titulo_graf_barras">Horas trabajadas por día</div>  
@@ -53,7 +59,8 @@
 	                  			<tr>	                  					   
                       				<th>Tipo tarea</th>	 
                       				<th>¿Facturable?</th>	                  				
-                      				<th>Horas</th>	
+                      				<th>Hs trabajo</th>	
+                      				<th>Hs gestión</th>	
                       				<th>Fecha registro</th>   
                       				<th>Fecha de trabajo</th> 
                       				<th>Jira</th>
@@ -70,6 +77,55 @@
 					
 	            </div>
 			</div>
+<!------------------------------------------------------------------------------------------------------------>
+		<div class="col-12 grid-margin">
+			<div class="row">
+				<div class="col-lg-5 grid-margin stretch-card">
+					<div class="card">
+						<div class="card-body">		
+							<h4>Gestión de demanda</h4>	
+			                <div class="wrapper d-flex justify-content-between">
+			                    <div class="side-left">
+			                      	<p class="mb-2">Factor actual:</p>
+			                    	<p class="display-3 mb-4 font-weight-light" th:text="${gestdem.factor*100} + '%'"></p>
+			                    </div>
+			                    <div class="side-right">
+			                    	<small class="text-muted">Enero 2019</small>
+			                	</div>
+			                </div>
+							<div class="wrapper">
+				                <div class="d-flex justify-content-between">
+					                <h5 class="mb-2">Horas repartidas</h5>
+					                <p class="mb-2 text-primary">90%</p>
+				                </div>
+				                <div class="progress">
+				                	<div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 88%" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"></div>
+				                </div>
+			                </div>
+			                <div class="clearfix">
+			                    <div class="float-left">
+			                    	<p class="mb-0 text-right">Consumidas</p>
+				                    <div class="fluid-container">
+				                    	<h3 class="font-weight-medium text-left mb-0" th:text="${gestdem.horas_consumidas!= null? gestdem.horas_consumidas+'h' : '0h' }">50h</h3>
+				                    </div>
+			                    </div>
+			                    <div class="float-right">
+			                    	<p class="mb-0 text-right">Totales</p>
+				                    <div class="fluid-container">
+				                    	<h3 class="font-weight-medium text-right mb-0" th:text="${gestdem.total_horas}+'h'"></h3>
+				                    </div>
+			                    </div>
+		                  	</div>
+		                </div>
+					</div>					
+				</div>
+				<div class="col-lg-7 grid-margin stretch-card">
+					<div class="card">
+					
+					</div>
+				</div>				
+			</div>
+		</div>
 <!------------------------------------------------------------------------------------------------------------>
          </div> 
       </div>

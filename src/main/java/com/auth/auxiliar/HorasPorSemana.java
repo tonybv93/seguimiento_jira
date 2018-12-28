@@ -1,21 +1,22 @@
 package com.auth.auxiliar;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class HorasPorSemana {
 	private Date fecha;
-	private double total;
+	private BigDecimal total;
 	private String leyenda;
 	public Date getFecha() {
 		return fecha;
 	}
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
-	}
-	public double getTotal() {
+	}	
+	public BigDecimal getTotal() {
 		return total;
 	}
-	public void setTotal(double total) {
+	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
 	public String getLeyenda() {
@@ -30,7 +31,7 @@ public class HorasPorSemana {
 		// TODO Auto-generated constructor stub
 	}
 
-	public HorasPorSemana(Date fecha, double total) {
+	public HorasPorSemana(Date fecha, BigDecimal total) {
 		super();
 		this.fecha = fecha;
 		this.total = total;

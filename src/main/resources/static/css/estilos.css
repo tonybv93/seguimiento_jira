@@ -463,10 +463,11 @@
 	margin-bottom: 20px;
 }
 .contenedor_tabla_detalle{
-	width: 90%;
+	width: 95%;
 	margin: 20px auto;
 	border: solid 1px #eee;
 	background-color: #fff;
+	overflow: auto;
 }
 .grupo_enmarcado{
 	background-color: #fafafa;
