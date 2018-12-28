@@ -118,8 +118,7 @@ public class JRestController {
 	// Obtener respuesta de ajax : NUEVO ACUERDO
 	@PostMapping("/acuerdo/nuevo")
 	public Acuerdos nuevoAcuerdo (@RequestBody RespGenerica jsonAcuerdo) {	
-		Acuerdos acuerdo = new Acuerdos();
-		
+		Acuerdos acuerdo = new Acuerdos();		
 		acuerdo.setAcuerdo(jsonAcuerdo.getTexto2());	
 		DateFormat formatoFechas = new SimpleDateFormat("yyyy-MM-dd");
 		Date fecha;
@@ -138,7 +137,7 @@ public class JRestController {
 			
 		acuerdo.setResponsable(acuerdoService.buscarUsuarioPorId((int)jsonAcuerdo.getNumero3()));
 		acuerdo.setEstado(acuerdoService.buscarEstadoPorId(1)); //Estado por defecto: 1-En proceso
-		acuerdo = acuerdoService.guardar(acuerdo);			
+		acuerdo = acuerdoService.guardar(acuerdo);		
 		return acuerdo;
 	}
 	

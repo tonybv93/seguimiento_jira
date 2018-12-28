@@ -75,7 +75,7 @@
 	                            <label class="col-sm-3 col-form-label texto_derecha">Jira:</label>
 	                            <div class="col-sm-9">
 		                            <div class="d-flex">
-		                               <input type="text" placeholder="Jira" id="id_input" class="form-control">
+		                               <input onblur="clear_alert('alerta_jira',this)" type="text" placeholder="Jira" id="id_input" class="form-control">
 		                               <button onclick="modal_buscar_jira()" class="btn btn-inverse-dark"><i class="mdi mdi-file-find mdi-24px"></i></button>                             	
 		                           	</div>
 		                           	 <span id="alerta_jira" class="alerta_forms"></span>
@@ -154,9 +154,9 @@
 	                      				<td>
 	                      					<i th:class="${registro.estado.icono}"></i>
 	                      				</td>                 				
-	                      				<td  th:text="${registro.jira}"></td>
-	                      				<td  th:text="${registro.tipojira}"></td>
-	                      				<td  th:text="${registro.resumen}"></td>	                      				
+	                      				<td  th:text="${registro.hjira.jira}"></td>
+	                      				<td  th:text="${registro.hjira.tipo}"></td>
+	                      				<td  th:text="${registro.hjira.descripcion}"></td>	                      				
 	                      				<td  th:text="${registro.tipoActividad.descripcion}"></td>
 	                      				<td  th:text="${registro.nro_horas}"></td>
 	                      				<td  th:text="${#dates.format(registro.fecha_real_trabajo, 'dd-MM-yyyy')}"></td>

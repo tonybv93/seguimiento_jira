@@ -2,6 +2,7 @@ package com.auth.service;
 
 import static java.lang.Math.toIntExact;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -101,8 +102,8 @@ public class JiraService implements IJiraService {
 				hxj.setJira(j.getKey());
 				hxj.setDescripcion(j.getFields().getSummary());
 				hxj.setTipo(j.getFields().getIssuetype().getName());
-				hxj.setHoras_desarrollo(j.getFields().getCustomfield_14851());
-				hxj.setHoras_prueba(j.getFields().getCustomfield_14850());
+				hxj.setHoras_desarrollo(BigDecimal.valueOf(j.getFields().getCustomfield_14851()));
+				hxj.setHoras_prueba(BigDecimal.valueOf(j.getFields().getCustomfield_14850()));
 				lsthxj.add(hxj);
 				}
 			return lsthxj;
@@ -129,8 +130,8 @@ public class JiraService implements IJiraService {
 					hxj.setJira(j.getKey());
 					hxj.setDescripcion(j.getFields().getSummary());
 					hxj.setTipo(j.getFields().getIssuetype().getName());
-					hxj.setHoras_desarrollo(j.getFields().getCustomfield_14851());
-					hxj.setHoras_prueba(j.getFields().getCustomfield_14850());
+					hxj.setHoras_desarrollo(BigDecimal.valueOf(j.getFields().getCustomfield_14851()));
+					hxj.setHoras_prueba(BigDecimal.valueOf(j.getFields().getCustomfield_14850()));
 					lsthxj.add(hxj);
 					}
 				return lsthxj;
@@ -165,19 +166,19 @@ public class JiraService implements IJiraService {
 			if (jsonJira.getFields().getCustomfield_11236() != null)
 				bdJira.setResponsable(jsonJira.getFields().getCustomfield_11236().getDisplayName());
 			// HORAS  CERT Y DESA
-			bdJira.setHoras_des(jsonJira.getFields().getCustomfield_14850());
-			bdJira.setHoras_cert(jsonJira.getFields().getCustomfield_14851());			
+			bdJira.setHoras_des(BigDecimal.valueOf(jsonJira.getFields().getCustomfield_14850()));
+			bdJira.setHoras_cert(BigDecimal.valueOf(jsonJira.getFields().getCustomfield_14851()));			
 			if (!noEsNuloOVacio(bdJira.getHoras_cert()) || !noEsNuloOVacio(bdJira.getHoras_des())) {
-				int horaCert = 0;
-				int horasDes= 0;
+				BigDecimal horaCert = BigDecimal.ZERO;
+				BigDecimal horasDes= BigDecimal.ZERO;
 				List<JsoJira> subTareas = jsonJira.getFields().getSubTareas();						
 				for (JsoJira jhijo: subTareas) {
-					horaCert = horaCert + jhijo.getFields().getCustomfield_14851();
-					horasDes = horasDes + jhijo.getFields().getCustomfield_14850();
+					horaCert = horaCert.add(BigDecimal.valueOf(jhijo.getFields().getCustomfield_14851()));
+					horasDes = horasDes.add(BigDecimal.valueOf(jhijo.getFields().getCustomfield_14850()));
 				}
-				if (bdJira.getHoras_cert() == 0)
+				if (bdJira.getHoras_cert().compareTo(BigDecimal.ZERO) == 0)
 					bdJira.setHoras_cert(horaCert);				
-				if (bdJira.getHoras_des() == 0)
+				if (bdJira.getHoras_des().compareTo(BigDecimal.ZERO) == 0)
 					bdJira.setHoras_des(horasDes);				
 			}			
 			// FÁBRICA 	
@@ -186,17 +187,17 @@ public class JiraService implements IJiraService {
 				bdJira.setFabrica(fabrica);				
 			}
 				
-			if (bdJira.getHoras_des() != 0 && bdJira.getFabrica() != null )
-				bdJira.setMonto_des(bdJira.getHoras_des()*bdJira.getFabrica().getTarifa());
+			if (bdJira.getHoras_des().compareTo(BigDecimal.ZERO) != 0 && bdJira.getFabrica() != null )
+				bdJira.setMonto_des(bdJira.getHoras_des().multiply(BigDecimal.valueOf(bdJira.getFabrica().getTarifa())));
 			else 
-				bdJira.setMonto_des(0);
+				bdJira.setMonto_des(BigDecimal.ZERO);
 			
-			if (bdJira.getHoras_cert() != 0 && bdJira.getFabrica() != null )
-				bdJira.setMonto_cert(bdJira.getHoras_cert()*bdJira.getFabrica().getTarifa());
+			if (bdJira.getHoras_des().compareTo(BigDecimal.ZERO) != 0 && bdJira.getFabrica() != null )
+				bdJira.setMonto_cert(bdJira.getHoras_cert().multiply(BigDecimal.valueOf(bdJira.getFabrica().getTarifa())));
 			else
-				bdJira.setMonto_cert(0);
+				bdJira.setMonto_cert(BigDecimal.ZERO);
 			
-			bdJira.setMonto_total(bdJira.getMonto_cert() + bdJira.getMonto_des());
+			bdJira.setMonto_total(bdJira.getMonto_cert().add(bdJira.getMonto_des()));
 			
 			// FECHAS*/
 			bdJira.setFecha_actualizacion(jsonJira.getFields().getUpdated());
@@ -315,31 +316,31 @@ public class JiraService implements IJiraService {
 	private JsoJira actualizarTipo(JsoJira j) {
 		if (j.getFields().getLabels().contains("GSOCompromiso")) {
 			j.getFields().setEtiqueta("Compromiso");
-			j.getFields().setEmpresa("Cavali");			
+			j.getFields().setEmpresa("CAVALI");			
 		}else if (j.getFields().getLabels().contains("BVLCompromiso")) {
 			j.getFields().setEtiqueta("Compromiso");
 			j.getFields().setEmpresa("BVL");		
 		}else if (j.getFields().getLabels().contains("GSOCritico")) {
 			j.getFields().setEtiqueta("Crítico");
-			j.getFields().setEmpresa("Cavali");		
+			j.getFields().setEmpresa("CAVALI");		
 		}else if (j.getFields().getLabels().contains("BVLCritico")) {
 			j.getFields().setEtiqueta("Crítico");
 			j.getFields().setEmpresa("BVL");		
 		}else if (j.getFields().getLabels().contains("GSOMejoraBD")) {
 			j.getFields().setEtiqueta("Mejora BD");
-			j.getFields().setEmpresa("Cavali");		
+			j.getFields().setEmpresa("CAVALI");		
 		}else if (j.getFields().getLabels().contains("BVLMejoraBD")) {
 			j.getFields().setEtiqueta("Mejora BD");
 			j.getFields().setEmpresa("BVL");		
 		}else if (j.getFields().getLabels().contains("GSOPrio")) {
 			j.getFields().setEtiqueta("Prioritario");
-			j.getFields().setEmpresa("Cavali");		
+			j.getFields().setEmpresa("CAVALI");		
 		}else if (j.getFields().getLabels().contains("BVLPrio")) {
 			j.getFields().setEtiqueta("Prioritario");
 			j.getFields().setEmpresa("BVL");		
 		}else if (j.getFields().getLabels().contains("GSORegular")) {
 			j.getFields().setEtiqueta("Regular");
-			j.getFields().setEmpresa("Cavali");		
+			j.getFields().setEmpresa("CAVALI");		
 		}else if (j.getFields().getLabels().contains("BVLRegular")) {
 			j.getFields().setEtiqueta("Regular");
 			j.getFields().setEmpresa("BVL");		

@@ -14,7 +14,7 @@ import com.auth.entity.Indicador_Contable;
 
 @Repository
 public interface IActaRepository extends CrudRepository<Acta, Integer> {
-	@Query(value="SELECT NEW com.auth.auxiliar.DetalleActaPre(pr.hjira.jira, pr.hjira.tipo, pr.hjira.descripcion,  SUM(pr.nro_horas)) "+
+	@Query(value="SELECT NEW com.auth.auxiliar.DetalleActaPre(pr.hjira.jira, pr.hjira.indicador.indicador, pr.hjira.descripcion,  SUM(pr.nro_horas)) "+
 			" FROM Proveedor_Reg_Horas pr" + 
 			" WHERE pr.fecha_real_trabajo > to_date(?1)"+
 			" AND pr.fecha_real_trabajo < to_date(?2)"+
@@ -23,7 +23,7 @@ public interface IActaRepository extends CrudRepository<Acta, Integer> {
 			" AND pr.flagfacturar = true"+
 			" AND pr.hjira.indicador = ?4"+
 			" AND pr.hjira.empresa = ?5"+
-			" GROUP BY pr.hjira.jira, pr.hjira.tipo, pr.hjira.descripcion"
+			" GROUP BY pr.hjira.jira, pr.hjira.indicador.indicador, pr.hjira.descripcion"
 			,nativeQuery= false)
 	public List<DetalleActaPre> listarDetalleActaPre(String fecha1, String fecha2, Fabrica fab, Indicador_Contable indicador, Empresa e);	
 	

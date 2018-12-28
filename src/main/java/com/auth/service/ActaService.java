@@ -1,5 +1,7 @@
 package com.auth.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,14 +14,16 @@ import com.auth.entity.Acta_Estado;
 import com.auth.entity.Acta_detalle;
 import com.auth.entity.Empresa;
 import com.auth.entity.Fabrica;
+import com.auth.entity.HJira;
 import com.auth.entity.Indicador_Contable;
 import com.auth.entity.Periodo;
 import com.auth.entity.Usuario;
-import com.auth.repository.IActaDetalle;
+import com.auth.repository.IActaDetalleRepository;
 import com.auth.repository.IActaRepository;
 import com.auth.repository.IEmpresaRepository;
 import com.auth.repository.IEstadoActaRepository;
 import com.auth.repository.IFabricaRepository;
+import com.auth.repository.IHJiraRepository;
 import com.auth.repository.IIndicadorContableRepository;
 import com.auth.repository.IPeriodoRepository;
 import com.auth.rest.RespGenerica;
@@ -40,7 +44,9 @@ public class ActaService implements IActaService {
 	@Autowired
 	IEstadoActaRepository estadoActaRepo;
 	@Autowired
-	IActaDetalle actaDetalleRepo;
+	IActaDetalleRepository actaDetalleRepo;
+	@Autowired
+	IHJiraRepository hjiraRepo;
 	
 	@Override
 	public List<Acta> listarTodoActas() {
@@ -110,13 +116,16 @@ public class ActaService implements IActaService {
 	}
 	
 	@Override
-	public Acta registrarNuevaActa(RespGenerica respuesta) {
+	public Acta registrarNuevaActa(RespGenerica respuesta, Usuario usuario) {
+		//variables para acta
 		Fabrica fabrica = fabricaRepo.findById((int)respuesta.getNumero4()).orElse(null);
 		Empresa empresa = empresaRepo.findById((int)respuesta.getNumero3()).orElse(null);
 		Indicador_Contable tipo = indicadorRepo.findById((int) respuesta.getNumero2()).orElse(null);
 		Periodo periodo = periodoRepo.findById((int) respuesta.getNumero1()).orElse(null);
-		Acta_Estado estado = estadoActaRepo.findById(1).orElse(null); //ESTADO POR DEFECTO, 1 = REGISTRADO
+		Acta_Estado estado = estadoActaRepo.findById(1).orElse(null); //ESTADO POR DEFECTO, 1 = REGISTRADO		
 		Acta acta = new Acta();
+		
+		// CREACIÓN DE ACTA
 		acta.setVersion("1.0");
 		acta.setRazon_social_proveedor(fabrica.getNombre());
 		acta.setDescripcion_servicio(respuesta.getTexto1());
@@ -129,13 +138,36 @@ public class ActaService implements IActaService {
 		acta.setEmpresa(empresa);
 		acta.setFabrica(fabrica);				
 		acta = actaRepo.save(acta);
-		acta.setCodigo("ACT-" + acta.getId());		
-		for (String s : respuesta.getArregloStr()) {
+
+			
+		double total_horas_desarrollo = 0.0;
+		// SEPRAR LISTA DE JIRAS (APROBADOS Y PATEADOS
+		List<DetalleActaPre> listaJirasPateados = new ArrayList<>();
+		List<DetalleActaPre> listadetallePre = actaRepo.listarDetalleActaPre(periodo.getInicio(), periodo.getFin(), usuario.getFabrica(), tipo, empresa);
+		for (DetalleActaPre dpre: listadetallePre) {
+			if (!respuesta.getArregloStr().contains(dpre.getJira())) {
+				listaJirasPateados.add(dpre);
+				listadetallePre.remove(dpre);
+			}else {
+				total_horas_desarrollo = total_horas_desarrollo + dpre.getTotalHoras().doubleValue();
+			}
+		}
+		
+		// JIRAS APROBADOS
+		// --Horas totales		
+		for (DetalleActaPre dpre: listadetallePre) {
+			HJira hjira = hjiraRepo.findByJira(dpre.getJira());
 			Acta_detalle detalle = new Acta_detalle();
 			detalle.setActa(acta);
-			detalle.setJira(s);
+			detalle.setJira(hjira);
+			detalle.setNro_horas_jira(dpre.getTotalHoras());
+			detalle.setNro_horas_concepto1(BigDecimal.valueOf((respuesta.getNumero5()/total_horas_desarrollo)*dpre.getTotalHoras().doubleValue()));
+			detalle.setNro_horas_concepto1(BigDecimal.valueOf((respuesta.getNumero6()/total_horas_desarrollo)*dpre.getTotalHoras().doubleValue()));
+			detalle.setNro_total_horas(detalle.getNro_horas_jira().add(detalle.getNro_horas_concepto1().add(detalle.getNro_horas_concepto2())));
 			actaDetalleRepo.save(detalle);
 		}	
+		//Segundo guardado
+		acta.setCodigo("ACT-" + acta.getId());
 		return actaRepo.save(acta);
 	}
 //--------------------------- FABRICA

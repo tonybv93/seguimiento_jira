@@ -172,8 +172,10 @@ function cargarGraficoBarras(){
 }
 //------------------------------ AGREGAR a TABLA -------------------------
 function clear_alert(idalert,input){	
-	var alerta = document.getElementById(idalert);
-	alerta.innerHTML = '';
+	if (input.value != ''){
+		var alerta = document.getElementById(idalert);
+		alerta.innerHTML = '';
+	}
 }
 
 function agregar(){
@@ -186,8 +188,8 @@ function agregar(){
 	var fechastr = dd+'-'+mm+'-'+yyyy
 	var nro_horas = document.getElementById("nro_horas").value;
 	var tr = document.createElement('tr');
-	var jira = document.getElementById("id_input").value;
-	var str_busqueda = '../../provrest/hxjira/' + jira;
+	var jira = document.getElementById("id_input").value.toUpperCase();
+	var str_busqueda = '../../provrest/hxjiraxfab/' + jira;
 	var alerta = document.getElementById("alerta_horas");
 	var alertajira = document.getElementById("alerta_jira");
 	var tipo_reg = document.getElementById("cbx_tipo_registro").value;
@@ -242,8 +244,17 @@ function agregar(){
 									tr.appendChild(crearTD(fechastr));
 									tr.appendChild(crearTD(comentario));
 									tr.appendChild(crearBotonX());	
-									donut();
-									tabla.appendChild(tr);	
+									tabla.appendChild(tr);
+									
+									//Limpiar los campos (Reiniciar buscador)
+									document.getElementById("id_input").value = '';
+									document.getElementById("resultado").innerHTML = "";
+						    		var div_cont = document.getElementById("c3-pie-chart1");
+						    		div_cont.innerHTML = "";	
+						    		document.getElementById("nro_horas").value = '';
+						    		document.getElementById("cbx_tipo_registro").value = 1;
+						    		document.getElementById("txa_comentario").value = '';						    		
+						    			
 					        	}else{
 					        		alert(respuesta);
 					        	}
@@ -324,8 +335,7 @@ function quitarElemento(btn){
 	        method : 'post',
 	      	data : data,
 	        success : function(respuesta){
-	        	if (document.getElementById("id_input").value != ''){
-	        		console.log("adasdas");
+	        	if (document.getElementById("id_input").value.toUpperCase() != ''){
 	        		donut();
 	        	}
 	        	fila.parentNode.removeChild(fila);
@@ -364,29 +374,42 @@ function enviarElemento(btn){
 }
 
 //------------------------------ ACTUALIZAR GRÁFICOS DONUT -------------------------
+//---- INPUT JIRA
 //Cambiar Donut cuando cambie el valor de input jira
 $( function() {
     $("#id_input").change( function() {
-    	var jira = document.getElementById("id_input").value;
-    	var str_busqueda = '../../provrest/hxjiraxfab/' + jira    	
-    	$.get(str_busqueda).done(function( data ) {	  
-    		if (data != null){
-    			cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo); 
-    			document.getElementById("resultado").innerHTML = data.descripcion;
-    		}	   		
-    	})
-    	.fail(function () {
-    		document.getElementById("resultado").innerHTML = "No encontrado.";
+    	var jira = document.getElementById("id_input").value.toUpperCase();
+    	if (jira!=''){
+    		var str_busqueda = '../../provrest/hxjiraxfab/' + jira    	
+        	$.get(str_busqueda).done(function( data ) {	 
+        		if (data != null && data !=''){
+        			cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo); 
+        			document.getElementById("resultado").innerHTML = data.jira + ': ' +  data.descripcion;
+        		}else{
+        			document.getElementById("resultado").innerHTML = "No encontrado.";
+            		var div_cont = document.getElementById("c3-pie-chart1");
+        			div_cont.innerHTML = "No encontrado.";
+        		}	
+        	})
+        	.fail(function () {
+        		document.getElementById("resultado").innerHTML = "No encontrado.";
+        		var div_cont = document.getElementById("c3-pie-chart1");
+        		div_cont.innerHTML = "No encontrado.";	
+            });    		
+    	}else{
+    		document.getElementById("resultado").innerHTML = "";
     		var div_cont = document.getElementById("c3-pie-chart1");
-    		div_cont.innerHTML = "No encontrado.";	
-        });	
+    		div_cont.innerHTML = "";
+    	}
+    	
+    		
     });
 });
 //Invocar manualmente el cambio de donut
 function donut(){
-	var jira = document.getElementById("id_input").value;
+	var jira = document.getElementById("id_input").value.toUpperCase();
 	var str_busqueda = '../../provrest/hxjiraxfab/' + jira    	
-	$.get(str_busqueda).done(function( data ) {	  
+	$.get(str_busqueda).done(function( data ) {	  		
 		if (data != null){
 			cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo); 
 			document.getElementById("resultado").innerHTML = data.descripcion;
@@ -439,11 +462,4 @@ function cargarGraficoDonut(totales,consumidos){
 		var div_cont = document.getElementById("c3-pie-chart1");
 		div_cont.innerHTML = "No existe data para mostrar en este requerimiento. No se han aprobado horas de desarrollo.";			
 	}			
-}
-
-
-//================================== PRUEBA
-function prueba3(){
-	var elemento = document.getElementsByClassName("c3-xgrid-focus");
-	console.log(elemento.lenght)
 }

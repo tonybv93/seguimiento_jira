@@ -24,63 +24,77 @@ public class Acta_detalle {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fabrica_factor_acta_seq")
 	@SequenceGenerator(sequenceName="fabrica_factor_acta_seq", allocationSize=1, name="fabrica_factor_acta_seq")
 	private Integer id;
-	
-	private String jira;
-	private BigDecimal total_horas;
-	private BigDecimal costo_jira;
-	private BigDecimal costo_concepto;
-	private BigDecimal costo_jira_toral;
+
+	private BigDecimal nro_horas_jira;
+	private BigDecimal nro_horas_concepto1;
+	private BigDecimal nro_horas_concepto2;
+	private BigDecimal nro_total_horas;
+	private BigDecimal tarifa;
+	private BigDecimal costo_total;	
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_acta")
 	private Acta acta;
-
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_hjira")
+	private HJira jira;
+	
+	public Acta_detalle() {
+		super();
+	}
 	public Integer getId() {
 		return id;
 	}
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public String getJira() {
-		return jira;
+	public BigDecimal getNro_horas_jira() {
+		return nro_horas_jira;
 	}
 
-	public void setJira(String jira) {
-		this.jira = jira;
+	public void setNro_horas_jira(BigDecimal nro_horas_jira) {
+		this.nro_horas_jira = nro_horas_jira;
 	}
 
-	public BigDecimal getTotal_horas() {
-		return total_horas;
+	public BigDecimal getNro_horas_concepto1() {
+		return nro_horas_concepto1;
 	}
 
-	public void setTotal_horas(BigDecimal total_horas) {
-		this.total_horas = total_horas;
+	public void setNro_horas_concepto1(BigDecimal nro_horas_concepto1) {
+		this.nro_horas_concepto1 = nro_horas_concepto1;
 	}
 
-	public BigDecimal getCosto_jira() {
-		return costo_jira;
+	public BigDecimal getNro_horas_concepto2() {
+		return nro_horas_concepto2;
 	}
 
-	public void setCosto_jira(BigDecimal costo_jira) {
-		this.costo_jira = costo_jira;
+	public void setNro_horas_concepto2(BigDecimal nro_horas_concepto2) {
+		this.nro_horas_concepto2 = nro_horas_concepto2;
 	}
 
-	public BigDecimal getCosto_concepto() {
-		return costo_concepto;
+	public BigDecimal getNro_total_horas() {
+		return nro_total_horas;
 	}
 
-	public void setCosto_concepto(BigDecimal costo_concepto) {
-		this.costo_concepto = costo_concepto;
+	public void setNro_total_horas(BigDecimal nro_total_horas) {
+		this.nro_total_horas = nro_total_horas;
 	}
 
-	public BigDecimal getCosto_jira_toral() {
-		return costo_jira_toral;
+	public BigDecimal getTarifa() {
+		return tarifa;
 	}
 
-	public void setCosto_jira_toral(BigDecimal costo_jira_toral) {
-		this.costo_jira_toral = costo_jira_toral;
+	public void setTarifa(BigDecimal tarifa) {
+		this.tarifa = tarifa;
+	}
+
+	public BigDecimal getCosto_total() {
+		return costo_total;
+	}
+
+	public void setCosto_total(BigDecimal costo_total) {
+		this.costo_total = costo_total;
 	}
 
 	public Acta getActa() {
@@ -91,10 +105,11 @@ public class Acta_detalle {
 		this.acta = acta;
 	}
 
-	public Acta_detalle() {
-		super();
+	public HJira getJira() {
+		return jira;
 	}
-	
-	
-	
+
+	public void setJira(HJira jira) {
+		this.jira = jira;
+	}
 }

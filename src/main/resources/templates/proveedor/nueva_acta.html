@@ -35,105 +35,177 @@
 			<div class="col-12 grid-margin">
 	            <div class="card">                
 	            	<div class="card-body"> 
-	              		<h4>Nueva acta</h4>
-	              		<div class="grupo_datos grupo_enmarcado">      
-                      <div class="row">
-                       <div class="col-md-7">
-                       <div class="row">                    	
-                        <div class="col-md-12">
-                          <div class="form-group row">
-                            <label class="col-sm-3 col-form-label texto_derecha">Fábrica:</label>
-                            <div class="col-sm-9">
-                            	<input id="acta_fabrica_id" type="hidden" th:value="${fabrica.id}">
-								<span class="fecha_plomo" th:text="${fabrica.nombre}"></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">                    	
-                        <div class="col-md-12">
-                          <div class="form-group row">
-                            <label class="col-sm-3 col-form-label texto_derecha">Cliente:</label>
-                            <div class="col-sm-9">
-                            	<select id="acta_cliente_id" class="form-control border-primary">
-									<option th:each="opcion:${listaEmpresas}" th:value="${opcion.id}" th:text="${opcion.nombrecorto}"></option>							
-								</select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">                    	
-                        <div class="col-md-12">
-                          <div class="form-group row">
-                            <label class="col-sm-3 col-form-label texto_derecha">Tipo:</label>
-                            <div class="col-sm-9">
-                            	<select id="acta_tipo_id" class="form-control border-primary">
-									<option th:each="opcion:${listaTiposActa}" th:value="${opcion.id}" th:text="${opcion.descripcion}"></option>							
-								</select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                       	<div class="row">                      	
-	                        <div class="col-md-12">
-	                          <div class="form-group row">
-	                            <label class="col-sm-3 col-form-label texto_derecha">Periodo:</label>
-	                            <div class="col-sm-9">
-		                            <div class="d-flex">
+	              	<h4>Nueva acta</h4>
+	              	<div class="grupo_datos grupo_enmarcado">      
+                    <div class="row">
+	                    <div class="col-md-6">
+		                    <div class="row">                    	
+		                        <div class="col-md-12">
+		                          <div class="form-group row">
+		                            <label class="col-sm-3 col-form-label texto_derecha">Fábrica:</label>
+		                            <div class="col-sm-9">
+		                            	<input id="acta_fabrica_id" type="hidden" th:value="${fabrica.id}">
+										<span class="fecha_plomo" th:text="${fabrica.nombre}"></span>
+		                            </div>
+		                          </div>
+		                        </div>
+		                    </div>		                   	
+		                    <div class="row">                      	
+		                        <div class="col-md-12">
+		                          <div class="form-group row">
+		                            <label class="col-sm-3 col-form-label texto_derecha">Periodo:</label>
+		                            <div class="col-sm-9">	                            
 		                               <select id="select_periodo" class="form-control border-primary">
 											<option th:each="opcion:${listaPeriodos}" th:value="${opcion.id}" th:text="${opcion.codigo}"></option>							
-										</select>
-		                               <button onclick="buscarJiras()" class="btn btn-primary mr-2">Buscar</button>                             	
-		                           	</div>
+										</select>	                                                            
+			                           	 <span id="alerta_jira" class="alerta_forms"></span>
+			                           	<div class="mensaje_resultado" id="resultado"></div>
+		                            </div>
+		                          </div>
+		                        </div>
+		                 	</div>                     
+		                	<div class="row">                      	
+		                       <div class="col-md-12">
+		                         <div class="form-group row">
+		                           <label class="col-sm-3 col-form-label texto_derecha"></label>
+		                           <div class="col-sm-9">                             
+		                            <button onclick="buscarJiras()" class="btn btn-primary mr-2">Buscar</button>                            	
 		                           	 <span id="alerta_jira" class="alerta_forms"></span>
 		                           	<div class="mensaje_resultado" id="resultado"></div>
-	                            </div>
-	                          </div>
-	                        </div>
-	                 	</div>  
-                      </div>
+		                           </div>
+		                         </div>
+		                       </div>
+		                 	</div>  
+	                    </div>
 <!----------------------------------------------------------------------- pie  ------------------------------------------------------->
-                       <div class="col-md-5">
-                       	<div class="grafico_horas">
-                       		<h6 class="titulo_pie"></h6>
-                       	</div>
-                       </div>
-                      </div> 
+	                    <div class="col-md-6">
+	                    	 <div class="row">                    	
+		                        <div class="col-md-12">
+		                          <div class="form-group row">
+		                            <label class="col-sm-3 col-form-label texto_derecha">Cliente:</label>
+		                            <div class="col-sm-9">
+		                            	<select id="acta_cliente_id" class="form-control border-primary">
+											<option th:each="opcion:${listaEmpresas}" th:value="${opcion.id}" th:text="${opcion.nombrecorto}"></option>							
+										</select>
+		                            </div>
+		                          </div>
+		                        </div>
+		                    </div>	
+	                    	<div class="row">                    	
+		                        <div class="col-md-12">
+		                          <div class="form-group row">
+		                            <label class="col-sm-3 col-form-label texto_derecha">Tipo:</label>
+		                            <div class="col-sm-9">
+		                            	<select id="acta_tipo_id" class="form-control border-primary">
+											<option th:each="opcion:${listaTiposActa}" th:value="${opcion.id}" th:text="${opcion.indicador}"></option>							
+										</select>		                            	
+		                            </div>
+		                          </div>
+		                        </div>
+		                    </div>
+		                    
+	                    </div>
+                   	</div> 
 <!-----------------------------------------------------------------------Sección 2  ------------------------------------------------------->      	                 	
-	                 	<div class="row">                      	
-	                        <div class="col-md-10">
-	                          <div class="form-group row">
-	                            <label class="col-sm-3 col-form-label texto_derecha">Descripción:</label>
-	                            <div class="col-sm-9">
-	                               <textarea id="txa_descripcion" class="form-control"></textarea>
-	                            </div>	
-	                          </div>
-	                        </div>
-	                 	</div>
-	                 	<h4>Detalle</h4>
+					
+	                 	<h6>Detalle</h6>
 	              		<div class="div_fondo_blanco">
-	              			<table class="table table-hover">
+	              			<table class="table">
 	              				<thead>
 	              					<tr>
-		              					<th>Jira</th>
-		              					<th>Tipo</th>
+	              						<th style="min-width: 145px;">Jira</th>
 		              					<th>Resumen</th>
+		              					<th>Tipo</th>
 		              					<th>C. Costo</th>
-		              					<th>Total Horas</th>
-		              					<th>Tarifa</th>
-		              					<th>¿Considerar?</th>
+		              					<th>Hs Des</th>
+		              					<th>Hs Ges. D</th>
+		              					<th>Hs Ges. C</th>
+		              					<th>Total Hs</th>
+		              					<th>Importe total</th>		              					
 	              					</tr>
 	              				</thead>
 	              				<tbody id="cuerpo_tabla">
 	              				</tbody>
-	              			</table>							
-						</div> 	  
-                    </div> 
-                    <div class="div_derecha">
+	              			</table>
+	              										
+						</div>
+						<div id="mensaje_resultado" class="mensaje_resultado_tabla"></div> 	  
+					<div id="calculador" class="row dis_hiden">
+						<div class="linea_div"></div>
+							<div class="col-md-6 grupo_texto_mediano">
+								<div class="row">                    	
+			                        <div class="col-md-12">
+			                          <div class="row">
+			                            <label class="col-sm-5 col-form-label2 texto_derecha">Horas gest. demanda:</label>
+			                            <div class="col-sm-7 d-flex">
+			                            	<input id="inp_dem" type="number" class="form-control-peque" placeholder="##">										
+			                            	<span class="mensaje_input"> (Opcional)</span>
+			                            </div>
+			                          </div>
+			                        </div>
+			                    </div>
+			                    <div class="row">                    	
+			                        <div class="col-md-12">
+			                          <div class="row">
+			                            <label class="col-sm-5 col-form-label2 texto_derecha">Horas gest. config:</label>
+			                            <div class="col-sm-7 d-flex">
+			                            	<input id="inp_conf" type="number" class="form-control-peque" placeholder="##">										
+			                            	<span class="mensaje_input"> (Opcional)</span>
+			                            </div>
+			                          </div>
+			                        </div>
+			                    </div>
+			                    <div class="row">                    	
+			                        <div class="col-md-12">
+			                          <div class="row">
+			                            <label class="col-sm-5 col-form-label2 texto_derecha">Tarifa por hora:</label>
+			                            <div class="col-sm-7 d-flex">
+			                            	<input id="inp_tarifa" type="number" class="form-control-peque" placeholder="S/ ">										
+			                            	<span class="mensaje_input"> (Obligatorio)</span>
+			                            </div>
+			                          </div>
+			                        </div>
+			                    </div>
+			                    <div class="row">                    	
+			                        <div class="col-md-12">
+			                          <div class="row">
+			                            <label class="col-sm-5 col-form-label texto_derecha"></label>
+			                            <div class="col-sm-7 d-flex">
+			                            	<button onclick="calcularMontos()" class="btn btn-primary mr-2">Calcular</button>										
+			                            </div>
+			                          </div>
+			                        </div>
+			                    </div>
+		                    </div>
+		                    <div class="col-md-6">
+		                    	 <div class="detalle_acta">
+		                    	 	<h4 class="centrado">Resumen de Acta</h4>
+		                    	 	<br>
+									<table class="tabla_detalle_acta">
+										<tbody>
+											<tr>
+												<td class="tabla_detalle_texto">Total de horas: </td>
+												<td id="resumen_total_horas" class="tabla_detalle_numero">0</td>
+											</tr>
+											<tr>
+												<td class="tabla_detalle_texto">Tarifa por hora: </td>
+												<td  id="resumen_tarifa" class="tabla_detalle_numero">S/ 0.00</td>
+											</tr>
+											<tr>
+												<td class="tabla_detalle_texto">Importe TOTAL: </td>
+												<td  id="resumen_total_monto" class="tabla_detalle_numero">S/ 0.00</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+		                    </div>
+		                </div> 
+                            		       	 
+					</div>
+					 <div id="btns_enviar_acta" class="div_derecha dis_hiden">
                     	<button class="btn btn-secondary mr-2">Cancelar</button>  
 	              		<button class="btn btn-primary mr-2" onclick="enviar_acta()">Enviar</button>    
-                    </div>         		       	 
-					</div>
+                    </div>
 	            </div>
 			</div>
 <!------------------------------------------------------------------------------------------------------------>

@@ -48,10 +48,9 @@
 	                  		</thead>
 	                  		<tbody id="detalle_registros">
 	                  			<tr  th:each="registro:${listaRegistrosConfirmados}">  
-	                  				<td class="no_mostrar"  th:text="${registro.id}"></td>                   				
-	                  				<td  th:text="${registro.jira}"></td>
-	                  				<td  th:text="${registro.tipojira}"></td>
-	                  				<td  th:text="${registro.resumen}"></td>
+	                  				<td  th:text="${registro.hjira.jira}"></td>
+	                      				<td  th:text="${registro.hjira.tipo}"></td>
+	                      				<td  th:text="${registro.hjira.descripcion}"></td>	
 	                  				<td  th:text="${#dates.format(registro.fecha_real_trabajo, 'dd-MM-yyyy')}"></td>
 	                  				<td  th:text="${registro.nro_horas}"></td>
 	                  			</tr>
@@ -78,10 +77,9 @@
 	                  		</thead>
 	                  		<tbody id="detalle_registros">
 	                  			<tr  th:each="registro:${listaRegistrosAprobados}">  
-	                  				<td class="no_mostrar"  th:text="${registro.id}"></td>                   				
-	                  				<td  th:text="${registro.jira}"></td>
-	                  				<td  th:text="${registro.tipojira}"></td>
-	                  				<td  th:text="${registro.resumen}"></td>
+	                  				<td  th:text="${registro.hjira.jira}"></td>
+	                      			<td  th:text="${registro.hjira.tipo}"></td>
+	                      			<td  th:text="${registro.hjira.descripcion}"></td>	
 	                  				<td  th:text="${#dates.format(registro.fecha_real_trabajo, 'dd-MM-yyyy')}"></td>
 	                  				<td  th:text="${registro.nro_horas}"></td>
 	                  			</tr>
@@ -167,8 +165,7 @@
     <script th:src="@{/js/shared/settings.js}"></script>
     <script th:src="@{/js/shared/todolist.js}"></script>    
     <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
-    
-    <script th:src="@{/js/prov_reg_horas.js}"></script>        
+       
     <script th:src="@{/js/menus.js}"></script>    
     <script type="text/javascript">
     	cargar_menus();

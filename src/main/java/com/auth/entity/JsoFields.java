@@ -22,6 +22,7 @@ public class JsoFields {
 	private JsoPersonalizado customfield_11483; 	//Indicador
 	private JsoPersonalizado customfield_11016; 	//Fabrica
 	private JsoPersonalizado customfield_17050;		//Centro de costo
+	private JsoPersonalizado customfield_11640;		//EMPRESA
 	
 	private JsoAtributoG issuetype;					//Tipo de incidencia	
 	private JsoAtributoG status;					//Estado
@@ -46,7 +47,13 @@ public class JsoFields {
     private List<JsoJira> subTareas = new ArrayList<>();	//Jiras hijo
 	
     
-    public JsoPersonalizado getCustomfield_17050() {
+    public JsoPersonalizado getCustomfield_11640() {
+		return customfield_11640;
+	}
+	public void setCustomfield_11640(JsoPersonalizado customfield_11640) {
+		this.customfield_11640 = customfield_11640;
+	}
+	public JsoPersonalizado getCustomfield_17050() {
 		return customfield_17050;
 	}
 	public void setCustomfield_17050(JsoPersonalizado customfield_17050) {

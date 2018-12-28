@@ -589,6 +589,11 @@ textarea
 	color: #0c6fcc;
 	font-size: 13px;
 }
+.mensaje_resultado_tabla{
+	padding: 10px;
+	color: #0c6fcc;
+	font-size: 13px;
+}
 .bg-rojo{
 	background-color: red;
 }
@@ -626,7 +631,61 @@ textarea
 }
 .div_fondo_blanco{
 	background-color: #fff;
+	max-height: 250px;
+	overflow: auto;
 }
 .fondo_rojo{
 	border: solid 2px #aa0000;
+}
+/* --------------- acta detalle ---------------*/
+.detalle_acta{
+	display: block;
+	width: 80%;
+	margin: auto;
+}
+.tabla_detalle_acta{
+	width: 250px;
+	display: block;
+	margin: auto;	
+}
+
+.tabla_detalle_texto{
+	width: 160px;
+	font-size: 14px;
+	font-weight: bold;
+}
+.tabla_detalle_numero{
+	font-size: 14px;
+	text-align: right;
+}
+.dis_hiden{
+	display: none;
+}
+.mensaje_input{
+	color: #aaa;
+	line-height: 50px;
+	font-size: 12px;
+	padding-left: 10px;
+}
+.form-group2{
+	margin-bottom: 5px;
+}
+.form-control-peque{
+	width: 140px;
+	border: solid #eee 1px;
+	border-radius: 5px;
+	height: 40px;
+	font-size: 12px;
+	padding: 3px 10px;;
+	line-height: 15px;
+}
+.grupo_texto_mediano{
+	font-size: 14px !important;
+}
+.col-form-label2{
+	padding: 0;
+	line-height: 40px;
+}
+.col-form-label2{
+	font-size: 12px !important;
 }

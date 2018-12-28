@@ -50,17 +50,17 @@
                   		</div>
 	                 	<table class="table table-striped table-hover">
 	                  		<thead>
-	                  			<tr>
-	                  				<th>Jira</th>
-	                      				<th>Tipo Jira</th>
-	                      				<th>Resumen Jira</th>	
-	                      				<th>Desarrollador</th>	   
-	                      				<th>Tipo tarea</th>	                  				
-	                      				<th>Horas</th>	
-	                      				<th>Fecha registro</th>   
-	                      				<th>Fecha de trabajo</th> 
-	                      				<th>Observaciones</th>
-	                      				<th>Confirmación</th>	
+	                  			<tr>	                  					   
+                      				<th>Tipo tarea</th>	 
+                      				<th>¿Facturable?</th>	                  				
+                      				<th>Horas</th>	
+                      				<th>Fecha registro</th>   
+                      				<th>Fecha de trabajo</th> 
+                      				<th>Jira</th>
+                      				<th>Cliente</th>
+                      				<th>Ind. Contab.</th>
+                      				<th>Resumen tarea</th>
+                      				<th>Confirmación</th>	
 	                  			</tr>
 	                  		</thead>
 	                  		<tbody id="detalle_registros">	                  		
@@ -75,6 +75,29 @@
       </div>
    	</div>
  	</div>	
+<!------------------------------------------------------------------------------------------------------------>
+<div id="modal_confirmacion" class="un_modal">			
+		<div class="contenido_modal">
+			<div class="card-body">  
+				<div class="row">
+				  	<div class="col-8 grid-margin">
+				  		<div id="titulo_modal_confirmacion" class="modal_header"></div>	
+				  	</div>				  
+				  	<div class="col-4 grid-margin">
+				  		<span class="close" onclick="cerrar_modal()">&times;</span>
+				  	</div>
+			  	</div> 
+			  	<p>Una vez confirmado, no se prodrá revertir. Verifica los datos antes de seguir.</p>  
+			  	<ul class="lista-simple">
+			  		<li> <b>Desarrollador:</b> <span id="mocon4"></span> </li>
+			  		<li> <b>Jira:</b> <span id="mocon1"></span> </li>
+			  		<li> <b>Día:</b> <span id="mocon2"></span> </li>
+			  		<li> <b>Horas:</b> <span id="mocon3"></span> </li>
+			  	</ul>			  	
+			  	<button class="btn btn-inverse-success" type="submit" id="btn_confirmar_horas">Confirmar</button>  		  	          	
+        	</div>
+		</div>
+	</div> 	
 <!------------------------------------------------------------------------------------------------------------>
 <!---------------------------------              SCRIPS                      --------------------------------->
 <!------------------------------------------------------------------------------------------------------------>

@@ -1,5 +1,6 @@
 package com.auth.service;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,15 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.auth.auxiliar.HorasPorSemana;
+import com.auth.entity.Empresa;
 import com.auth.entity.Estado_Reg_Horas;
+import com.auth.entity.Fabrica;
 import com.auth.entity.HJira;
+import com.auth.entity.Indicador_Contable;
 import com.auth.entity.JsoJira;
 import com.auth.entity.Periodo;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Tipo_Actividad_Proveedor;
 import com.auth.entity.Usuario;
+import com.auth.repository.IEmpresaRepository;
 import com.auth.repository.IEstadoRegHorasRepository;
+import com.auth.repository.IFabricaRepository;
 import com.auth.repository.IHJiraRepository;
+import com.auth.repository.IIndicadorContableRepository;
 import com.auth.repository.IJiraRepository;
 import com.auth.repository.IPeriodoRepository;
 import com.auth.repository.IProveedorRegHorasRepository;
@@ -47,6 +54,12 @@ public class RegistroHorasService implements IRegistroHorasService {
 	JiraApiRepository jiraResRepo;
 	@Autowired
 	ITipoActividadProveedor tipoActividadRepo;
+	@Autowired
+	IFabricaRepository fabricaRepo;
+	@Autowired
+	IEmpresaRepository empresaRepo;
+	@Autowired
+	IIndicadorContableRepository indicadorRepo;
 	
 	
 	@Override
@@ -163,61 +176,50 @@ public class RegistroHorasService implements IRegistroHorasService {
 		return regHorasRepo.horasTrabajadas(jira);
 	}
 
-	
-	@Override
-	public HJira buscarHXJira(String jira) {
-		//PRIMERO: Verificar si existe en la base de datos
-		HJira hxj = hxjRepo.findByJira(jira);
-		if (hxj == null) {
-			//Si NO existe, se creará un registro nuevo
-			hxj = new HJira();			
-			JsoJira j = jiraResRepo.busquedaJQL("key="+jira).get(0); // Se consult al api			
-			if (j != null) {
-				hxj.setJira(j.getKey());
-				hxj.setDescripcion(j.getFields().getSummary());
-				hxj.setTipo(j.getFields().getIssuetype().getName());
-				hxj.setHoras_desarrollo(j.getFields().getCustomfield_14851());
-				hxj.setHoras_prueba(j.getFields().getCustomfield_14850());
-				hxj = hxjRepo.save(hxj);
-				return hxj;				
-			}else {
-				return null;
-			}
-		}else {
-			//Si SÍ existe, se retorne el registro
-			return hxj;
-		}
-	}
-
 	@Override
 	public HJira buscarHXJiraXFab(String jira, String fabrica) {
 		//PRIMERO: Verificar si existe en la base de datos
 		HJira hxj = hxjRepo.findByJira(jira);
 		if (hxj == null) {
 			//Si NO existe, se creará un registro nuevo
-			hxj = new HJira();			
-			JsoJira j = jiraResRepo.busquedaJQL("key="+jira+"+and+fabrica="+fabrica).get(0); // Se consult al api			
-			if (j != null) {
-				hxj.setJira(j.getKey());
-				hxj.setDescripcion(j.getFields().getSummary());
-				hxj.setTipo(j.getFields().getIssuetype().getName());
-				hxj.setHoras_desarrollo(j.getFields().getCustomfield_14851());
-				hxj.setHoras_prueba(j.getFields().getCustomfield_14850());
-				hxj = hxjRepo.save(hxj);
-				return hxj;				
-			}else {
-				return null;
+			hxj = new HJira();		
+		}
+		// Ya sea nuevo registro o no, se actualizan todos los campos		
+		List<JsoJira> respuestaAPI = jiraResRepo.busquedaJQL("key="+jira+"+and+fabrica="+fabrica +"&fields=key,summary,issuetype,customfield_14851,customfield_14850,customfield_11483,customfield_11640"); // Se consult al api
+		if (respuestaAPI != null && respuestaAPI.size() == 1) {
+			JsoJira j = respuestaAPI.get(0); 
+			
+			hxj.setJira(j.getKey());
+			hxj.setDescripcion(j.getFields().getSummary());
+			hxj.setTipo(j.getFields().getIssuetype().getName());
+			hxj.setHoras_desarrollo(BigDecimal.valueOf(j.getFields().getCustomfield_14850()));
+			hxj.setHoras_prueba(BigDecimal.valueOf(j.getFields().getCustomfield_14851()));
+			//Fabrica
+			Fabrica f = fabricaRepo.findByNombre(fabrica);
+			hxj.setFabrica(f);
+			//Indicador contable
+			if (j.getFields().getCustomfield_11483() != null) {
+				Indicador_Contable ic = indicadorRepo.findByIndicador(j.getFields().getCustomfield_11483().getValue());
+				hxj.setIndicador(ic);
+			}				
+			//Empresa
+			if (j.getFields().getCustomfield_11640() != null) {
+				Empresa emp = empresaRepo.findByNombre(j.getFields().getCustomfield_11640().getValue());		
+				hxj.setEmpresa(emp);
 			}
+			
+			hxj = hxjRepo.save(hxj);
+			
+			return hxj;			
 		}else {
-			//Si SÍ existe, se retorne el registro
-			return hxj;
+			return null;
 		}
 	}
 	
 
 	@Override
 	public List<Tipo_Actividad_Proveedor> listarTiposActividad() {
-		return (List<Tipo_Actividad_Proveedor>) tipoActividadRepo.findAll();
+		return tipoActividadRepo.findAllByOrderById();
 	}
 
 	@Override
@@ -231,34 +233,45 @@ public class RegistroHorasService implements IRegistroHorasService {
 	public String registrarHoras(Usuario u, RespGenerica respuesta) {
 
 			Proveedor_Reg_Horas registro = new Proveedor_Reg_Horas();
+			// USUARIO QUE REGISTRA
 			registro.setUsuario(u);
-			registro.setEstado(estadoRepo.findById(3).orElse(null)); 
+			// ESTADO DE REGISTRO (CREADO)
+			registro.setEstado(estadoRepo.findById(3).orElse(null)); //ESTADO INICIAL: 3=CREADO
+			// FECHAS
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			try {
 				Date date = format.parse(respuesta.getTexto2());
 				registro.setFecha_real_trabajo(date);
+				registro.setFecha_facturacion(date);	// FECHA DE FACTURACION POR DEFECTO: FECHA DE TRABAJO REAL
 			} catch (ParseException e) {
 				e.printStackTrace();
 				return "Error con la fecha!";
 			}			
 			registro.setFecha_registro(new Date());
+			// JIRA HISTORICO
 			registro.setHjira(hxjRepo.findByJira(respuesta.getTexto1()));
-			registro.setNro_horas(respuesta.getNumero1());
+			// NRO HORAS
+			registro.setNro_horas( BigDecimal.valueOf(respuesta.getNumero1()));
+			// TIPO DE ACTIVIDAD (DESARROLLO Y MEJORA SON FACTURABLES)
 			registro.setTipoActividad(tipoActividadRepo.findById((int) respuesta.getNumero2()).orElse(null));
+			// COMENTARIO (OPCIONAL)
 			registro.setComentario(respuesta.getTexto5());			
 			HJira hxj = registro.getHjira();
-			
-			// Si las horas son desarrollo o mejora, se SUMAN de las horas CONSUMIDAS
-			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1) {
-				if((hxj.getHoras_desarrollo() - hxj.getConsumido_desarrollo()) > registro.getNro_horas()) {
+			// NRO DE HORAS (TIPO 4:MEJORA Y 1:DESARROLLO SE RESTAN DEL TOTAL)
+			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1) {	// Validar tipos
+				if((hxj.getHoras_desarrollo().subtract(hxj.getConsumido_desarrollo())).compareTo(registro.getNro_horas()) == 1) {
+					registro.setFlagfacturar(true);
 					registro = regHorasRepo.save(registro);
-					hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo() + registro.getNro_horas());
+					
+					//Las horas facturables se restan del pull de horas totales (DESARROLLO)
+					hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo().add(registro.getNro_horas()));					
 					hxjRepo.save(hxj);
 					return registro.getId().toString();	
 				}else {
 					return "No quedan horas";
 				}
 			}else {
+				registro.setFlagfacturar(false);
 				registro = regHorasRepo.save(registro);
 				return registro.getId().toString();	
 			}
@@ -281,7 +294,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 			HJira hxj = hxjRepo.findByJira(registro.getHjira().getJira());
 			// Si las horas son desarrollo o mejora, se restan de las horas CONSUMIDAS 
 			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1) { //4- Mejora | 1- Desarrollo 
-				hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo() - registro.getNro_horas());
+				hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo().subtract(registro.getNro_horas()));
 				hxjRepo.save(hxj);
 			}
 			return "Eliminado";			

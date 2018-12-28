@@ -1,5 +1,6 @@
 package com.auth.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -22,11 +23,11 @@ public class Jira {
 	private String asignado;
 	private String responsable;	
 	private String centro_costo;
-	private double horas_cert;
-	private double horas_des;
-	private double monto_cert;
-	private double monto_des;
-	private double monto_total;	
+	private BigDecimal horas_cert;
+	private BigDecimal horas_des;
+	private BigDecimal monto_cert;
+	private BigDecimal monto_des;
+	private BigDecimal monto_total;	
 	private Date fecha_creacion;
 	private Date fecha_actualizacion;	
 	private Date fecha_pruebas;
@@ -96,35 +97,34 @@ public class Jira {
 	public void setResponsable(String responsable) {
 		this.responsable = responsable;
 	}
-	
-	public double getHoras_cert() {
+	public BigDecimal getHoras_cert() {
 		return horas_cert;
 	}
-	public void setHoras_cert(double horas_cert) {
+	public void setHoras_cert(BigDecimal horas_cert) {
 		this.horas_cert = horas_cert;
 	}
-	public double getHoras_des() {
+	public BigDecimal getHoras_des() {
 		return horas_des;
 	}
-	public void setHoras_des(double horas_des) {
+	public void setHoras_des(BigDecimal horas_des) {
 		this.horas_des = horas_des;
 	}
-	public double getMonto_cert() {
+	public BigDecimal getMonto_cert() {
 		return monto_cert;
 	}
-	public void setMonto_cert(double monto_cert) {
+	public void setMonto_cert(BigDecimal monto_cert) {
 		this.monto_cert = monto_cert;
 	}
-	public double getMonto_des() {
+	public BigDecimal getMonto_des() {
 		return monto_des;
 	}
-	public void setMonto_des(double monto_des) {
+	public void setMonto_des(BigDecimal monto_des) {
 		this.monto_des = monto_des;
 	}
-	public double getMonto_total() {
+	public BigDecimal getMonto_total() {
 		return monto_total;
 	}
-	public void setMonto_total(double monto_total) {
+	public void setMonto_total(BigDecimal monto_total) {
 		this.monto_total = monto_total;
 	}
 	public Date getFecha_creacion() {

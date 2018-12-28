@@ -1,5 +1,7 @@
 package com.auth.entity;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,12 +15,11 @@ import javax.persistence.SequenceGenerator;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @DynamicInsert
 @DynamicUpdate
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class HJira {
 	@Id
 	@Column(name="ID")
@@ -28,11 +29,12 @@ public class HJira {
 	private String jira;
 	private String descripcion;
 	private String tipo;
-	private double horas_desarrollo;
-	private double horas_prueba;
-	private double consumido_prueba;
-	private double consumido_desarrollo;
+	private BigDecimal horas_desarrollo;
+	private BigDecimal horas_prueba;
+	private BigDecimal consumido_prueba;
+	private BigDecimal consumido_desarrollo;
 	
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_fabrica")
 	private Fabrica fabrica;
@@ -45,7 +47,7 @@ public class HJira {
 	@JoinColumn(name="id_empresa")
 	private Empresa empresa;
 	
-		
+	
 	public Fabrica getFabrica() {
 		return fabrica;
 	}
@@ -91,28 +93,29 @@ public class HJira {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public double getHoras_desarrollo() {
+	public BigDecimal getHoras_desarrollo() {
 		return horas_desarrollo;
 	}
-	public void setHoras_desarrollo(double horas_desarrollo) {
+	public void setHoras_desarrollo(BigDecimal horas_desarrollo) {
 		this.horas_desarrollo = horas_desarrollo;
 	}
-	public double getHoras_prueba() {
+	public BigDecimal getHoras_prueba() {
 		return horas_prueba;
 	}
-	public void setHoras_prueba(double horas_prueba) {
+	public void setHoras_prueba(BigDecimal horas_prueba) {
 		this.horas_prueba = horas_prueba;
 	}
-	public double getConsumido_prueba() {
+	public BigDecimal getConsumido_prueba() {
 		return consumido_prueba;
 	}
-	public void setConsumido_prueba(double consumido_prueba) {
+	public void setConsumido_prueba(BigDecimal consumido_prueba) {
 		this.consumido_prueba = consumido_prueba;
 	}
-	public double getConsumido_desarrollo() {
+	public BigDecimal getConsumido_desarrollo() {
 		return consumido_desarrollo;
 	}
-	public void setConsumido_desarrollo(double consumido_desarrollo) {
+	public void setConsumido_desarrollo(BigDecimal consumido_desarrollo) {
 		this.consumido_desarrollo = consumido_desarrollo;
 	}
+	
 }

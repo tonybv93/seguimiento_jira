@@ -21,7 +21,7 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_USUARIO = ?1 AND ID_ESTADO_REG_HORAS in (3,4) )",nativeQuery = true)
 	public List<Proveedor_Reg_Horas> listarEnviadoPorUsuario(int id);	
 	
-	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_USUARIO = ?1 AND ID_ESTADO_REG_HORAS = 2)",nativeQuery = true)
+	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_USUARIO = ?1 AND ID_ESTADO_REG_HORAS = 2) ORDER BY FECHA_REAL_TRABAJO",nativeQuery = true)
 	public List<Proveedor_Reg_Horas> listarConfirmadosPorUsuario(int id);
 	
 	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_USUARIO = ?1 AND ID_ESTADO_REG_HORAS = 1)",nativeQuery = true)

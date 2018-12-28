@@ -11264,9 +11264,9 @@ pre {
         right: 0; }
 
 .form-check .form-check-label {
-  font-size: 0.875rem;
+  font-size: 0.775rem;
   line-height: 1.5;
-  padding-left: 10px; }
+  padding-left: 0px; }
   .form-check .form-check-label input:checked + .input-helper:before {
     background-color: #ffffff; }
   .form-check .form-check-label input:checked + .input-helper:after {

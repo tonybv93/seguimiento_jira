@@ -38,7 +38,7 @@ public interface IActaService {
 	public Empresa buscarEmpresa(int id);
 	//----- ESPECIALES
 	public List<DetalleActaPre> listarDetalleActaPRE(Usuario u, RespGenerica respuesta);
-	public Acta registrarNuevaActa(RespGenerica respuesta);
+	public Acta registrarNuevaActa(RespGenerica respuesta, Usuario usuario);
 	//----- FABRICA
 	public List<Fabrica> listarFabricas();
 	public Fabrica buscarFabricaPorID(int id);

@@ -12,6 +12,8 @@ public class RespGenerica {
 	private double numero3;
 	private double numero4;
 	private double numero5;
+	private double numero6;
+	private double numero7;
 	private String texto1;
 	private String texto2;
 	private String texto3;
@@ -111,6 +113,22 @@ public class RespGenerica {
 
 	public void setTexto5(String texto5) {
 		this.texto5 = texto5;
+	}
+
+	public double getNumero6() {
+		return numero6;
+	}
+
+	public void setNumero6(double numero6) {
+		this.numero6 = numero6;
+	}
+
+	public double getNumero7() {
+		return numero7;
+	}
+
+	public void setNumero7(double numero7) {
+		this.numero7 = numero7;
 	}
 	
 }

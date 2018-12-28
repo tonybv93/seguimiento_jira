@@ -41,7 +41,9 @@ public class ProvRestController {
 		@PostMapping("/acta/nueva")
 		@ResponseBody
 		public Integer registrarActaNueva(@RequestBody RespGenerica respuesta){			
-			return actaService.registrarNuevaActa(respuesta).getId();
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
+			return actaService.registrarNuevaActa(respuesta,usuario).getId();
 		}
 		// Lista pre de jiras por acta
 		@PostMapping("/acta/jiraspre")
@@ -113,14 +115,7 @@ public class ProvRestController {
 			return registroService.horasTrabajadas(jira);
 		}
 		
-		// Buscar HORAS X JIRAS
-		@GetMapping("/hxjira/{jira}")
-		@ResponseBody
-		public HJira buscarHXJira(@PathVariable(name="jira") String jira){
-			return registroService.buscarHXJira(jira);
-		}
-		
-		// Buscar HORAS X JIRAS
+		// Buscar HORAS X JIRAS X FABRICA
 		@GetMapping("/hxjiraxfab/{jira}")
 		@ResponseBody
 		public HJira buscarHXJiraXFab(@PathVariable(name="jira") String jira){
@@ -130,13 +125,6 @@ public class ProvRestController {
 			return registroService.buscarHXJiraXFab(jira,fabrica);
 		}
 		
-		//BUSCAR JIRAS PARA ACTA
-		@GetMapping("/buscar/jira/{str}")
-		@ResponseBody
-		public List<HJira> buscarJirasPersonalizado(@PathVariable(name="str") String str){
-			List<HJira> respuesta =  jiraService.BuscadorPersonalizado(str);
-			return respuesta;
-		}
 		//BUSCAR JIRAS PARA ACTA
 		@GetMapping("/buscarxfab/jira/{str}")
 		@ResponseBody

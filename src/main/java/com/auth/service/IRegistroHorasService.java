@@ -33,8 +33,7 @@ public interface IRegistroHorasService {
 	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro,int id_estado);
 	public List<HorasPorSemana> listarDiasPorSemana(int id_usuario);
 	public double horasTrabajadas(String jira);
-	//------------------ HX JIRA
-	public HJira buscarHXJira(String jira);
+	//------------------ HX JIRA	
 	public HJira buscarHXJiraXFab(String jira, String fabrica);
 	//----------------- TIPO ACTIVIDAD
 	public List<Tipo_Actividad_Proveedor> listarTiposActividad();

@@ -16,7 +16,6 @@ public class Indicador_Contable {
 	private int id;
 	private String indicador;
 	private String css_class;
-	@Column(name="ICON_IND_CONTABLE")
 	private String icon_ind_contable;
 
 	public Indicador_Contable() {

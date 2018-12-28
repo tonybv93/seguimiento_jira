@@ -7,12 +7,32 @@ function modal_buscar_jira(){
 	modal.style.display = "block";
 }
 
-function modal_confirmar(btn){
+function modal_confirmar(btn,opcion){
+	var boton_confirmar = document.getElementById('btn_confirmar_horas');
 	tr = btn.parentNode.parentNode.parentNode;
-	document.getElementById('mocon1').innerHTML = tr.children[1].innerHTML + ' - ' + tr.children[3].innerHTML;
-	document.getElementById('mocon2').innerHTML = tr.children[4].innerHTML;
-	document.getElementById('mocon3').innerHTML = tr.children[5].innerHTML;
-	document.getElementById('input_pk').value = tr.children[0].innerHTML;
+	console.log(tr);
+	id = tr.children[0].innerHTML;
+	
+	if (opcion == 1){
+		document.getElementById('titulo_modal_confirmacion').innerHTML = 'Confirmar registro de actividad';
+		boton_confirmar.setAttribute('class','btn btn-inverse-success');
+		boton_confirmar.innerHTML = 'Aprobar';
+	}else{
+		document.getElementById('titulo_modal_confirmacion').innerHTML = 'Rechazar registro de actividad';
+		boton_confirmar.setAttribute('class','btn btn-inverse-danger');
+		boton_confirmar.innerHTML = 'Rechazar';
+	}
+	
+	document.getElementById('mocon1').innerHTML = tr.children[6].innerHTML + ' - ' + tr.children[3].innerHTML;
+	document.getElementById('mocon2').innerHTML = tr.children[5].innerHTML;
+	document.getElementById('mocon3').innerHTML = tr.children[3].innerHTML;
+	
+	var desarr_select = document.getElementById('filtro_desarrollador');
+	document.getElementById('mocon4').innerHTML = desarr_select.options[desarr_select.selectedIndex].text;		
+	
+	
+	boton_confirmar.setAttribute('onclick','cambiar_estado('+id+','+opcion+')')
+	
 	
 	modal = document.getElementById('modal_confirmacion');
 	span =  document.getElementsByClassName("close")[1];
@@ -20,16 +40,15 @@ function modal_confirmar(btn){
 }
 
 function cerrar_modal() {
-	limpiarTablaBusqueda();
 	modal.style.display = "none";
 }
 
 window.onclick = function(event)	 {
 if (event.target == modal) {
-	limpiarTablaBusqueda();
 	modal.style.display = "none";
 	}
 }
+
 function seleccionar_tr(tr_seleccionado){
 	inp_jira = document.getElementById('id_input');
 	inp_jira.value = tr_seleccionado.children[0].innerHTML;
@@ -41,10 +60,7 @@ function seleccionar_tr(tr_seleccionado){
 //------------------------------ acciones -------------------------
 
 //Cambiar estado
-function cambiar_estado(btn,id_nuevo_estado){
-	var fila = btn.parentNode.parentNode.parentNode;	
-	id = fila.children[0].innerHTML;
-	console.log(id);
+function cambiar_estado(id,id_nuevo_estado,index_fila){
 	objjson = {};
 	//Cambiar estado
 	objjson.numero1 = id;	//Id de registro
@@ -64,8 +80,9 @@ function cambiar_estado(btn,id_nuevo_estado){
 	            alert(sm1);
 	        }  	        
 	    });
-	
-	fila.parentNode.removeChild(fila);
+	location.reload();	
+	//fila.parentNode.removeChild(index_fila);
+	//modal.style.display = "none";
 }
 
 //----------------------------- FILTRAR POR DESARROLLADOR
@@ -111,9 +128,8 @@ function cargarGraficoBarras(){
         				onmouseover: function (d, i) { 
         					var datos = rep[13 - d.x].fecha;            					
         					var tabla = document.getElementById("detalle_registros");        					
-        					for (var i = 0; i < tabla.rows.length; i++) { 
-        						console.log(datos.substring(0, 10) + ' =? ' + tabla.rows[i].children[8].innerHTML);
-        						if (datos.substring(0, 10) == tabla.rows[i].children[8].innerHTML) {
+        					for (var i = 0; i < tabla.rows.length; i++) {         					
+        						if (datos.substring(0, 10) == tabla.rows[i].children[5].innerHTML) {
         							 tabla.children[i].classList.add('fondo_rojo');
 								}							
         					}
@@ -189,15 +205,15 @@ function cargarGraficoBarras(){
         	limpiarTabla(tabla);
         	for (var i = 0; i < rep.length; i++) {        		
         		var tr = document.createElement('tr');
-        		tr.appendChild(crearTDoculto(rep[i].id));
-        		tr.appendChild(crearTD(rep[i].jira));
-        		tr.appendChild(crearTD(rep[i].tipojira));
-        		tr.appendChild(crearTD(rep[i].resumen));
-        		tr.appendChild(crearTD(rep[i].usuario.descripcion));
+        		tr.appendChild(crearTDoculto(rep[i].id));        		
         		tr.appendChild(crearTD(rep[i].tipoActividad.descripcion));
+        		tr.appendChild(crearTD(rep[i].flagfacturar));
         		tr.appendChild(crearTD(rep[i].nro_horas));
         		tr.appendChild(crearTD(rep[i].fecha_registro.substring(0, 10)));
         		tr.appendChild(crearTD(rep[i].fecha_real_trabajo.substring(0, 10)));
+        		tr.appendChild(crearTD(rep[i].hjira.jira));  
+        		tr.appendChild(crearTD(rep[i].hjira.empresa.nombre));   
+        		tr.appendChild(crearTD(rep[i].hjira.indicador.indicador));
         		tr.appendChild(crearTD(rep[i].comentario));
         		tr.appendChild(crearBotonX());
         		tabla.appendChild(tr);        		
@@ -236,10 +252,10 @@ function crearBotonX(){
 	btn2.appendChild(i2);
 	
 	btn1.setAttribute('class','btn btn-icons btn-inverse-success btn-ico');
-	btn1.setAttribute('onclick','cambiar_estado(this,1)');
+	btn1.setAttribute('onclick','modal_confirmar(this,1)');
 	
 	btn2.setAttribute('class','btn btn-icons btn-inverse-danger btn-ico');
-	btn2.setAttribute('onclick','cambiar_estado(this,4)');	
+	btn2.setAttribute('onclick','modal_confirmar(this,4)');	
 	
 	td = document.createElement('td');
 	contenido = document.createElement('div');
@@ -261,5 +277,4 @@ function prueba2(){
 }
 function prueba3(){
 	var elemento = document.getElementsByClassName("c3-xgrid-focus");
-	console.log(elemento)
 }
