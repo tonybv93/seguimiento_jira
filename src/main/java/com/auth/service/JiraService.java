@@ -247,8 +247,11 @@ public class JiraService implements IJiraService {
 			// GUARDAR y actualizar JIRA HISTÓRICO
 			HJira hxj;
 			hxj = horasJiraRepo.findByJira(bdJira.getJira());
-			if(hxj == null) 
+			if(hxj == null) {
 				hxj = new HJira();
+				hxj.setConsumido_desarrollo(BigDecimal.ZERO);
+				hxj.setConsumido_prueba(BigDecimal.ZERO);
+			}
 			hxj.setJira(bdJira.getJira());
 			hxj.setDescripcion(bdJira.getResumen());
 			hxj.setTipo(bdJira.getTipoRequerimiento().getNombre());

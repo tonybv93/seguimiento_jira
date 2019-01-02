@@ -48,6 +48,7 @@ function modal_confirmar(btn){
 	document.getElementById('mocon1').innerHTML = tr.children[2].innerHTML + ' - ' + tr.children[4].innerHTML;
 	document.getElementById('mocon2').innerHTML = tr.children[7].innerHTML;
 	document.getElementById('mocon3').innerHTML = tr.children[6].innerHTML;
+	document.getElementById('mocon4').innerHTML = tr.children[5].innerHTML;
 	document.getElementById('input_pk').value = tr.children[0].innerHTML;
 	
 	modal = document.getElementById('modal_confirmacion');
@@ -96,14 +97,14 @@ function cargarGraficoBarras(){
         	var f = [];
         	var e = [];
         	for (var i = 0; i < 14; i++) {
-				if (rep[i].total < 8 ){
+				if (rep[i].total < 9 ){
 					t[i] = rep[i].total;
-					f[i] = 8 - t[i];
+					f[i] = 9 - t[i];
 					e[i] = 0;
 				}else{
-					t[i] = 8;
+					t[i] = 9;
 					f[i] = 0;
-					e[i] = rep[i].total - 8;
+					e[i] = rep[i].total - 9;
 				}
 			}
         	var gbarras = c3.generate({
@@ -181,10 +182,12 @@ function clear_alert(idalert,input){
 function agregar(){
 	var tabla = document.getElementById("detalle_registros");
 	var fechajs = document.getElementById("fecha_registro").value;
-	
+	var fechahoy = new Date();
+	console.log(fechahoy + ' vs ' + fechajs);
 	var dd = fechajs.substring(8,10);
 	var mm = fechajs.substring(5,7);
 	var yyyy = fechajs.substring(0,4);
+	
 	var fechastr = dd+'-'+mm+'-'+yyyy
 	var nro_horas = document.getElementById("nro_horas").value;
 	var tr = document.createElement('tr');
@@ -211,7 +214,7 @@ function agregar(){
 			$.get(str_busqueda).done(function( data ) {	  
 				//Comprobar que hayan Horas disponibles : [SALIR]
 				if (data.horas_desarrollo <= nro_horas*1.1){
-					alert("No hay horas disponibles");
+					alert("Las horas disponibles son menores a: " + nro_horas*1.1 +'h (Incluyendo gestión de demanda).');
 				}else{
 					//Si hay horas disponibles, construir el REGISTRO
 					var objjson = {};
@@ -240,8 +243,7 @@ function agregar(){
 									tr.appendChild(crearTD(data.tipo));
 									tr.appendChild(crearTD(data.descripcion));
 									tr.appendChild(crearTD(tipo_reg.options[tipo_reg.selectedIndex].text));							
-									tr.appendChild(crearTD(nro_horas));									
-									tr.appendChild(crearTD(''));
+									tr.appendChild(crearTD(nro_horas));	
 									tr.appendChild(crearTD(fechastr));
 									tr.appendChild(crearTD(comentario));
 									tr.appendChild(crearBotonX());	

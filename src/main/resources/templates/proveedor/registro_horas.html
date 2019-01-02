@@ -116,7 +116,7 @@
 	                 	<div class="row">                      	
 	                        <div class="col-md-10">
 	                          <div class="form-group row">
-	                            <label class="col-sm-3 col-form-label texto_derecha">Comentario:</label>
+	                            <label class="col-sm-3 col-form-label texto_derecha">Resumen:</label>
 	                            <div class="col-sm-9">
 	                               <textarea id="txa_comentario" class="form-control"></textarea>
 	                            </div>	
@@ -143,9 +143,8 @@
 	                      				<th>Resumen Jira</th>	   
 	                      				<th>Tipo tarea</th>	                  				
 	                      				<th>Hs trabajo</th>	
-	                      				<th>Hs Gestion</th>	
 	                      				<th>Fecha</th>   
-	                      				<th>Observaciones</th>
+	                      				<th>Resumen</th>
 	                      				<th>Confirmación</th>
 	                      			</tr>
 	                      		</thead>
@@ -153,14 +152,13 @@
 	                      			<tr  th:each="registro:${listaRegistros}">  
 	                      				<td class="no_mostrar"  th:text="${registro.id}"></td>  
 	                      				<td>
-	                      					<i th:class="${registro.estado.icono}"></i>
+	                      					<i th:class="${registro.estado.icono}" th:title="${registro.estado.descripcion}"></i>
 	                      				</td>                 				
 	                      				<td  th:text="${registro.hjira.jira}"></td>
-	                      				<td  th:text="${registro.hjira.tipo}"></td>
+	                      				<td  th:text="${registro.hjira.indicador.indicador}"></td>
 	                      				<td  th:text="${registro.hjira.descripcion}"></td>	                      				
 	                      				<td  th:text="${registro.tipoActividad.descripcion}"></td>
 	                      				<td  th:text="${registro.nro_horas}"></td>
-	                      				<td  th:text="${registro.nro_horas_gestion}"></td>
 	                      				<td  th:text="${#dates.format(registro.fecha_real_trabajo, 'dd-MM-yyyy')}"></td>
 	                      				<td  th:text="${registro.comentario}"></td>	                      			
 	                      				<td>
@@ -242,11 +240,13 @@
 				  		<span class="close" onclick="cerrar_modal()">&times;</span>
 				  	</div>
 			  	</div> 
-			  	<p>Una vez confirmado, no se prodrá revertir. Verifica los datos antes de la confirmación.</p>  
+			  	<p>Una vez confirmado, no se prodrá revertir. Verifica los datos antes del enviar.</p>  
 			  	<ul class="lista-simple">
-			  		<li> <b>Jira:</b> <span id="mocon1"></span> </li>
-			  		<li> <b>Día:</b> <span id="mocon2"></span> </li>
-			  		<li> <b>Horas:</b> <span id="mocon3"></span> </li>
+			  		<li> <b>Requerimiento:</b> <span id="mocon1"></span> </li>
+			  		<li> <b>Tipo de actividad:</b> <span id="mocon4"></span> </li>
+			  		<li> <b>Fecha de trabajo:</b> <span id="mocon2"></span> </li>
+			  		<li> <b>Nro horas:</b> <span id="mocon3"></span> </li>
+			  		
 			  	</ul>
 			  	<form th:action="@{/proveedor/desarrollo/registrohoras}" method="post">
 			  		<input type="hidden" id="input_pk" name="id_hora">
@@ -255,6 +255,11 @@
         	</div>
 		</div>
 	</div>
+	<div id="domMessage" class="un_modal">
+		<div class="contenido_loader"> 
+    		<h6>Cargando...</h6> 
+    	</div>
+	</div> 
 
 <!------------------------------------------------------------------------------------------------------------>
 <!---------------------------------              SCRIPS                      --------------------------------->
@@ -272,6 +277,19 @@
     <script th:src="@{/js/menus.js}"></script>    
     <script type="text/javascript">
     	cargar_menus();
+	</script>
+	<script type="text/javascript">
+
+    $( document ).ajaxStart(function() 
+    {
+    	$( "#domMessage" ).show();    	
+
+    }).ajaxStop(function() 
+    {
+    	$( "#domMessage" ).hide();    	
+
+    });
+
 	</script>
 </body>
 </html>

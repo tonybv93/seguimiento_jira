@@ -33,7 +33,7 @@ public interface IRegistroHorasService {
 	//----------------- ESPECIALES
 	public String registrarHoras(Usuario u, RespGenerica objeto);
 	public String eliminarHoras(Usuario u, RespGenerica objeto);
-	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro,int id_estado);
+	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro,int id_estado, Usuario u);
 	public List<HorasPorSemana> listarDiasPorSemana(int id_usuario);
 	public List<HorasPorSemana> listarDiasdelMes(int id_usuario, String periodo);
 	public double horasTrabajadas(String jira);

@@ -116,7 +116,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 	
 	@Override
 	public List<Periodo> listarPeriodos() {
-		return (List<Periodo>) periodoRepo.findAll();
+		return (List<Periodo>) periodoRepo.findAllByOrderByPeriodoAsc();
 	}
 	
 	@Override
@@ -148,26 +148,26 @@ public class RegistroHorasService implements IRegistroHorasService {
 
 	@Override
 	public List<HorasPorSemana> listarDiasdelMes(int id_usuario, String periodo) {
-		//TEMPORAL
-		periodo = "201812";
 		//Variables
 		Usuario u = usuarioRepo.findById(id_usuario).orElse(null);
 		Estado_Reg_Horas e1 = estadoRepo.findById(1).orElse(null); //Estado 1: 1 = aprobado
 		Estado_Reg_Horas e2 = estadoRepo.findById(2).orElse(null); //Estado 2: 2 = confirmado
-		List<HorasPorSemana> lstHoras = regHorasRepo.horasSemanales(u,e1,e2);
-		List<HorasPorSemana> listaFinal = new ArrayList<>();
-
+		
 		//Formatos
 		SimpleDateFormat formatoCorto = new SimpleDateFormat("dd");
 		SimpleDateFormat formatoLargo = new SimpleDateFormat("dd-MM-yyyy");		
 		String fechal1, fechal2, fechaCorta;
 				
+		//Fechas
+		Date inicio = new Date();
+		Date fin = new Date();
 		//Encontrar día inicial del mes		
 		String fecha_inicial ="01-" + periodo.substring(4,6) +'-'+ periodo.substring(0, 4);		
 
 		Calendar calendario2 = Calendar.getInstance();
 		try {
 			calendario2.setTime(formatoLargo.parse(fecha_inicial));
+			inicio = calendario2.getTime();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -177,11 +177,16 @@ public class RegistroHorasService implements IRegistroHorasService {
 		calendario2.set(Calendar.DAY_OF_MONTH, 1);  
 		calendario2.add(Calendar.DATE, -1);  		
 		int nro_dias = calendario2.get(Calendar.DAY_OF_MONTH);
+		fin = calendario2.getTime();		
+		//Resetear calendaro
 		try {
-			calendario2.setTime(formatoLargo.parse(fecha_inicial));
+			calendario2.setTime(formatoLargo.parse(fecha_inicial));			
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
+		}		
+		//ARREGLOS
+		List<HorasPorSemana> lstHoras = regHorasRepo.horasMes(u,e1,e2, fin, inicio);
+		List<HorasPorSemana> listaFinal = new ArrayList<>();
 		int j = 0;
 		//Llenar nuevo arreglo		
 		for (int i = 0; i < nro_dias; i++) {	
@@ -211,9 +216,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 		//Variables
 		Usuario u = usuarioRepo.findById(id_usuario).orElse(null);
 		Estado_Reg_Horas e1 = estadoRepo.findById(1).orElse(null); //Estado 1: 1 = aprobado
-		Estado_Reg_Horas e2 = estadoRepo.findById(2).orElse(null); //Estado 2: 2 = confirmado
-		List<HorasPorSemana> lstHoras = regHorasRepo.horasSemanales(u,e1,e2);
-		List<HorasPorSemana> listaFinal = new ArrayList<>();
+		Estado_Reg_Horas e2 = estadoRepo.findById(2).orElse(null); //Estado 2: 2 = confirmado		
 		int j = 0; //Contador
 		
 		//Encontrar día de la semana
@@ -227,13 +230,20 @@ public class RegistroHorasService implements IRegistroHorasService {
 		SimpleDateFormat formatoCorto = new SimpleDateFormat("dd");
 		SimpleDateFormat formatoLargo = new SimpleDateFormat("dd-MM-yyyy");		
 		String fechal1, fechal2, fechaCorta;
-
+		
+		//Fechas limite
+		Calendar calendario2 = Calendar.getInstance();
+		calendario2.setTime(calendario.getTime());
+		calendario2.add(Calendar.DAY_OF_YEAR, -14);		
+		
+		//Arreglos
+		List<HorasPorSemana> lstHoras = regHorasRepo.horasSemanales(u,e1,e2, calendario.getTime(), calendario2.getTime());
+		List<HorasPorSemana> listaFinal = new ArrayList<>();
 		//Llenar nuevo arreglo		
 		for (int i = 0; i < 14; i++) {	
 			HorasPorSemana hxdia = new HorasPorSemana();
 			fechaCorta = formatoCorto.format(calendario.getTime());
-			fechal1 = formatoLargo.format(calendario.getTime());
-			
+			fechal1 = formatoLargo.format(calendario.getTime());			
 			if (lstHoras.size() > j)
 				fechal2 = formatoLargo.format(lstHoras.get(j).getFecha());
 			else 
@@ -264,6 +274,8 @@ public class RegistroHorasService implements IRegistroHorasService {
 		if (hxj == null) {
 			//Si NO existe, se creará un registro nuevo
 			hxj = new HJira();		
+			hxj.setConsumido_desarrollo(BigDecimal.ZERO);
+			hxj.setConsumido_prueba(BigDecimal.ZERO);
 		}
 		// Ya sea nuevo registro o no, se actualizan todos los campos	
 		List<JsoJira> respuestaAPI = jiraResRepo.busquedaJQL("key="+jira+"+and+fabrica="+fabrica +"&fields=key,summary,issuetype,customfield_14851,customfield_14850,customfield_11483,customfield_11640"); // Se consult al api
@@ -339,14 +351,16 @@ public class RegistroHorasService implements IRegistroHorasService {
 			registro.setComentario(respuesta.getTexto5());			
 			HJira hxj = registro.getHjira();
 			// NRO DE HORAS (TIPO 4:MEJORA Y 1:DESARROLLO SE RESTAN DEL TOTAL)
-			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1) {	// Validar tipos
-				if((hxj.getHoras_desarrollo().subtract(hxj.getConsumido_desarrollo())).compareTo(registro.getNro_horas()) == 1) {
+			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1 ||  registro.getTipoActividad().getId() == 5) {	// Validar tipos
+				if((hxj.getHoras_desarrollo().subtract(hxj.getConsumido_desarrollo())).compareTo(registro.getNro_horas()) >= 0) {
 					registro.setFlagfacturar(true);
 					// NRO HORAS GESTION (10%) !!SOLO PARA GMD!!
-					if (hjira.getFabrica().getNombre().equals("GMD") && !hjira.getTipo().equals("Proyecto")) {
+					if (hjira.getFabrica().getNombre().equals("GMD") && !hjira.getTipo().equals("Proyecto") && registro.getTipoActividad().getId() != 5) {
 						registro.setNro_horas_gestion(registro.getNro_horas().multiply(BigDecimal.valueOf(0.1)));
-					}
-					registro = regHorasRepo.save(registro);					
+					}else {
+						registro.setNro_horas_gestion(BigDecimal.ZERO);
+					}					
+					registro = regHorasRepo.save(registro);						
 					//Las horas facturables se restan del pull de horas totales (DESARROLLO)
 					hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo().add(registro.getNro_horas()).add(registro.getNro_horas_gestion()));					
 					hxjRepo.save(hxj);
@@ -363,9 +377,16 @@ public class RegistroHorasService implements IRegistroHorasService {
 	
 	// CAMBIAR ESTADOS
 	@Override
-	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro, int id_estado) {
+	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro, int id_estado, Usuario u) {
 		registro.setEstado(estadoRepo.findById(id_estado).orElse(null));
 		regHorasRepo.save(registro);	
+		if (id_estado == 1 && registro.isFlagfacturar()) {
+			String fecha =  registro.getFecha_real_trabajo().toString().substring(0, 4) + registro.getFecha_real_trabajo().toString().substring(5, 7);
+			Periodo p = periodoRepo.findByPeriodo(fecha);
+			Horas_Gestion_Demanda hgd = hgDemandaRepo.buscarPorUsuarioYPeriodo(u.getId(), p.getId());
+			hgd.setHoras_consumidas(hgd.getHoras_consumidas().add(registro.getNro_horas_gestion()));
+			hgDemandaRepo.save(hgd);
+		}
 		return "Confirmado";
 	}
 	
@@ -377,7 +398,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 			regHorasRepo.deleteById((int)respuesta.getNumero1());
 			HJira hxj = hxjRepo.findByJira(registro.getHjira().getJira());
 			// Si las horas son desarrollo o mejora, se restan de las horas CONSUMIDAS 
-			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1) { //4- Mejora | 1- Desarrollo 
+			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1 || registro.getTipoActividad().getId() == 5) { //4- Mejora | 1- Desarrollo 
 				hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo().subtract(registro.getNro_horas()).subtract(registro.getNro_horas_gestion()));
 				hxjRepo.save(hxj);
 			}

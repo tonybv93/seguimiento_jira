@@ -54,7 +54,7 @@ public class Proveedor_Reg_Horas {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_estado_reg_horas")
 	private Estado_Reg_Horas estado;
-
+	
 	
 	public Date getFecha_facturacion() {
 		return fecha_facturacion;
@@ -112,14 +112,6 @@ public class Proveedor_Reg_Horas {
 		this.nro_horas_gestion = nro_horas_gestion;
 	}
 
-	public boolean isFlagfacturar() {
-		return flagfacturar;
-	}
-
-	public void setFlagfacturar(boolean flagfacturar) {
-		this.flagfacturar = flagfacturar;
-	}
-
 	public String getComentario() {
 		return comentario;
 	}
@@ -150,6 +142,14 @@ public class Proveedor_Reg_Horas {
 
 	public void setEstado(Estado_Reg_Horas estado) {
 		this.estado = estado;
+	}
+	
+	public boolean isFlagfacturar() {
+		return flagfacturar;
+	}
+
+	public void setFlagfacturar(boolean flagfacturar) {
+		this.flagfacturar = flagfacturar;
 	}
 
 	public Proveedor_Reg_Horas() {

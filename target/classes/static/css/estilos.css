@@ -352,7 +352,7 @@
 }
 .contenido_modal{
 	background-color: #fff;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 10% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
     width: 50%; /* Could be more or less, depending on screen size */
@@ -689,4 +689,14 @@ textarea
 }
 .col-form-label2{
 	font-size: 12px !important;
+}
+.contenido_loader{
+	background-color: #646464;
+	font-size: 15px;
+	text-align: center;
+	border-radius: 5px;
+	color: #fff;
+	margin: 25% auto;
+	width: 200px;
+    padding: 20px;
 }

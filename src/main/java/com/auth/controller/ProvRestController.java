@@ -79,7 +79,7 @@ public class ProvRestController {
 			Proveedor_Reg_Horas registro = registroService.buscarRegPorID((int)respuesta.getNumero1());		
 			Rol rol = usuarioService.buscarRolPorId(4); //SI EL ROL ES JEFE DE PROVEEDORES, SI PUEDE CAMBIAR ESTADO DE OTRAS PERSONAS
 			if (registro.getUsuario() == usuario || usuario.getRoles().contains(rol)) {				 
-				return registroService.cambiarEstadoRegistro(registro,(int) respuesta.getNumero2());
+				return registroService.cambiarEstadoRegistro(registro,(int) respuesta.getNumero2(), usuario);
 			}else {
 				return "Error, no puede confirmar registros de otras personas";
 			}	
@@ -114,6 +114,17 @@ public class ProvRestController {
 			Usuario usuario = usuarioService.buscarPorId((int)respuesta.getNumero1());	
 			return registroService.listarRegistrosConfirmadosPorDesarrollador(usuario);
 		}
+		
+		// Lista de actividad diaria por Desarrollador [REGISTROS]
+		@PostMapping("/registros/aprobados/desarrollador")
+		@ResponseBody
+		public List<Proveedor_Reg_Horas> listarRegistrosAprobadosPorDesarrollador(@RequestBody RespGenerica respuesta){
+					
+			Usuario usuario = usuarioService.buscarPorId((int)respuesta.getNumero1());	
+			return registroService.listarRegistrosAprobadosPorDesarrollador(usuario);
+		}
+		
+		
 		// Lista de actividad diaria por Desarrollador [REGISTROS]
 		@PostMapping("/registros/mes/desarrollador")
 		@ResponseBody

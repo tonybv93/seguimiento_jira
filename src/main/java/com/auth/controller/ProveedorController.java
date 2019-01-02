@@ -56,8 +56,9 @@ public class ProveedorController {
 		Proveedor_Reg_Horas registro = regHorasService.buscarRegPorID(id);
 				
 		if (registro.getUsuario() == usuario) {				 
-			regHorasService.cambiarEstadoRegistro(registro, 2);			
-		}
+			regHorasService.cambiarEstadoRegistro(registro, 2, usuario);	
+			
+		}		
 		return "redirect:/proveedor/desarrollo/registrohoras";
 	}
 	
@@ -69,7 +70,6 @@ public class ProveedorController {
 		model.addAttribute("gestdem",regHorasService.buscarHGDemandaPorUsuario(usuario.getId(),regHorasService.periodoActual().getId()));
 		model.addAttribute("listaDesarrolladores",usuarioService.listarUsuarioPorRol(3));
 		model.addAttribute("listaPeriodos",regHorasService.listarPeriodos());
-		model.addAttribute("listaRegistros","");
 		
 		return "proveedor/control_horas";
 	}
