@@ -14,4 +14,7 @@ public interface IUsuarioService {
 	
 	// ROLES
 	public Rol buscarRolPorId(int id);
+	
+	//pass
+	public boolean cambiarPass(String pas_antigua, String pas_nueva, Usuario u);
 }

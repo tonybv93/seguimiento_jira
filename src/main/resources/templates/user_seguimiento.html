@@ -175,7 +175,7 @@
 					  				<span th:if="${jira.fecha_produccion == null}" class="font-gris">Por definir</span>
 					  			</td>
 					  			<td>
-					  				<span data-toggle="tooltip" th:title="${jira.fabrica.nombre}+ ': S/ ' + ${#numbers.formatDecimal(jira.monto_des, 0, 'DEFAULT', 2, 'DEFAULT')} + ' - Pandora: S/ '   + ${#numbers.formatDecimal(jira.monto_cert, 0, 'DEFAULT', 2, 'DEFAULT')}" th:if="${jira.monto_total != 0}" th:text="'S/ ' + ${#numbers.formatDecimal(jira.monto_total, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
+					  				<span data-toggle="tooltip" th:title="${jira.fabrica != null ? jira.fabrica.nombre:'-' }+ ': S/ ' + ${#numbers.formatDecimal(jira.monto_des, 0, 'DEFAULT', 2, 'DEFAULT')} + ' - Pandora: S/ '   + ${#numbers.formatDecimal(jira.monto_cert, 0, 'DEFAULT', 2, 'DEFAULT')}" th:if="${jira.monto_total != 0}" th:text="'S/ ' + ${#numbers.formatDecimal(jira.monto_total, 0, 'DEFAULT', 2, 'DEFAULT')}"></span>
 					  				<span th:if="${jira.monto_total == 0}" class="font-gris">Por estimar</span>
 					  			</td>
 					  			

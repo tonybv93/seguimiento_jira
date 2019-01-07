@@ -1,6 +1,7 @@
 package com.auth.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -379,13 +380,23 @@ public class RegistroHorasService implements IRegistroHorasService {
 	@Override
 	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro, int id_estado, Usuario u) {
 		registro.setEstado(estadoRepo.findById(id_estado).orElse(null));
-		regHorasRepo.save(registro);	
-		if (id_estado == 1 && registro.isFlagfacturar()) {
+		regHorasRepo.save(registro);
+		//EN CASO SEA APROBACIÓN: CONSIDERAR HORAS DE GESTIÓN DE DEMANDA (SOLO PARA REQUES FACTURABLES DE GMD(id 21))
+		if (id_estado == 1 && registro.isFlagfacturar() && registro.getUsuario().getFabrica().getId() == 21) { 					
+			//--- Periodo 
 			String fecha =  registro.getFecha_real_trabajo().toString().substring(0, 4) + registro.getFecha_real_trabajo().toString().substring(5, 7);
-			Periodo p = periodoRepo.findByPeriodo(fecha);
+			Periodo p = periodoRepo.findByPeriodo(fecha);			
+			//--- Horas Gestion demanda
 			Horas_Gestion_Demanda hgd = hgDemandaRepo.buscarPorUsuarioYPeriodo(u.getId(), p.getId());
-			hgd.setHoras_consumidas(hgd.getHoras_consumidas().add(registro.getNro_horas_gestion()));
-			hgDemandaRepo.save(hgd);
+			//- Verificar que existan horas de GESTIÓN DE DEMANDA	
+			if (hgd.getHoras_consumidas().add(registro.getNro_horas_gestion()).compareTo(hgd.getTotal_horas()) == 1) { //Si es mayor (Supera el tope de horas)
+				// En caso no, realizar el prorrateo
+				prorateoRegistros(u.getId(),u.getFabrica().getId(),p,registro.getNro_horas_gestion(),hgd); 
+			}else {
+				hgd.setHoras_consumidas(hgd.getHoras_consumidas().add(registro.getNro_horas_gestion()));
+				hgDemandaRepo.save(hgd);
+			}
+			
 		}
 		return "Confirmado";
 	}
@@ -412,5 +423,37 @@ public class RegistroHorasService implements IRegistroHorasService {
 	@Override
 	public Horas_Gestion_Demanda buscarHGDemandaPorUsuario(int u, int p) {
 		return hgDemandaRepo.buscarPorUsuarioYPeriodo(u,p);
+	}
+
+
+	private String prorateoRegistros(int id_usu, int id_fab, Periodo periodo, BigDecimal horas, Horas_Gestion_Demanda hgestDem) {
+		List<Proveedor_Reg_Horas> lstRegistros = regHorasRepo.listarParaProrateo(id_fab, periodo.getInicio(), periodo.getFin());
+		// FORMULA PARA PRORATEAR: encontrar nuevo factor
+		BigDecimal factor_actual = hgestDem.getFactor();
+		BigDecimal tope = hgestDem.getTotal_horas();
+		BigDecimal total_horas = hgestDem.getHoras_consumidas().add(horas);
+		BigDecimal nuevo_factor = (factor_actual.multiply(tope)).divide(total_horas,8, RoundingMode.HALF_UP);		
+		BigDecimal nuevo_consumido = BigDecimal.ZERO;
+		String str = "";
+		for (Proveedor_Reg_Horas prh: lstRegistros) {
+			prh.setNro_horas_gestion(prh.getNro_horas().multiply(nuevo_factor));
+			regHorasRepo.save(prh);	//Se cambian el total de GEST DEM en cada registro
+			if (prh.getEstado().getId() == 1) {
+				
+				
+				//str = str + nuevo_/consumido.add(prh.getNro_horas_gestion()).toString() + " + ";
+				//System.out.println(nuevo_consumido.doubleValue());
+				//System.out.println(nuevo_consumido.toString());
+				//System.out.println(prh.getNro_horas_gestion());
+				//System.out.println(nuevo_consumido.add(prh.getNro_horas_gestion()));
+				nuevo_consumido = nuevo_consumido.add(prh.getNro_horas_gestion());
+				
+			}
+		}
+		System.out.println(">>>>>>>>>>>>>>>>>>>> _c" + str);
+		hgestDem.setHoras_consumidas(nuevo_consumido);
+		hgestDem.setFactor(nuevo_factor);
+		hgDemandaRepo.save(hgestDem); // Se actualiza el total de GEST DEM y el FACTOR
+		return "El trabajo está hecho";
 	}	
 }

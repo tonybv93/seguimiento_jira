@@ -26,6 +26,7 @@ import com.auth.entity.Usuario;
 import com.auth.rest.RespAcuerdoTerminado;
 import com.auth.rest.RespFechas;
 import com.auth.rest.RespGenerica;
+import com.auth.service.IActaService;
 import com.auth.service.IAcuerdosService;
 import com.auth.service.IJiraDetalleService;
 import com.auth.service.IJiraService;
@@ -47,7 +48,15 @@ public class JRestController {
 	private IUsuarioService usuarioService;		
 	@Autowired
 	private IMenuService menuService;
-	
+	@Autowired
+	private IActaService actaService;
+// -------------------------------------------------------- ACTA -------------------------------------
+	@PostMapping("/acta/confirmarenvio")
+	@ResponseBody
+	public String confirmarEnvioActa(@RequestBody RespGenerica respuesta){		
+		actaService.revisarActaGerente(respuesta);
+		return "Hecho!";
+	}
 // -------------------------------------------------------- JIRA--------------------------------------
 	// Enviar una lista: JIRAS
 	@RequestMapping("/jira/lista")

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <link rel="stylesheet" th:href="@{/css/select2.min.css}">
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> 
+  </head>
+
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+			 <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">    
+<!-----------------------------------------------------------------------CABECERA  ------------------------------------------------------->               
+                  
+                      	<div class="header_acta">
+	                      		<div class="cabecera_acta hdr_30">
+	                      		</div>
+
+	                      		<div class="cabecera_acta hdr_70">
+	                      			<div class="acta_titulo"><b>ACTA DE ACEPTACIÓN DE SERVICIOS DE FACTURACIÓN</b></div>
+	                      			<div class="acta_codigo"><b>Nro°</b> <span id="acta_id" th:text="${acta.id}"></span> </div>
+	                      			
+	                      			<div class="acta_estado"><b>Estado: </b> <span th:class="${acta.estado.css_clase}" th:text="${acta.estado.descripcion}"></span> </div>
+	                      		</div>
+
+	                      		<div class="cabecera_acta hdr_30 cabecera_acta_logo">
+	                      			<img class="logo_bvl" src="/images/bvl.png" alt="logo">
+	                      			<div class="titulo_subsec"><b>Versión:</b> <span th:text="${acta.version}"></span> </div> 
+	                      			<div class="titulo_subsec"><b>Fecha:</b> <span th:text="${#dates.format(acta.fecha_registro, 'dd-MM-yyyy')}"></span></div>
+	                      		</div>
+                      	</div>                     	
+                     	<br> 
+<!----------------------------------------------------------------------- DATOS SERVICIO  ------------------------------------------------------->
+                      <div class="acta_datos_titulo">Datos de Servicio</div>      
+                      <div class="acta_grupo_datos">  
+                      	<div class="cuerdo_detalle_acta">
+                      		<div class="bdy_25">
+                      			Empresa cliente
+                      		</div>
+                      		<div class="dby_80">
+                      			<span th:text="${acta.empresa.nombre}"></span>
+                      		</div>
+                      	</div>  
+                      	<div class="cuerdo_detalle_acta">
+                      		<div class="bdy_25">
+                      			Tipo de acta
+                      		</div>
+                      		<div class="dby_80">
+                      			<span>Contrato de locación de servicios</span>
+                      		</div>
+                      	</div>
+                      	<div class="cuerdo_detalle_acta">
+                      		<div class="bdy_25">
+                      			Ind. contable
+                      		</div>
+                      		<div class="dby_80">
+                      			<span th:text="${acta.indicador.indicador}"></span>
+                      		</div>
+                      	</div>
+                      	<div class=cuerdo_detalle_acta>
+                      		<div class="bdy_25">
+                      			Periodo
+                      		</div>
+                      		<div class="bdy_25_blanco">
+                      			<span th:text="${acta.periodo.periodo}"></span>
+                      		</div>
+                      		<div class="bdy_25">
+                      			Total de horas
+                      		</div>
+                      		<div class="bdy_25_blanco">
+                      			<span th:text="${acta.total_horas + ' Hs'}"></span>
+                      		</div>
+                      	</div>  
+                      </div>   
+                      <div class="cuerdo_detalle_acta">
+                      		<div class="bdy_25">
+                      			Descripción del servicio
+                      		</div>
+                      		<div class="dby_80" th:if="${acta.estado.id == 1 || acta.estado.id == 4}">
+                      			<textarea id="txtarea_descipcion" class="text_area_actadetalle"  th:field="${acta.descripcion_servicio}"></textarea>
+                      		</div>
+                      		<div class="dby_80" th:if="${acta.estado.id != 1 && acta.estado.id != 4}">
+                      			<div class="text_area_comentario"  th:text="${acta.descripcion_servicio}"></div>
+                      		</div>
+                      		
+                      	</div>
+                     <div class="acta_datos_titulo">Descripción de entregables realizados en el periodo</div>  
+                     <div class="acta_tabla_jiras">
+                     	<table class="table table-striped table-hover">
+                     		<thead>
+                     			<tr>	                      				
+                     				<th class="th_wdt_90px">Reuqerimiento</th>
+                     				<th class="th_wdt_90px">Tipo Req.</th>
+                     				<th>Descripción</th>
+                     				<th class="th_wdt_50px">H/H</th>
+                     				<th class="th_wdt_50px">G/D</th>
+                     				<th class="th_wdt_50px">G/C</th>
+                     				<th class="th_wdt_50px">Tarifa</th>
+                     				<th class="th_wdt_90px">Total sin IGV.</th>
+                     			</tr>
+                     		</thead>
+                     		<tbody>
+                     			<tr th:each="detalle:${listaDetalles}">
+                     				<td th:text="${detalle.jira.jira}"></td>
+                     				<td th:text="${detalle.jira.tipo}"></td>
+                     				<td th:text="${detalle.jira.descripcion}"></td>
+                     				<td th:text="${detalle.nro_horas_jira}"></td>
+                     				<td th:text="${detalle.nro_horas_concepto1}"></td>
+                     				<td th:text="${detalle.nro_horas_concepto2}"></td>
+                     				<td th:text="${'S/ ' +  detalle.tarifa}"></td>
+                     				<td th:text="${'S/ ' + detalle.costo_total}"></td>
+                     			</tr>
+                     		</tbody>
+                     	</table>
+                     </div>
+                     <div class="detalle_acta_botones" th:if="${acta.estado.id == 1 || acta.estado.id == 4}">
+                     	<button class="btn btn-primary mr-2" onclick="modal_buscar_jira()">Enviar</button>
+                     	<button class="btn secondary mr-2" onclick="back();">Cancelar</button>
+                     </div>
+<!----------------------------------------------------------------------- DETALLE ACTA  ------------------------------------------------------->   
+                  </div>
+                </div>
+<!---------------------------------------------^ fin card 1 ^---------------------------------------------->                           
+   			</div>
+<!----------------------------------------------- CARD 2  --------------------------------------------------->     
+            <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                  	<h6>Observaciones y comentarios</h6> 
+                  	<div class="caja_comentarios">
+	                  	<div class="comentario">
+	                  		<div class="comentario_header">
+	                  			<span class="comentario_usuario">Nombre Usuario</span>
+	                  			<span class="comentario_fecha">12/20/2018</span>
+	                  		</div>
+	                  		<div class="comentario_contenido">
+	                  			Este es un comentario asdasd ads asd a
+	                  		</div>                 		
+	                  	</div>
+	                  	<div class="comentario">
+	                  		<div class="comentario_header">
+	                  			<span class="comentario_usuario">Nombre Usuario</span>
+	                  			<span class="comentario_fecha">12/20/2018</span>
+	                  		</div>
+	                  		<div class="comentario_contenido">
+	                  			Este es un comentario asdasd ads asd a
+	                  		</div>                 		
+	                  	</div>	
+	                  	<div class="comentario">
+	                  		<div class="comentario_header">
+	                  			<span class="comentario_usuario">Nombre Usuario</span>
+	                  			<span class="comentario_fecha">12/20/2018</span>
+	                  		</div>
+	                  		<div class="comentario_contenido">
+	                  			Este es un comentario asdasd ads asd a
+	                  		</div>                 		
+	                  	</div>	
+                  	</div>
+                  	
+                  	<div class="caja_comentarios">                  	
+                  		Nuevo comentario:
+                  		<div class="nuevo_comentario">
+                  			<textarea class="text_area_comentario"></textarea>
+                  			<button type="button" class="btn btn-secondary btn-fw btn_comentar">
+                            <i class="mdi mdi-file-document"></i>Comentar</button>
+                  		</div>
+                  		
+                  	</div>
+                  	<div>
+                  	</div>
+                  </div>
+                </div>  
+            </div>
+<!------------------------------------------------------------------------------------------------------------>
+        </div> 
+      </div>
+   	</div>
+ 	</div>
+<!------------------------------------------------------------------------------------------------------------>
+	
+ 	<div id="mi_modal" class="un_modal">			
+		<div class="contenido_modal">
+			<div class="card-body">  
+				<div class="row">
+				  	<div class="col-8 grid-margin">
+				  		<div class="modal_header">Confirmar acta</div>	
+				  	</div>				  
+				  	<div class="col-4 grid-margin">
+				  		<span class="close" onclick="cerrar_modal()">&times;</span>
+				  	</div>
+			  	</div>
+    			<p>Una vez confirmada, ya no podrá modificar el acta a menos que el cliente la rechace.</p>
+        	</div>
+        	<div class="detalle_acta_botones">
+            	<button class="btn btn-primary mr-2" onclick="confirmar_envio()"> Enviar</button>
+            	<button class="btn secondary mr-2" onclick="cerrar_modal()">Cancelar</button>
+            </div>
+		</div>
+	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>    
+    <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
+    
+    <script th:src="@{/js/prov_detalle_acta.js}"></script>    
+    <script th:src="@{/js/menus.js}"></script> 
+    <script type="text/javascript">
+    	cargar_menus();
+	</script>
+</body>
+</html>

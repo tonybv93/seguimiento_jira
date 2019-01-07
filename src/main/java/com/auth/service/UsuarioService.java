@@ -53,4 +53,15 @@ public class UsuarioService implements IUsuarioService {
 		return rolRepo.findById(id).orElse(null);
 	}
 
+	@Override
+	public boolean cambiarPass(String pas_antigua, String pas_nueva, Usuario u) {
+		if (encriptador.matches(pas_antigua, u.getPassword())) {
+			u.setPassword(encriptador.encode(pas_nueva));
+			userRepo.save(u);
+			return true;
+		}else {
+			return false;
+		}
+	}
+
 }

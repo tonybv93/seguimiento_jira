@@ -53,6 +53,15 @@ public class ProvRestController {
 			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());						
 			return actaService.listarDetalleActaPRE(usuario,respuesta);
 		}
+		// Confirmar envio acta
+		@PostMapping("/acta/confirmarenvio")
+		@ResponseBody
+		public String confirmarEnvioActa(@RequestBody RespGenerica respuesta){
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());			
+			actaService.cambiarEstadoActa(respuesta, usuario, 2); // ESTADO 2: Enviado
+			return "Hecho!";
+		}
 // -------------------------------------------------- REGISTRO DE HORAS ----------------------------
 
 		@PostMapping("/registro/nuevo")

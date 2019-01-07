@@ -1,7 +1,7 @@
 package com.auth.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +19,7 @@ import com.auth.entity.Indicador_Contable;
 import com.auth.entity.Periodo;
 import com.auth.entity.Usuario;
 import com.auth.repository.IActaDetalleRepository;
+import com.auth.repository.IActaEstadoRepository;
 import com.auth.repository.IActaRepository;
 import com.auth.repository.IEmpresaRepository;
 import com.auth.repository.IEstadoActaRepository;
@@ -50,6 +51,8 @@ public class ActaService implements IActaService {
 	IHJiraRepository hjiraRepo;
 	@Autowired
 	IHorasGestionDemandaRepository gestionDemandRepo;
+	@Autowired
+	IActaEstadoRepository actaEstadoRepo;
 	
 	@Override
 	public List<Acta> listarTodoActas() {
@@ -143,19 +146,15 @@ public class ActaService implements IActaService {
 		acta = actaRepo.save(acta);
 
 			
-		double total_horas_desarrollo = 0.0;
+		BigDecimal total_horas_desarrollo = BigDecimal.ZERO;
+		BigDecimal total_horas_concepto1 = BigDecimal.ZERO;
+		
 		// SEPRAR LISTA DE JIRAS (APROBADOS Y PATEADOS
-		List<DetalleActaPre> listaJirasPateados = new ArrayList<>();
 		List<DetalleActaPre> listadetallePre = actaRepo.listarDetalleActaPre(periodo.getInicio(), periodo.getFin(), usuario.getFabrica(), tipo, empresa);
 		for (DetalleActaPre dpre: listadetallePre) {
-			if (!respuesta.getArregloStr().contains(dpre.getJira())) {
-				listaJirasPateados.add(dpre);
-				listadetallePre.remove(dpre);
-			}else {
-				total_horas_desarrollo = total_horas_desarrollo + dpre.getTotalHoras().doubleValue();
-			}
+			total_horas_desarrollo = total_horas_desarrollo.add(dpre.getTotalHoras());
+			total_horas_concepto1 = total_horas_concepto1.add(dpre.getTotalHorasGesDem());
 		}
-		
 		// JIRAS APROBADOS
 		// --Horas totales		
 		for (DetalleActaPre dpre: listadetallePre) {
@@ -163,11 +162,16 @@ public class ActaService implements IActaService {
 			Acta_detalle detalle = new Acta_detalle();
 			detalle.setActa(acta);
 			detalle.setJira(hjira);
+			detalle.setTarifa(BigDecimal.valueOf(respuesta.getNumero7()) );
 			detalle.setNro_horas_jira(dpre.getTotalHoras());
-			detalle.setNro_horas_concepto1(BigDecimal.valueOf((respuesta.getNumero5()/total_horas_desarrollo)*dpre.getTotalHoras().doubleValue()));
-			detalle.setNro_horas_concepto1(BigDecimal.valueOf((respuesta.getNumero6()/total_horas_desarrollo)*dpre.getTotalHoras().doubleValue()));
+			// GESTION DE DEMANDA
+			detalle.setNro_horas_concepto1(dpre.getTotalHorasGesDem().add( (BigDecimal.valueOf(respuesta.getNumero5()).divide(total_horas_desarrollo,2,RoundingMode.HALF_UP)).multiply(dpre.getTotalHoras()) ));
+			//GESTION CONFIGURACION
+			detalle.setNro_horas_concepto2( (BigDecimal.valueOf(respuesta.getNumero6()).divide(total_horas_desarrollo,2,RoundingMode.HALF_UP)).multiply(dpre.getTotalHoras()) );
+			//
 			detalle.setNro_total_horas(detalle.getNro_horas_jira().add(detalle.getNro_horas_concepto1().add(detalle.getNro_horas_concepto2())));
-			actaDetalleRepo.save(detalle);
+			detalle.setCosto_total(detalle.getNro_total_horas().multiply(detalle.getTarifa()));			
+			actaDetalleRepo.save(detalle);			
 		}	
 		//Segundo guardado
 		acta.setCodigo("ACT-" + acta.getId());
@@ -197,9 +201,9 @@ public class ActaService implements IActaService {
 	}
 
 	@Override
-	public List<Acta> listaActasPorEstado(Acta_Estado estado) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Acta> listaActasPorEstado(int id_estado) {
+		Acta_Estado estado = estadoActaRepo.findById(id_estado).orElse(null);
+		return actaRepo.findAllByEstado(estado);
 	}
 //--------------------------- indicador contable
 	@Override
@@ -210,6 +214,33 @@ public class ActaService implements IActaService {
 	@Override
 	public List<Indicador_Contable> listarIndicadorContable() {
 		return (List<Indicador_Contable>) indicadorRepo.findAll();
+	}
+
+	@Override
+	public List<Acta_detalle> listarDetalle(Acta acta) {
+
+		return actaDetalleRepo.findAllByActa(acta);
+	}
+
+	@Override
+	public void cambiarEstadoActa(RespGenerica respuesta, Usuario u,int estado_nuevo_id) {
+		Acta acta = actaRepo.findById((int)respuesta.getNumero1()).orElse(null);
+		// Validar que el usuario tenga permisos sobre el acta
+		if (acta.getFabrica().getId() == u.getFabrica().getId()) {			
+			Acta_Estado estado = actaEstadoRepo.findById(estado_nuevo_id).orElse(null); 
+			acta.setDescripcion_servicio(respuesta.getTexto1());
+			acta.setEstado(estado);
+			actaRepo.save(acta);
+		}
+	}
+
+	@Override
+	public void revisarActaGerente(RespGenerica respuesta) {
+		Acta acta = actaRepo.findById((int)respuesta.getNumero1()).orElse(null);
+		Acta_Estado estado = actaEstadoRepo.findById((int)respuesta.getNumero2()).orElse(null); 
+		acta.setEstado(estado);
+		actaRepo.save(acta);
+
 	}
 
 }

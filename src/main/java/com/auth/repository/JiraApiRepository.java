@@ -20,7 +20,7 @@ public class JiraApiRepository {
 	public List<JsoJira> busquedaJQL(String filtro) {	
 		JsoListaJiras jiraSS = new JsoListaJiras();
 		String cadenaJson = "https://jira.cavali.com.pe:8443/rest/api/2/search?jql=" + filtro;		
-		RestTemplate restTemplate = restTB.basicAuthorization("antony.becerra","Bolsa2018").errorHandler(new MyErrorHandler()).build(); 
+		RestTemplate restTemplate = restTB.basicAuthorization("antony.becerra","Bolsa2019").errorHandler(new MyErrorHandler()).build(); 
 		System.out.println(cadenaJson);
 		jiraSS = restTemplate.getForObject(cadenaJson, JsoListaJiras.class);		
 		return jiraSS.getIssues();

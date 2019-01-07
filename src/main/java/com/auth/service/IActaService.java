@@ -9,6 +9,7 @@ import com.auth.entity.Fabrica;
 import com.auth.entity.Indicador_Contable;
 import com.auth.entity.Periodo;
 import com.auth.entity.Acta_Estado;
+import com.auth.entity.Acta_detalle;
 import com.auth.entity.Usuario;
 import com.auth.rest.RespGenerica;
 
@@ -18,12 +19,18 @@ public interface IActaService {
 	public List<Acta> listaActasPorUsuario(Usuario usuario);
 	public List<Acta> listaActasPorEmpresa(Empresa empresa);
 	public List<Acta> listaActasPorIndicador(Indicador_Contable indicador);
-	public List<Acta> listaActasPorEstado(Acta_Estado estado);
+	public List<Acta> listaActasPorEstado(int id_estado);
 	public Acta buscarActaPorID(int id);
 	public Acta buscarActaPorCodigo(String codigo);
 	public Acta guardarActa(Acta a);
 	public void desactivarActa(Acta a);
-		
+	
+	public void cambiarEstadoActa(RespGenerica respuesta,Usuario u, int estado_nuevo_id);
+	public void revisarActaGerente(RespGenerica respuesta);
+	// ------- DETALLE
+	public List<Acta_detalle> listarDetalle(Acta acta);
+	
+	
 	//----- ESTADO_ACTA
 	public List<Acta_Estado> listarEstadoActa();
 	//----- indicador acta

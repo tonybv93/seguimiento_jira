@@ -37,6 +37,8 @@ public interface IRegistroHorasService {
 	public List<HorasPorSemana> listarDiasPorSemana(int id_usuario);
 	public List<HorasPorSemana> listarDiasdelMes(int id_usuario, String periodo);
 	public double horasTrabajadas(String jira);
+	
+
 	//------------------ HX JIRA	
 	public HJira buscarHXJiraXFab(String jira, String fabrica);
 	//----------------- TIPO ACTIVIDAD

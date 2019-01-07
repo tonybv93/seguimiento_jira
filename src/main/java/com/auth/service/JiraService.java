@@ -193,8 +193,10 @@ public class JiraService implements IJiraService {
 			else 
 				bdJira.setMonto_des(BigDecimal.ZERO);
 			
-			if (bdJira.getHoras_des().compareTo(BigDecimal.ZERO) != 0 && bdJira.getFabrica() != null )
-				bdJira.setMonto_cert(bdJira.getHoras_cert().multiply(BigDecimal.valueOf(bdJira.getFabrica().getTarifa())));
+			Fabrica fab = fabricaRepo.findById(22).orElse(null);
+			
+			if (bdJira.getHoras_cert().compareTo(BigDecimal.ZERO) != 0)
+				bdJira.setMonto_cert(bdJira.getHoras_cert().multiply(BigDecimal.valueOf(fab.getTarifa())));
 			else
 				bdJira.setMonto_cert(BigDecimal.ZERO);
 			

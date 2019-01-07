@@ -1,5 +1,118 @@
 @charset "ISO-8859-1";
-
+/* -------------- acta ----------------  */
+.icono_modal_alerta{
+	font-size: 60px;
+	line-height: 60px;
+	color: #ffd943;
+	margin: 0;
+	padding: 0;
+}
+.icono_modal_bien{
+	font-size: 60px;
+	line-height: 60px;
+	color: #19d895;
+	margin: 0;
+	padding: 0;
+}
+.alineacion_centro{
+	text-align: center;
+}
+.detalle_acta_botones2{
+	margin-top: 10px;
+	width: 100%;
+	text-align: center;
+}
+.detalle_acta_botones{
+	margin-top: 10px;
+	width: 100%;
+	text-align: right;
+}
+.th_wdt_90px{
+	min-width: 90px;
+}	
+.th_wdt_50px{
+	min-width: 50px;
+}	
+.cabecera_acta_logo{
+	text-align: center;	
+}
+.text_area_actadetalle{
+	margin: 1px;
+	font-size: 11px;
+	padding: 12px;
+	border: solid 1px #eee;
+	border-radius: 3px;
+	
+}
+.titulo_subsec{
+	width: 100%;
+	border-top: solid 1px #ddd;
+}
+.acta_datos_titulo{
+	width: 100%;
+	font-size: 14px;
+	border: solid 1px #ddd;
+	background-color: #eee;
+	font-weight: bold;
+	padding: 1px 5px;	
+}
+.header_acta{
+	width:100%;
+	display: flex;
+}
+.cuerdo_detalle_acta{
+	width:100%;
+	display: flex;
+	font-size: 14px;
+}
+.cabecera_acta{
+	padding: 10px;
+	width: 100%;
+	height: 110px;
+	font-size: 14px;
+	border: solid 1px #ddd;
+}
+.acta_titulo{
+	padding-top: 10px;
+}
+.acta_codigo{
+	font-size: 13px;
+}
+.acta_estado{
+	margin-top: 10px;
+	font-size: 12px;
+}
+.hdr_30{
+	width: 30%;
+	font-size: 12px;
+}
+.hdr_70{
+	width: 70%;
+	text-align: center;
+	min-width: 220px;
+}
+.bdy_25{
+	width: 25%;
+	border: solid 1px #ddd;
+	background-color: #eee;
+	padding: 1px 5px;
+}
+.bdy_25_blanco{
+	width: 25%;
+	border: solid 1px #ddd;
+	padding: 1px 5px;
+}
+.dby_80{
+	width: 75%;
+	border: solid 1px #ddd;
+	padding: 1px 5px;
+}
+.acta_tabla_jiras{
+	width: 100%;	
+	border: solid 1px #ddd;
+	padding: 10px;
+	font-size: 14px;
+}
 /* -------------- observaciones ----------------  */
 
 .cont_obs{
@@ -444,11 +557,7 @@
 	font-size: 14px;
 }
 /* ------------------ ACTA ----------------------------*/
-.cabecera_acta{
-	width: 100%;
-	height: 120px;
-	text-align: center;
-}
+
 .logo_acta{
 	height:100%;
 	max-height: 80px;
@@ -458,9 +567,9 @@
 	border: solid 1px #eee;
 	margin-bottom: 20px;
 }
-.grupo_datos{
-	padding: 0 30px;
-	margin-bottom: 20px;
+
+.acta_grupo_datos{
+	width: 100%;
 }
 .contenedor_tabla_detalle{
 	width: 95%;
@@ -699,4 +808,14 @@ textarea
 	margin: 25% auto;
 	width: 200px;
     padding: 20px;
+}
+.overflow_auto{
+	overflow: auto;
+}
+.tr_totales{
+	background-color: #323232;
+	color: #fff;
+}
+.tr_totales td{
+	height: 20px;
 }

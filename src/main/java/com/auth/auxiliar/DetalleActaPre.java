@@ -7,12 +7,14 @@ public class DetalleActaPre {
 	private String tipoJira;
 	private String resumen;
 	private BigDecimal totalHoras;
-
-	public DetalleActaPre(String jira, String tipoJira, String resumen, BigDecimal totalHoras) {
+	private BigDecimal totalHorasGesDem;
+	
+	public DetalleActaPre(String jira, String tipoJira, String resumen, BigDecimal totalHoras, BigDecimal totalHorasGesDem) {
 		this.jira = jira;
 		this.tipoJira = tipoJira;
 		this.resumen = resumen;
 		this.totalHoras = totalHoras;
+		this.totalHorasGesDem = totalHorasGesDem;
 	}
 	public DetalleActaPre() {
 	}
@@ -40,5 +42,12 @@ public class DetalleActaPre {
 	public void setTotalHoras(BigDecimal totalHoras) {
 		this.totalHoras = totalHoras;
 	}
+	public BigDecimal getTotalHorasGesDem() {
+		return totalHorasGesDem;
+	}
+	public void setTotalHorasGesDem(BigDecimal totalHorasGesDem) {
+		this.totalHorasGesDem = totalHorasGesDem;
+	}
+	
 	
 }

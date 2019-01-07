@@ -118,10 +118,10 @@
 		              					<th>Tipo</th>
 		              					<th>C. Costo</th>
 		              					<th>Hs Des</th>
-		              					<th>Hs Ges. D</th>
-		              					<th>Hs Ges. C</th>
+		              					<th>Hs Ges. Des</th>
+		              					<th>Hs Ges. Conf</th>
 		              					<th>Total Hs</th>
-		              					<th>Importe total</th>		              					
+		              					<th style="width: 130px;">Importe total</th>		              					
 	              					</tr>
 	              				</thead>
 	              				<tbody id="cuerpo_tabla">
@@ -199,14 +199,15 @@
 									</table>
 								</div>
 		                    </div>
-		                </div> 
-                            		       	 
+		                </div>                         		       	 
 					</div>
+					<br>
 					 <div id="btns_enviar_acta" class="div_derecha dis_hiden">
-                    	<button class="btn btn-secondary mr-2">Cancelar</button>  
-	              		<button class="btn btn-primary mr-2" onclick="enviar_acta()">Enviar</button>    
+                    	<button class="btn btn-secondary mr-2" onclick="back()">Cancelar</button>  
+	              		<button class="btn btn-primary mr-2" onclick="enviar_acta()">Continuar</button>    
                     </div>
-	            </div>
+                </div>   
+	        </div>
 			</div>
 <!------------------------------------------------------------------------------------------------------------>
          </div> 
@@ -214,8 +215,11 @@
    	</div>
  	</div>	
 <!------------------------------------------------------------------------------------------------------------>
-
-
+	<div id="domMessage" class="un_modal">
+		<div class="contenido_loader"> 
+    		<h6>Cargando...</h6> 
+    	</div>
+	</div>
 
 <!---------------------------------              SCRIPS                      --------------------------------->
 <!------------------------------------------------------------------------------------------------------------>
@@ -232,6 +236,18 @@
     <script th:src="@{/js/menus.js}"></script>    
     <script type="text/javascript">
     	cargar_menus();
+	</script>
+	<script type="text/javascript">
+
+    $( document ).ajaxStart(function() 
+    {
+    	$( "#domMessage" ).show();    	
+
+    }).ajaxStop(function() 
+    {
+    	$( "#domMessage" ).hide();    	
+
+    });
 	</script>
 </body>
 </html>

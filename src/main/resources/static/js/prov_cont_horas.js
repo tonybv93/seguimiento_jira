@@ -1,6 +1,8 @@
 /*--------------------  BLOCK ----------------------------*/
-
-
+var barrita_xc = document.getElementById('barrita_porcentaje').innerHTML;
+var barrita_graf = document.getElementById('barrita_graf'); 
+console.log(barrita_xc);
+barrita_graf.style.width=barrita_xc;
 
 /*--------------------  MODAL ----------------------------*/
 var modal;
@@ -79,6 +81,7 @@ function cambiar_estado(id,id_nuevo_estado,index_fila){
 	      	data : data,
 	        success : function(respuesta){
 	        	console.log(respuesta);
+	        	location.reload();
 	        },
 	        error: function(error,sm1,sm2){
 	        	alert("Se prodjo un error");
@@ -86,7 +89,7 @@ function cambiar_estado(id,id_nuevo_estado,index_fila){
 	            alert(sm1);
 	        }  	        
 	    });
-	location.reload();	
+		
 	//fila.parentNode.removeChild(index_fila);
 	//modal.style.display = "none";
 }

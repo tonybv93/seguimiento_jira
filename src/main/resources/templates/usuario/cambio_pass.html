@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <link rel="stylesheet" th:href="@{/css/select2.min.css}">
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> 
+  </head>
+
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!------------------------------------------------------------------------------------ CONTENIDO ------------------------------------------------------------------------------>				
+				<div class="col-md-6 grid-margin stretch-card">
+					<div class="card">
+						<div class="card-body">
+					   		<div th:class="${clase}" th:if="${mensaje != null}"><i class="mdi mdi-alert-circle"></i><span th:text="${mensaje}"></span></div>
+					   		<form action="/perfil/password" method="POST">
+					   			<h6>Cambio de contraseña</h6>
+					   			<div class="form-group">
+					   				<label>Contraseña actual</label>
+					   				<input autocomplete="off" name="pass_antigua" type="password" class="form-control" placeholder="ingresa tu contraseña" required>
+					   			</div>
+					   			<br>
+					   			<div class="form-group padding_bajo">
+					   				<label>Nueva contraseña</label>
+					   				<input autocomplete="off" name="pass_nueva" type="password"  class="form-control" placeholder="Ingresa una contraseña nueva" required>
+					   			</div>
+					   			<div class="form-group padding_bajo">
+					   				<label>Repita la nueva contraseña</label>
+					   				<input autocomplete="off" name="pass_nueva2" type="password"  class="form-control" placeholder="Repite la contraseña nueva" required>
+					   			</div>
+					   			<br>
+					   			<button type="reset" class="btn btn-light">Cancelar</button>
+					   			<button type="submit" class="btn btn-success mr-2">Cambiar</button>   			
+					   			
+					   		</form>
+					   	</div>
+					</div>
+				</div>
+<!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------->					
+				</div>
+			</div>
+		</div>
+	</div>
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>    
+    <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>    
+
+    <script th:src="@{/js/menus.js}"></script>    
+    <script type="text/javascript">
+    	cargar_menus();
+	</script>
+	
+	<script type="text/javascript">
+
+    $( document ).ajaxStart(function() 
+    {
+    	$( "#domMessage" ).show();    	
+
+    }).ajaxStop(function() 
+    {
+    	$( "#domMessage" ).hide();    	
+
+    });
+
+	</script>	
+
+</body>
+</html>

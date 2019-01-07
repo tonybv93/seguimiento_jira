@@ -31,7 +31,17 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_USUARIO = ?1 AND ID_ESTADO_REG_HORAS = 1) ORDER BY FECHA_REAL_TRABAJO",nativeQuery = true)
 	public List<Proveedor_Reg_Horas> listarAprobadosPorUsuario(int id);
 	
-	
+	@Query(value ="(SELECT prh.ID, prh.FECHA_REGISTRO, prh.FECHA_REAL_TRABAJO, prh.NRO_HORAS, prh.ID_ESTADO_REG_HORAS, prh.FLAGFACTURAR,  " +
+				" prh.ID_TIPO_ACTIVIDAD_PROV, prh.COMENTARIO, prh.ID_USUARIO, prh.ID_HJIRA, prh.FECHA_FACTURACION,prh.NRO_HORAS_GESTION "+
+				" FROM BVLSEGDB.PROVEEDOR_REG_HORAS prh "+
+				" JOIN BVLSEGDB.USUARIO us ON prh.ID_USUARIO = us.ID "+
+				" JOIN BVLSEGDB.FABRICA fab ON us.ID_FABRICA = fab.ID"+
+				" WHERE fab.ID = ?1 "+
+				" AND prh.FECHA_REAL_TRABAJO >= to_date(?2)"+
+				" AND prh.fecha_real_trabajo <= to_date(?3)"+
+				" AND prh.flagfacturar = 1)"+
+				" ORDER BY FECHA_REAL_TRABAJO",nativeQuery = true)
+	public List<Proveedor_Reg_Horas> listarParaProrateo(int id, String fecha1, String fecha2);
 	
 	@Query(value="SELECT NEW com.auth.auxiliar.HorasPorSemana(pr.fecha_real_trabajo, sum(pr.nro_horas)) "+
 				" FROM Proveedor_Reg_Horas pr" + 

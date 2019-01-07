@@ -1,5 +1,8 @@
 package com.auth.controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.auth.entity.Acta;
+import com.auth.entity.Horas_Gestion_Demanda;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Usuario;
 import com.auth.service.IActaService;
@@ -67,12 +72,22 @@ public class ProveedorController {
 	public String aprobacionHoras(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
-		model.addAttribute("gestdem",regHorasService.buscarHGDemandaPorUsuario(usuario.getId(),regHorasService.periodoActual().getId()));
+		Horas_Gestion_Demanda hgd = regHorasService.buscarHGDemandaPorUsuario(usuario.getId(),regHorasService.periodoActual().getId());
+		
+		model.addAttribute("gestdem",hgd);
 		model.addAttribute("listaDesarrolladores",usuarioService.listarUsuarioPorRol(3));
 		model.addAttribute("listaPeriodos",regHorasService.listarPeriodos());
-		
+		model.addAttribute("porcentaje",(hgd.getHoras_consumidas().divide(hgd.getTotal_horas(),4,RoundingMode.HALF_UP)).multiply(BigDecimal.valueOf(100)).toString().substring(0, 4) + "%");
 		return "proveedor/control_horas";
 	}
+	@PostMapping("/gestion/detalleacta")
+	public String detalleActa(Model model, @RequestParam(name="id_acta") int id) {
+		Acta acta = actaService.buscarActaPorID(id);
+		model.addAttribute("acta",acta);
+		model.addAttribute("listaDetalles",actaService.listarDetalle(acta));
+		return "proveedor/detalle_acta";
+	}
+	
 	@GetMapping("/gestion/listaactas")
 	public String listarActasEnviadas(Model model) {
 		model.addAttribute("listaActas",actaService.listarTodoActas());
@@ -83,7 +98,7 @@ public class ProveedorController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
 		
-		model.addAttribute("listaPeriodos",actaService.listarPeriodos());
+		model.addAttribute("listaPeriodos",regHorasService.listarPeriodos());
 		model.addAttribute("listaEmpresas",actaService.listarEmpresas());
 		model.addAttribute("listaTiposActa",actaService.listarIndicadorContable());
 		model.addAttribute("fabrica",usuario.getFabrica());
