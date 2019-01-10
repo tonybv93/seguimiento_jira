@@ -10,6 +10,7 @@ public interface IUsuarioService {
 	public Usuario buscarPorId(int id);
 	public List<Usuario> listarUsuarios();
 	public List<Usuario> listarUsuarioPorRol(int id_rol);
+	public List<Usuario> listarUsuarioPorRolYEmpresa(int id_rol, int id_empresa);
 	public void guardarUsuario(Usuario user);
 	
 	// ROLES

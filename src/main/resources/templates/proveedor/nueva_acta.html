@@ -57,9 +57,7 @@
 		                            <div class="col-sm-9">	                            
 		                               <select id="select_periodo" class="form-control border-primary">
 											<option th:each="opcion:${listaPeriodos}" th:value="${opcion.id}" th:text="${opcion.codigo}"></option>							
-										</select>	                                                            
-			                           	 <span id="alerta_jira" class="alerta_forms"></span>
-			                           	<div class="mensaje_resultado" id="resultado"></div>
+										</select>	      
 		                            </div>
 		                          </div>
 		                        </div>
@@ -69,9 +67,7 @@
 		                         <div class="form-group row">
 		                           <label class="col-sm-3 col-form-label texto_derecha"></label>
 		                           <div class="col-sm-9">                             
-		                            <button onclick="buscarJiras()" class="btn btn-primary mr-2">Buscar</button>                            	
-		                           	 <span id="alerta_jira" class="alerta_forms"></span>
-		                           	<div class="mensaje_resultado" id="resultado"></div>
+		                            <button onclick="buscarJiras()" class="btn btn-primary mr-2">Buscar</button>
 		                           </div>
 		                         </div>
 		                       </div>
@@ -121,14 +117,15 @@
 		              					<th>Hs Ges. Des</th>
 		              					<th>Hs Ges. Conf</th>
 		              					<th>Total Hs</th>
+		              					<th>Tarifa</th>
 		              					<th style="width: 130px;">Importe total</th>		              					
 	              					</tr>
 	              				</thead>
 	              				<tbody id="cuerpo_tabla">
 	              				</tbody>
-	              			</table>
-	              										
-						</div>
+	              			</table>	              									
+						</div>						 	  
+						<span id="id_mensaje_cc" class="mensaje_restriccion_cc dis_hiden"> <i class="mdi mdi-alert"></i> No podrá continuar hasta que <b>todos</b>  los Jiras cuenten con <b>centro de costo.</b>  En caso ver este mensaje, por favor contactar un administrador.</span>
 						<div id="mensaje_resultado" class="mensaje_resultado_tabla"></div> 	  
 					<div id="calculador" class="row dis_hiden">
 						<div class="linea_div"></div>
@@ -138,7 +135,7 @@
 			                          <div class="row">
 			                            <label class="col-sm-5 col-form-label2 texto_derecha">Horas gest. demanda:</label>
 			                            <div class="col-sm-7 d-flex">
-			                            	<input id="inp_dem" type="number" class="form-control-peque" placeholder="##">										
+			                            	<input onchange="cambiovalor()" id="inp_dem" type="number" class="form-control-peque" placeholder="##">										
 			                            	<span class="mensaje_input"> (Opcional)</span>
 			                            </div>
 			                          </div>
@@ -149,7 +146,7 @@
 			                          <div class="row">
 			                            <label class="col-sm-5 col-form-label2 texto_derecha">Horas gest. config:</label>
 			                            <div class="col-sm-7 d-flex">
-			                            	<input id="inp_conf" type="number" class="form-control-peque" placeholder="##">										
+			                            	<input onchange="cambiovalor()" id="inp_conf" type="number" class="form-control-peque" placeholder="##">										
 			                            	<span class="mensaje_input"> (Opcional)</span>
 			                            </div>
 			                          </div>
@@ -160,8 +157,8 @@
 			                          <div class="row">
 			                            <label class="col-sm-5 col-form-label2 texto_derecha">Tarifa por hora:</label>
 			                            <div class="col-sm-7 d-flex">
-			                            	<input id="inp_tarifa" type="number" class="form-control-peque" placeholder="S/ ">										
-			                            	<span class="mensaje_input"> (Obligatorio)</span>
+			                            	<input onchange="cambiovalor()" id="inp_tarifa" type="number" class="form-control-peque" placeholder="S/ ">										
+			                            	<span id="mensaje_tarifa" class="mensaje_input"> (Obligatorio)</span>			                            	
 			                            </div>
 			                          </div>
 			                        </div>
@@ -171,7 +168,7 @@
 			                          <div class="row">
 			                            <label class="col-sm-5 col-form-label texto_derecha"></label>
 			                            <div class="col-sm-7 d-flex">
-			                            	<button onclick="calcularMontos()" class="btn btn-primary mr-2">Calcular</button>										
+			                            	<button onclick="calcularMontos()" class="btn btn-primary mr-2">Aplicar</button>										
 			                            </div>
 			                          </div>
 			                        </div>
@@ -197,6 +194,7 @@
 											</tr>
 										</tbody>
 									</table>
+									<div id="mensaje_resultado" class="mensaje_restriccion_cc">*Los cálculos realizados en esta vista son una aproximación muy cercana a la realidadz.</div>
 								</div>
 		                    </div>
 		                </div>                         		       	 
@@ -204,7 +202,7 @@
 					<br>
 					 <div id="btns_enviar_acta" class="div_derecha dis_hiden">
                     	<button class="btn btn-secondary mr-2" onclick="back()">Cancelar</button>  
-	              		<button class="btn btn-primary mr-2" onclick="enviar_acta()">Continuar</button>    
+	              		<button class="btn btn-primary mr-2" onclick="enviar_acta()">Guardar</button>    
                     </div>
                 </div>   
 	        </div>

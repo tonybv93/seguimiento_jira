@@ -18,6 +18,7 @@ public interface IActaService {
 	public List<Acta> listarTodoActas();
 	public List<Acta> listaActasPorUsuario(Usuario usuario);
 	public List<Acta> listaActasPorEmpresa(Empresa empresa);
+	public List<Acta> listaActasPorFabrica(Fabrica fabrica);
 	public List<Acta> listaActasPorIndicador(Indicador_Contable indicador);
 	public List<Acta> listaActasPorEstado(int id_estado);
 	public Acta buscarActaPorID(int id);

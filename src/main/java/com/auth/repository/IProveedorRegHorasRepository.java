@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-
 import com.auth.auxiliar.HorasPorSemana;
 import com.auth.entity.Estado_Reg_Horas;
 import com.auth.entity.Proveedor_Reg_Horas;
@@ -18,6 +17,13 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 	
 	public List<Proveedor_Reg_Horas> findAllByUsuario(Usuario u);
 	public List<Proveedor_Reg_Horas> findAllByEstado(Estado_Reg_Horas e);
+
+	
+	@Query(value ="(SELECT rh.* FROM BVLSEGDB.PROVEEDOR_REG_HORAS rh JOIN BVLSEGDB.USUARIO u ON u.id = rh.ID_USUARIO WHERE u.ID_FABRICA = ?1 AND rh.ID_ESTADO_REG_HORAS = ?2) ORDER BY FECHA_REGISTRO",nativeQuery = true)
+	public List<Proveedor_Reg_Horas> listarPorFabricaYEstado(int id_fabrica, int id_estado);	
+	
+	@Query(value ="(SELECT rh.* FROM BVLSEGDB.PROVEEDOR_REG_HORAS rh JOIN BVLSEGDB.USUARIO u ON u.id = rh.ID_USUARIO WHERE u.ID_FABRICA = ?1) ORDER BY FECHA_REGISTRO",nativeQuery = true)
+	public List<Proveedor_Reg_Horas> listarPorFabrica(int id_fabrica);
 	
 	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_USUARIO = ?1 AND ID_ESTADO_REG_HORAS in (3,4) ) ORDER BY FECHA_REGISTRO",nativeQuery = true)
 	public List<Proveedor_Reg_Horas> listarEnviadoPorUsuario(int id);	
@@ -31,6 +37,15 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 	@Query(value ="(SELECT * FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE ID_USUARIO = ?1 AND ID_ESTADO_REG_HORAS = 1) ORDER BY FECHA_REAL_TRABAJO",nativeQuery = true)
 	public List<Proveedor_Reg_Horas> listarAprobadosPorUsuario(int id);
 	
+	@Query(value ="(SELECT prh.*"+
+			" FROM BVLSEGDB.PROVEEDOR_REG_HORAS prh "+
+			" JOIN BVLSEGDB.USUARIO us ON prh.ID_USUARIO = us.ID "+
+			" WHERE us.id_fabrica = ?1 "+
+			" AND prh.FECHA_REAL_TRABAJO >= to_date(?2,'yyyy-mm-dd')"+
+			" AND prh.fecha_real_trabajo <= to_date(?3,'yyyy-mm-dd'))"+
+			" ORDER BY FECHA_REAL_TRABAJO",nativeQuery = true)
+	public List<Proveedor_Reg_Horas> listarPorFabricaEntreFechas(int id, String fecha1, String fecha2);
+
 	@Query(value ="(SELECT prh.ID, prh.FECHA_REGISTRO, prh.FECHA_REAL_TRABAJO, prh.NRO_HORAS, prh.ID_ESTADO_REG_HORAS, prh.FLAGFACTURAR,  " +
 				" prh.ID_TIPO_ACTIVIDAD_PROV, prh.COMENTARIO, prh.ID_USUARIO, prh.ID_HJIRA, prh.FECHA_FACTURACION,prh.NRO_HORAS_GESTION "+
 				" FROM BVLSEGDB.PROVEEDOR_REG_HORAS prh "+
@@ -43,6 +58,7 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 				" ORDER BY FECHA_REAL_TRABAJO",nativeQuery = true)
 	public List<Proveedor_Reg_Horas> listarParaProrateo(int id, String fecha1, String fecha2);
 	
+	// ------------------------------- GRÁFICOS
 	@Query(value="SELECT NEW com.auth.auxiliar.HorasPorSemana(pr.fecha_real_trabajo, sum(pr.nro_horas)) "+
 				" FROM Proveedor_Reg_Horas pr" + 
 				" WHERE pr.usuario = ?1"+
@@ -53,7 +69,7 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 				" ORDER BY pr.fecha_real_trabajo DESC"
 				,nativeQuery= false)
 	public List<HorasPorSemana> horasSemanales(Usuario usuario, Estado_Reg_Horas e1, Estado_Reg_Horas e2, Date fin, Date inicio );
-	
+		
 	@Query(value="SELECT NEW com.auth.auxiliar.HorasPorSemana(pr.fecha_real_trabajo, sum(pr.nro_horas)) "+
 			" FROM Proveedor_Reg_Horas pr" + 
 			" WHERE pr.usuario = ?1"+
@@ -67,5 +83,22 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 
 	@Query(value="SELECT sum(NRO_HORAS) FROM BVLSEGDB.PROVEEDOR_REG_HORAS WHERE jira = ?1", nativeQuery = true)
 	public long horasTrabajadas(String jira);
+	
+	
+	// ------------------------------- ACTA
+	@Query(value ="(SELECT prh.ID, prh.FECHA_REGISTRO, prh.FECHA_REAL_TRABAJO, prh.NRO_HORAS, prh.ID_ESTADO_REG_HORAS, prh.FLAGFACTURAR,  " +
+			" prh.ID_TIPO_ACTIVIDAD_PROV, prh.COMENTARIO, prh.ID_USUARIO, prh.ID_HJIRA, prh.FECHA_FACTURACION,prh.NRO_HORAS_GESTION "+
+			" FROM BVLSEGDB.PROVEEDOR_REG_HORAS prh "+
+			" JOIN BVLSEGDB.USUARIO us ON prh.ID_USUARIO = us.ID "+
+			" JOIN BVLSEGDB.FABRICA fab ON us.ID_FABRICA = fab.ID"+
+			" JOIN BVLSEGDB.HJIRA hj ON prh.ID_hjira = hj.ID"+
+			" WHERE fab.ID = ?1 "+
+			" AND prh.FECHA_REAL_TRABAJO >= to_date(?2)"+
+			" AND prh.fecha_real_trabajo <= to_date(?3)"+
+			" AND hj.id_indicador_contable = ?4"+
+			" AND hj.id_empresa = ?5"+
+			" AND prh.flagfacturar = 1)"+			
+			" ORDER BY FECHA_REAL_TRABAJO",nativeQuery = true)
+	public List<Proveedor_Reg_Horas> listarDetalleActaCompleto( int fab, String fecha1, String fecha2, int indicador, int e);	
 	
 }

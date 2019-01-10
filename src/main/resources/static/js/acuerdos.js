@@ -192,18 +192,15 @@ $( function() {
 	  
 	  
 	  function terminar_acuerdo(ind){		
-		objjson.numero1 = document.getElementById("id_categoria").value;	//Tipo
-		objjson.numero2 = document.getElementById("id_input2").value;		//Area		
-		objjson.numero3 = document.getElementById("responsable").value;		//Responsable
-		objjson.numero4 = document.getElementById("id_input").innerHTML;	//Jira
-		objjson.texto1 = document.getElementById("fecha_entrega").value;	//Fecha
-		objjson.texto2 = document.getElementById("exampleTextarea1").value; 	//Acuerdo
-		data = JSON.stringify(objjson); 	
+		objjson.tipo = tipo_btn;	//Tipo	
+		objjson.observacion = document.getElementById("txar_terminar").value; //Descripion
+		data = JSON.stringify(objjson); 
+		console.log('>>'+ data);
 	  	objjson = {};
 	  	
 	  	// REALIZAR PETICION
 	  	$.ajax({
-  	        url : '/rest/acuerdo/terminado',  	        
+  	        url : '/rest/acuerdos/terminar',  	        
   	        contentType:'application/json',
   	        method : 'post',
   	      	data : data,
@@ -219,7 +216,7 @@ $( function() {
   	        	else
   	        		spn_estado_accion.setAttribute('class','est_pospro');
   	        	
-  	        	spn_estado_accion.innerHTML = respuesta.estado;
+  	        	spn_estado_accion.innerHTML = respuesta.estado.nombre;
   	        	td_comen_accion.innerHTML = respuesta.observacion;
   	        	// aqui agregar los cambios 
   	        },
@@ -231,9 +228,6 @@ $( function() {
   	    });	  	
 	  }
 	 
-	  
-	  
-	  
 	  var span = document.getElementsByClassName("close")[0];
 	  var modal = document.getElementById('mi_modal');
 	  var btn_no = document.getElementById("boton_no");

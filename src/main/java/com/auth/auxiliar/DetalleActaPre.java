@@ -8,14 +8,25 @@ public class DetalleActaPre {
 	private String resumen;
 	private BigDecimal totalHoras;
 	private BigDecimal totalHorasGesDem;
+	private String centrocosto; 
 	
-	public DetalleActaPre(String jira, String tipoJira, String resumen, BigDecimal totalHoras, BigDecimal totalHorasGesDem) {
+	public DetalleActaPre(String jira, String tipoJira, String resumen, BigDecimal totalHoras, BigDecimal totalHorasGesDem, String cc) {
 		this.jira = jira;
 		this.tipoJira = tipoJira;
 		this.resumen = resumen;
 		this.totalHoras = totalHoras;
 		this.totalHorasGesDem = totalHorasGesDem;
+		this.centrocosto = cc;
 	}
+	
+	public String getCentrocosto() {
+		return centrocosto;
+	}
+
+	public void setCentrocosto(String centrocosto) {
+		this.centrocosto = centrocosto;
+	}
+
 	public DetalleActaPre() {
 	}
 	public String getJira() {

@@ -704,6 +704,11 @@ textarea
 	color: #0c6fcc;
 	font-size: 13px;
 }
+.mensaje_restriccion_cc{
+	padding: 10px;
+	color: #9d1515;
+	font-size: 13px;
+}
 .bg-rojo{
 	background-color: red;
 }
@@ -741,7 +746,7 @@ textarea
 }
 .div_fondo_blanco{
 	background-color: #fff;
-	max-height: 250px;
+	max-height: 450px;
 	overflow: auto;
 }
 .fondo_rojo{
@@ -781,14 +786,31 @@ textarea
 	margin-bottom: 5px;
 }
 .form-control-peque{
-	width: 140px;
+	width: 100px;
 	border: solid #eee 1px;
 	border-radius: 5px;
-	height: 40px;
+	height:35px;
 	font-size: 12px;
-	padding: 3px 10px;;
-	line-height: 15px;
+	padding: 2px 5px;
+	line-height: 14px;
 }
+.form-control-peque:focus{
+	border: solid 1px #3fc6ed;
+}
+
+.form-control-muypeque{
+	width: 50px;
+	border: solid #eee 1px;
+	border-radius: 5px;
+	height:35px;
+	font-size: 12px;
+	padding: 2px ;
+	line-height: 14px;
+}
+.form-control-muypeque:focus{
+	border: solid 1px #3fc6ed;
+}
+
 .grupo_texto_mediano{
 	font-size: 14px !important;
 }
@@ -813,7 +835,7 @@ textarea
 	overflow: auto;
 }
 .tr_totales{
-	background-color: #323232;
+	background-color: #98b1ba;
 	color: #fff;
 }
 .tr_totales td{

@@ -67,8 +67,12 @@ public class ProvRestController {
 		@PostMapping("/registro/nuevo")
 		public String registrarHoras (@RequestBody RespGenerica jsonAcuerdo) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
-			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());			
-			return registroService.registrarHoras(usuario, jsonAcuerdo);
+			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
+			if (usuario.getFabrica().getId() == 22)  { // 22: PANDORA
+				return registroService.registrarHorasCertificacion(usuario, jsonAcuerdo);
+			}else {
+				return registroService.registrarHoras(usuario, jsonAcuerdo);
+			}			
 		}
 		
 		@PostMapping("/registro/eliminar")
@@ -76,7 +80,11 @@ public class ProvRestController {
 			//VALIDACIÓN
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
-			return registroService.eliminarHoras(usuario, respuesta);
+			if (usuario.getFabrica().getId() == 22)  { // 22: PANDORA
+				return registroService.eliminarHorasCertificacion(usuario, respuesta);
+			}else{
+				return registroService.eliminarHoras(usuario, respuesta);
+			}
 		}
 		
 		@PostMapping("/registro/cambiarestado")
@@ -92,8 +100,16 @@ public class ProvRestController {
 			}else {
 				return "Error, no puede confirmar registros de otras personas";
 			}	
-		}			
-				
+		}	
+// -------------------------------------------------- EXCEL DE HORAS ----------------------------		
+		@PostMapping("/horasporfabrica/entrefechas")
+		@ResponseBody
+		public List<Proveedor_Reg_Horas> listarHorasPorFabricaEntreFechas(@RequestBody RespGenerica respuesta){
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
+			return registroService.listarRegistrosPorFabricaEntrePeriodos(usuario.getFabrica().getId(), respuesta.getTexto1(), respuesta.getTexto2());
+		}
+// -------------------------------------------------- GRÁFICAS DE HORAS ----------------------------
 		// Lista de actividad diaria por Desarrollador [GRÁFICO DE BARRAS]
 		@PostMapping("/horas/semana")
 		@ResponseBody
@@ -118,8 +134,7 @@ public class ProvRestController {
 		// Lista de actividad diaria por Desarrollador [REGISTROS]
 		@PostMapping("/registros/semana/desarrollador")
 		@ResponseBody
-		public List<Proveedor_Reg_Horas> listarRegistrosDiariosPorDesarrollador(@RequestBody RespGenerica respuesta){
-					
+		public List<Proveedor_Reg_Horas> listarRegistrosDiariosPorDesarrollador(@RequestBody RespGenerica respuesta){				
 			Usuario usuario = usuarioService.buscarPorId((int)respuesta.getNumero1());	
 			return registroService.listarRegistrosConfirmadosPorDesarrollador(usuario);
 		}
@@ -127,8 +142,7 @@ public class ProvRestController {
 		// Lista de actividad diaria por Desarrollador [REGISTROS]
 		@PostMapping("/registros/aprobados/desarrollador")
 		@ResponseBody
-		public List<Proveedor_Reg_Horas> listarRegistrosAprobadosPorDesarrollador(@RequestBody RespGenerica respuesta){
-					
+		public List<Proveedor_Reg_Horas> listarRegistrosAprobadosPorDesarrollador(@RequestBody RespGenerica respuesta){					
 			Usuario usuario = usuarioService.buscarPorId((int)respuesta.getNumero1());	
 			return registroService.listarRegistrosAprobadosPorDesarrollador(usuario);
 		}
@@ -149,7 +163,7 @@ public class ProvRestController {
 			return registroService.horasTrabajadas(jira);
 		}
 		
-		// Buscar HORAS X JIRAS X FABRICA
+		// Buscar HORAS X JIRAS X FABRICA [DONUT]
 		@GetMapping("/hxjiraxfab/{jira}")
 		@ResponseBody
 		public HJira buscarHXJiraXFab(@PathVariable(name="jira") String jira){

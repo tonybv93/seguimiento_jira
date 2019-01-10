@@ -64,4 +64,9 @@ public class UsuarioService implements IUsuarioService {
 		}
 	}
 
+	@Override
+	public List<Usuario> listarUsuarioPorRolYEmpresa(int id_rol, int id_empresa) {
+		return userRepo.usuariosPorRolyFabrica(id_rol,id_empresa);
+	}
+
 }

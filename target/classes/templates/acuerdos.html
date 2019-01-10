@@ -150,11 +150,11 @@
 						  			<td class="td_monto"> <span th:class="${acuerdo.estado.css_clase}" th:text="${acuerdo.estado.nombre}"></span> </td>
 						  							  			
 									<td>
-										<div class="d-flex ico_centrado texto_derecha">
-											<button th:if="${acuerdo.flagterminado != 1}"  onclick="confirm_terminar(this,1)" class="btn btn-icons btn-inverse-success" id="1" title="Terminar">
+										<div class="d-flex ico_centrado texto_derecha" th:if="${acuerdo.estado.id == 1}">
+											<button th:if="${acuerdo.flagterminado != 1}"  onclick="confirm_terminar(this,2)" class="btn btn-icons btn-inverse-success" id="1" title="Terminar">
 						                        <i class="mdi mdi-check"></i>					                     
 						                    </button>
-						                    <button th:if="${acuerdo.flagterminado != 1}"  onclick="confirm_terminar(this,2)" class="btn btn-icons btn-inverse-warning" id="2" title="Cancelar">
+						                    <button th:if="${acuerdo.flagterminado != 1}"  onclick="confirm_terminar(this,3)" class="btn btn-icons btn-inverse-warning" id="2" title="Cancelar">
 						                        <i class="mdi mdi-close"></i>					                     
 						                    </button>						                   										
 										</div>

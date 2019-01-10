@@ -1,3 +1,48 @@
+/*--------------------  RETO: PINTAR GRAFICO DE BARRAS DESDE AFUERA ----------------------------*/
+function diaSemana(dia,mes,anio){
+    var dias=[7, 1, 2, 3, 4, 5, 6];
+    var dt = new Date(mes+' '+dia+', '+anio+' 12:00:00');
+    return dias[dt.getUTCDay()];    
+}
+
+function nro_barra(arreglo,fecha){
+	for (var i = 0; i < 14; i++) {
+		if (arreglo[i] == fecha){
+			return i;
+		}
+	}
+}
+
+var nro_b = -1;
+function hovertabla(tr){	
+	var hoy = new Date();
+	var arreglo_dias = [];
+	var str_hoy = hoy.getDate() + "-" + (hoy.getMonth() +1) + "-" + hoy.getFullYear();
+	
+	var fecha_hoy = str_hoy.split('-');	
+	var fecha = tr.children[7].innerHTML.split('-');	
+	var nro_dia = diaSemana(fecha_hoy[0],fecha_hoy[1],fecha_hoy[2])*1;	
+	hoy.setDate(hoy.getDate() - nro_dia - 6);	
+	for (var i = 0; i < 14; i++) {		
+		arreglo_dias[i] =  hoy.getDate() + "-" + (hoy.getMonth() +1) + "-" + hoy.getFullYear();
+		hoy.setDate(hoy.getDate() + 1);
+	}
+	var fecha2 = fecha[0]*1 + '-' +  fecha[1]*1 + '-' +  fecha[2]*1;
+	nro_b = nro_barra(arreglo_dias,fecha2);
+	
+	var a = document.getElementsByClassName('c3-shapes c3-shapes-Faltante c3-bars c3-bars-Faltante');
+	var barra = a[0].children[nro_b];
+	//barra.style.fill='#5fa1b8';	
+	barra.setAttribute("style", "stroke: rgb(11, 113, 150); stroke-width: 1; fill: rgb(141, 184, 199); opacity: 1;");
+}
+
+function outtabla(tr){	
+	var a = document.getElementsByClassName(' c3-shapes c3-shapes-Faltante c3-bars c3-bars-Faltante');
+	var barra = a[0].children[nro_b];
+	//barra.style.fill='rgb(177, 213, 226)';
+	barra.setAttribute("style", "stroke: rgb(177, 213, 226); fill: rgb(177, 213, 226); opacity: 1;");
+}
+
 /*--------------------  BUSCAR JIRAS ----------------------------*/
 function buscar_jiras(){
 	str = document.getElementById("jira_buscador").value;
@@ -134,7 +179,7 @@ function cargarGraficoBarras(){
         			axis: {
         				x: {
         			    	label: {
-        			    		text: 'Diciembre',
+        			    		text: 'Enero',
         		                position: 'outer-center',        		                
         			    	},
         			    	type: 'category',
@@ -183,7 +228,6 @@ function agregar(){
 	var tabla = document.getElementById("detalle_registros");
 	var fechajs = document.getElementById("fecha_registro").value;
 	var fechahoy = new Date();
-	console.log(fechahoy + ' vs ' + fechajs);
 	var dd = fechajs.substring(8,10);
 	var mm = fechajs.substring(5,7);
 	var yyyy = fechajs.substring(0,4);
@@ -212,10 +256,6 @@ function agregar(){
 		}else{
 			//Buscar jira en la tabla HXJ (Data = Un hjira) 
 			$.get(str_busqueda).done(function( data ) {	  
-				//Comprobar que hayan Horas disponibles : [SALIR]
-				if (data.horas_desarrollo <= nro_horas*1.1){
-					alert("Las horas disponibles son menores a: " + nro_horas*1.1 +'h (Incluyendo gestión de demanda).');
-				}else{
 					//Si hay horas disponibles, construir el REGISTRO
 					var objjson = {};
 					objjson.numero1 = nro_horas;
@@ -268,7 +308,7 @@ function agregar(){
 					            alert(sm1);
 					        }  	        
 					    });				
-				}			
+							
 			});	
 		}
 	}
@@ -386,7 +426,13 @@ $( function() {
     		var str_busqueda = '../../provrest/hxjiraxfab/' + jira    	
         	$.get(str_busqueda).done(function( data ) {	 
         		if (data != null && data !=''){
-        			cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo); 
+        			var fabrica = document.getElementById('id_f').value;
+        			if (fabrica == 22){ //Si la fabrica es PANDORA 
+        				cargarGraficoDonut(data.horas_prueba,data.consumido_prueba);
+        			}else{
+        				cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo);
+        			}
+        			 
         			document.getElementById("resultado").innerHTML = data.jira + ': ' +  data.descripcion;
         		}else{
         			document.getElementById("resultado").innerHTML = "No encontrado.";
@@ -414,7 +460,12 @@ function donut(){
 	var str_busqueda = '../../provrest/hxjiraxfab/' + jira    	
 	$.get(str_busqueda).done(function( data ) {	  		
 		if (data != null){
-			cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo); 
+			var fabrica = document.getElementById('id_f').value;
+			if (fabrica == 22){ //Si la fabrica es PANDORA 
+				cargarGraficoDonut(data.horas_prueba,data.consumido_prueba);
+			}else{
+				cargarGraficoDonut(data.horas_desarrollo,data.consumido_desarrollo);
+			} 
 			document.getElementById("resultado").innerHTML = data.descripcion;
 		}	   		
 	})

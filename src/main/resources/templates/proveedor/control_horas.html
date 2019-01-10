@@ -12,6 +12,7 @@
     <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
     <!-- endinject -->
     <!-- plugin css for this page -->
+    <link rel="stylesheet" th:href="@{/css/shared/dataTables.bootstrap4.css}"/>
     <!-- End plugin css for this page -->
     <link rel="stylesheet" th:href="@{/css/select2.min.css}">
     <!-- inject:css -->
@@ -57,7 +58,7 @@
                   			</div>
                   		</div>
                   		<div class="overflow_auto">
-	                 	<table class="table table-striped table-hover">
+	                 	<table class="table table-striped table-hover" >
 	                  		<thead>
 	                  			<tr>	                  					   
                       				<th>Tipo tarea</th>	 
@@ -84,9 +85,9 @@
 <!------------------------------------------------------------------------------------------------------------>
 		<div class="col-12 grid-margin">
 			<div class="row">
-				<div class="col-lg-4 grid-margin stretch-card">
+				<div class="col-lg-4 grid-margin stretch-card" >
 					<div class="card">
-						<div class="card-body">		
+						<div  th:class="${fabrica.id == 21 ? 'card-body' : 'd-none'}">		
 							<h4>Gestión de demanda</h4>	
 			                <div class="wrapper d-flex justify-content-between">
 			                    <div class="side-left">
@@ -126,19 +127,14 @@
 				<div class="col-lg-8 grid-margin stretch-card">
 					<div class="card">
 						<div class="card-body">
-							<h4>Registros <b>aprobados</b> por desarrollador</h4>
+							<h4>Registros pendientes de <b>revisar</b> por desarrollador</h4>
 							<div class="overflow_auto">
 							<table class="table table-striped table-hover">
 		                  		<thead>
 		                  			<tr>	                  					   
-	                      				<th>Tipo tarea</th>	 
-	                      				<th>¿Facturable?</th>	                  				
-	                      				<th>Hs trabajo</th>	
-	                      				<th>Hs gestión</th>	  
-	                      				<th>Fecha de trabajo</th> 
-	                      				<th>Jira</th>
-	                      				<th>Cliente</th>
-	                      				<th>Ind. Contab.</th>
+	                      				<th>Desarrollador</th>	                   				
+	                      				<th>Registros enviados</th>	
+	                      				<th>Registros pendientes</th>	
 		                  			</tr>
 		                  		</thead>
 		                  		<tbody id="detalle_registros_aprobados">	                  		
@@ -216,6 +212,8 @@
 
 	</script>
 	
-
+	<!-- DATTABL --->	<script th:src="@{/js/dtable/jquery.dataTables.js}"></script>
+  	<!-- DATTABL --->	<script th:src="@{/js/dtable/dataTables.bootstrap4.js}"></script>
+  	<!-- DATTABL --->	<script th:src="@{/js/dtable/data-table.js}"></script>
 </body>
 </html>

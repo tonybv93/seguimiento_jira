@@ -25,38 +25,9 @@
   </head>
 
 <body class="sidebar-toggle-display sidebar-hidden">
-	<div class="container-scroller">	
-	<nav th:replace="fragments/shared :: header"></nav>
-      <div class="container-fluid page-body-wrapper">
-      	<nav th:replace="fragments/shared :: sidebar"></nav>
-      	<div class="main-panel">
-          <div class="content-wrapper">
+
 <!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
-			 <div class="col-12 grid-margin">
-			 	<div class="row">			 		
-			 		<div class="col-5 stretch-card">
-			 			<div class="card">
-				 			<div class="card-body">
-				 				<h6>Acciones:</h6>
-				 				<div class="detalle_acta_botones2">
-			                     	<button class="btn btn-primary mr-2" onclick="modal_confirmacion(3)">Aprobar</button>
-			                     	<button class="btn btn-danger mr-2" onclick="modal_confirmacion(4)">Rechazar</button>
-			                     </div>
-				 			</div>
-				 		</div>
-			 		</div>	
-			 		<div class="col-7 stretch-card">
-			 			<div class="card">
-				 			<div class="card-body">
-				 				
-				 			</div>
-				 		</div>
-			 		</div>			 		
-			 	</div>
-				<br>
-<!----------------------------------------------------------------------- DETALLE ACTA ------------------------------------------------------->               
-                <div class="card">
-                  <div class="card-body">   
+  
                    	<div class="header_acta">
                    		<div class="cabecera_acta hdr_30 cabecera_acta_logo">
                   			<img class="logo_bvl" src="/images/bvl.png" alt="logo">
@@ -202,94 +173,6 @@
                      		</tbody>
                      	</table>
                      </div>
-                     
-<!----------------------------------------------------------------------- DETALLE ACTA  ------------------------------------------------------->   
-                  </div>
-                </div>
-<!---------------------------------------------^ fin card 1 ^---------------------------------------------->                           
-   			</div>
-<!----------------------------------------------- CARD 2  --------------------------------------------------->     
-            <div class="col-12 grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                  	<h6>Observaciones y comentarios</h6> 
-                  	<div class="caja_comentarios">
-	                  	<div class="comentario">
-	                  		<div class="comentario_header">
-	                  			<span class="comentario_usuario">Nombre Usuario</span>
-	                  			<span class="comentario_fecha">12/20/2018</span>
-	                  		</div>
-	                  		<div class="comentario_contenido">
-	                  			Este es un comentario asdasd ads asd a
-	                  		</div>                 		
-	                  	</div>
-	                  	<div class="comentario">
-	                  		<div class="comentario_header">
-	                  			<span class="comentario_usuario">Nombre Usuario</span>
-	                  			<span class="comentario_fecha">12/20/2018</span>
-	                  		</div>
-	                  		<div class="comentario_contenido">
-	                  			Este es un comentario asdasd ads asd a
-	                  		</div>                 		
-	                  	</div>	
-	                  	<div class="comentario">
-	                  		<div class="comentario_header">
-	                  			<span class="comentario_usuario">Nombre Usuario</span>
-	                  			<span class="comentario_fecha">12/20/2018</span>
-	                  		</div>
-	                  		<div class="comentario_contenido">
-	                  			Este es un comentario asdasd ads asd a
-	                  		</div>                 		
-	                  	</div>	
-                  	</div>
-                  	
-                  	<div class="caja_comentarios">                  	
-                  		Nuevo comentario:
-                  		<div class="nuevo_comentario">
-                  			<textarea class="text_area_comentario"></textarea>
-                  			<button type="button" class="btn btn-secondary btn-fw btn_comentar">
-                            <i class="mdi mdi-file-document"></i>Comentar</button>
-                  		</div>
-                  		
-                  	</div>
-                  	<div>
-                  	</div>
-                  </div>
-                </div>  
-            </div>
-<!------------------------------------------------------------------------------------------------------------>
-        </div> 
-      </div>
-   	</div>
- 	</div>
-<!------------------------------------------------------------------------------------------------------------>
-	
- 	<div id="mi_modal" class="un_modal">			
-		<div class="contenido_modal">
-			<div class="card-body">  
-				<div class="row">
-				  	<div class="col-8 grid-margin">
-				  		<div id="titulo_modal" class="modal_header">Confirmar acta</div>	
-				  	</div>				  
-				  	<div class="col-4 grid-margin ">
-				  		<span class="close" onclick="cerrar_modal()">&times;</span>
-				  	</div>
-			  	</div>
-			  	<div class="row">
-			  		<div class="col-4 alineacion_centro">
-			  			<span id="icono_modal" class="mdi mdi-alert-outline icono_modal_alerta"></span>
-			  		</div>
-			  		<div class="col-8">
-			  			<p>Está a punto de confirmar el acta para el periodo 201901 de tipo Gasto.</p>
-			  		</div>
-			  	</div>
-        	</div>
-        	<div class="detalle_acta_botones">
-            	<button class="btn btn-primary mr-2" id="btn_confirmar_modal"> Enviar</button>
-            	<button class="btn secondary mr-2" onclick="cerrar_modal()">Cancelar</button>
-            </div>
-		</div>
-	</div>
 <!------------------------------------------------------------------------------------------------------------>
 <!---------------------------------              SCRIPS                      --------------------------------->
 <!------------------------------------------------------------------------------------------------------------>

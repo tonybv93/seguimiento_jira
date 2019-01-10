@@ -15,7 +15,7 @@ import com.auth.entity.Indicador_Contable;
 
 @Repository
 public interface IActaRepository extends CrudRepository<Acta, Integer> {
-	@Query(value="SELECT NEW com.auth.auxiliar.DetalleActaPre(pr.hjira.jira, pr.hjira.indicador.indicador, pr.hjira.descripcion,  SUM(pr.nro_horas), SUM(pr.nro_horas_gestion)) "+
+	@Query(value="SELECT NEW com.auth.auxiliar.DetalleActaPre(pr.hjira.jira, pr.hjira.indicador.indicador, pr.hjira.descripcion,  SUM(pr.nro_horas), SUM(pr.nro_horas_gestion),pr.hjira.centro_costo) "+
 			" FROM Proveedor_Reg_Horas pr" + 
 			" WHERE pr.fecha_real_trabajo >= to_date(?1)"+
 			" AND pr.fecha_real_trabajo <= to_date(?2)"+
@@ -24,12 +24,16 @@ public interface IActaRepository extends CrudRepository<Acta, Integer> {
 			" AND pr.flagfacturar = true"+
 			" AND pr.hjira.indicador = ?4"+
 			" AND pr.hjira.empresa = ?5"+
-			" GROUP BY pr.hjira.jira, pr.hjira.indicador.indicador, pr.hjira.descripcion"
+			" GROUP BY pr.hjira.jira, pr.hjira.indicador.indicador, pr.hjira.descripcion, pr.hjira.centro_costo"
 			,nativeQuery= false)
 	public List<DetalleActaPre> listarDetalleActaPre(String fecha1, String fecha2, Fabrica fab, Indicador_Contable indicador, Empresa e);	
+	
 	
 	public Acta findByCodigo(String codigo);
 	public List<Acta> findAllByEstado(Acta_Estado estado);
 	public List<Acta> findAllByFabrica(Fabrica fabrica);
 	public List<Acta> findAllByEmpresa(Empresa empresa);	
+	
+	@Query(value="SELECT * FROM BVLSEGDB.ACTA WHERE ID_FABRICA = ?1 AND ID_PERIODO = ?2 AND ID_EMPRESA = ?3 AND ID_INDICADOR_CONTABLE = ?4",nativeQuery=true)
+	public Acta verificarSiExistePrevia(int id_fab, int id_periodo,int id_empresa,int id_indicador);
 }

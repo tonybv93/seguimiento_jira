@@ -34,6 +34,7 @@ public class HJira {
 	private BigDecimal horas_prueba;
 	private BigDecimal consumido_prueba;
 	private BigDecimal consumido_desarrollo;
+	private BigDecimal reserva_desarrollo;
 	
 	@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -49,6 +50,12 @@ public class HJira {
 	private Empresa empresa;
 	
 	
+	public BigDecimal getReserva_desarrollo() {
+		return reserva_desarrollo;
+	}
+	public void setReserva_desarrollo(BigDecimal reserva_desarrollo) {
+		this.reserva_desarrollo = reserva_desarrollo;
+	}
 	public String getCentro_costo() {
 		return centro_costo;
 	}

@@ -12,6 +12,7 @@
     <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
     <!-- endinject -->
     <!-- plugin css for this page -->
+    <link rel="stylesheet" th:href="@{/css/shared/dataTables.bootstrap4.css}"/>
     <!-- End plugin css for this page -->
     <link rel="stylesheet" th:href="@{/css/select2.min.css}">
     <!-- inject:css -->
@@ -36,10 +37,10 @@
 	            <div class="card">                
 	              <div class="card-body"> 
 	              <h4>Actas registradas</h4>           
-	                 	<table class="table table-striped table-hover">
+	                 	<table class="table table-striped table-hover" id="order-listing">
 	                  		<thead>
 	                  			<tr>
-	                  				<th>Codigo</th>
+	                  				<th>Código</th>
 	                  				<th>Versión</th>
 	                  				<th>Cliente</th>	
 	                  				<th>Tipo</th>  
@@ -53,8 +54,7 @@
 	                  		</thead>
 	                  		<tbody id="detalle_registros">
 	                  			<tr  th:each="registro:${listaActas}">  
-	                  				<td class="no_mostrar"  th:text="${registro.id}"></td>                   				
-	                  				<td  th:text="${registro.codigo}"></td>
+	                  				<td th:text="${registro.id}"></td>      
 	                  				<td  th:text="${registro.version}"></td>
 	                  				<td  th:text="${registro.empresa.nombre}"></td>
 	                  				<td  th:text="${registro.indicador.indicador}"></td>
@@ -85,100 +85,7 @@
       </div>
    	</div>
  	</div>	
-<!----------------------------------------------------------------------- MODAL ------------------------------------------------------->
-	<div id="mi_modal" class="un_modal">			
-		<div class="contenido_modal">
-			<div class="card-body">  
-				<div class="row">
-				  	<div class="col-8 grid-margin">
-				  		<div class="modal_header">Buscar Jira</div>	
-				  	</div>				  
-				  	<div class="col-4 grid-margin">
-				  		<span class="close" onclick="cerrar_modal()">&times;</span>
-				  	</div>
-			  	</div>
-               	<div class="d-flex">
-               		<input type="text" id="jira_buscador" placeholder="Texto para buscar" class="form-control">
-               		<button onclick="buscar_jiras()" class="btn btn-primary mr-2">Buscar</button>
-              	</div>
-               	<br>
-				<div class="tabla_modal">
-	               	<table class="table table-striped table-hover">
-	               		<thead>
-	               			<tr>
-	               				<th>Jira</th>
-	               				<th>Resumen</th>
-	               				<th>Tipo</th>
-	               			</tr>
-	               		</thead>
-	               		<tbody id="tabla_buscar">
-	               		</tbody>
-	               	</table>	               
-    			</div>
-    			<p>*Solo se muestran <b>10</b> resultados. Para mejorar la búsqueda escriba algo más específico.</p>
-        	</div>
-		</div>
-	</div>
-	
-	<div id="modal_confirmacion" class="un_modal">			
-		<div class="contenido_modal">
-			<div class="card-body">  
-				<div class="row">
-				  	<div class="col-8 grid-margin">
-				  		<div class="modal_header">Confirmación</div>	
-				  	</div>				  
-				  	<div class="col-4 grid-margin">
-				  		<span class="close" onclick="cerrar_modal()">&times;</span>
-				  	</div>
-			  	</div> 
-			  	<p>Una vez confirmado, no se prodrá revertir. Verifica los datos antes de la confirmación.</p>  
-			  	<ul class="lista-simple">
-			  		<li> <b>Jira:</b> <span id="mocon1"></span> </li>
-			  		<li> <b>Día:</b> <span id="mocon2"></span> </li>
-			  		<li> <b>Horas:</b> <span id="mocon3"></span> </li>
-			  	</ul>
-			  	<form th:action="@{/proveedor/desarrollo/registrohoras}" method="post">
-			  		<input type="hidden" id="input_pk" name="id_hora">
-			  		<button class="btn btn-inverse-success" type="submit">Confirmar</button>  
-			  	</form>			  	          	
-        	</div>
-		</div>
-	</div>
-<!-------------------------------------------------------------- MODAL --------------------------------->
 
-	<div id="mi_modal" class="un_modal">			
-		<div class="contenido_modal">
-			<div class="card-body">  
-				<div class="row">
-				  	<div class="col-8 grid-margin">
-				  		<div class="modal_header">Buscar Jira</div>	
-				  	</div>				  
-				  	<div class="col-4 grid-margin">
-				  		<span class="close" onclick="cerrar_modal()">&times;</span>
-				  	</div>
-			  	</div>
-               	<div class="d-flex">
-               		<input type="text" id="jira_buscador" placeholder="Texto para buscar" class="form-control">
-               		<button onclick="buscar_jiras()" class="btn btn-primary mr-2">Buscar</button>
-              	</div>
-               	<br>
-				<div class="tabla_modal">
-	               	<table class="table table-striped table-hover">
-	               		<thead>
-	               			<tr>
-	               				<th>Jira</th>
-	               				<th>Resumen</th>
-	               				<th>Tipo</th>
-	               			</tr>
-	               		</thead>
-	               		<tbody id="tabla_buscar">
-	               		</tbody>
-	               	</table>	               
-    			</div>
-    			<p>*Solo se muestran <b>10</b> resultados. Para mejorar la búsqueda escriba algo más específico.</p>
-        	</div>
-		</div>
-	</div>
 <!------------------------------------------------------------------------------------------------------------>
 <!---------------------------------              SCRIPS                      --------------------------------->
 <!------------------------------------------------------------------------------------------------------------>
@@ -195,5 +102,8 @@
     <script type="text/javascript">
     	cargar_menus();
 	</script>
+	<!-- DATTABL --->	<script th:src="@{/js/dtable/jquery.dataTables.js}"></script>
+  	<!-- DATTABL --->	<script th:src="@{/js/dtable/dataTables.bootstrap4.js}"></script>
+  	<!-- DATTABL --->	<script th:src="@{/js/dtable/data-table.js}"></script>
 </body>
 </html>

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.auth.entity.Acuerdos;
+import com.auth.entity.Estado_Acuerdo;
 import com.auth.entity.Jira;
 import com.auth.entity.Jira_Detalle;
 import com.auth.entity.Menu;
@@ -154,16 +155,11 @@ public class JRestController {
 	@PostMapping("/acuerdos/terminar")
 	public Acuerdos terminarAcuerdo (@RequestBody RespAcuerdoTerminado jsonAcuerdo) {
 		Acuerdos acuerdo = acuerdoService.buscarPorId(jsonAcuerdo.getId());
+		Estado_Acuerdo estado = acuerdoService.buscarEstadoPorId(jsonAcuerdo.getTipo());
 		
 		Date hoy = (new Date());
 		acuerdo.setFlagterminado(true);
-		if (jsonAcuerdo.getTipo() == 1) {
-			//acuerdo.setEstado("Terminado");
-		}
-		else if (jsonAcuerdo.getTipo() == 2) {
-			//acuerdo.setEstado("Cancelado");
-		}
-			
+		acuerdo.setEstado(estado);
 		acuerdo.setFecha_cierre(hoy);
 		acuerdo.setObservacion(jsonAcuerdo.getObservacion());
 		acuerdo = acuerdoService.actualizar(acuerdo);			

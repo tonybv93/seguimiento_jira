@@ -18,4 +18,7 @@ public interface IUsuarioRepository extends CrudRepository<Usuario, Integer> {
 	
 	@Query(value="SELECT u.ID, u.PASSWORD, u.ENABLE, u.USERNAME,u.DESCRIPCION,u.ID_FABRICA, u.ID_EMPRESA FROM BVLSEGDB.USUARIO u RIGHT JOIN BVLSEGDB.USUARIO_ROL ur ON u.id = ur.ID_USER WHERE ur.ID_ROL = ?1",nativeQuery = true)
 	public List<Usuario> usuariosPorRol(int id_rol);
+	
+	@Query(value="SELECT u.ID, u.PASSWORD, u.ENABLE, u.USERNAME,u.DESCRIPCION,u.ID_FABRICA, u.ID_EMPRESA FROM BVLSEGDB.USUARIO u RIGHT JOIN BVLSEGDB.USUARIO_ROL ur ON u.id = ur.ID_USER WHERE ur.ID_ROL = ?1 and u.ID_FABRICA = ?2",nativeQuery = true)
+	public List<Usuario> usuariosPorRolyFabrica(int id_rol, int id_dabrica);
 }

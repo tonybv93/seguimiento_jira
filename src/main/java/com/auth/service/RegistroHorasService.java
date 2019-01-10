@@ -271,6 +271,13 @@ public class RegistroHorasService implements IRegistroHorasService {
 	@Override
 	public HJira buscarHXJiraXFab(String jira, String fabrica) {
 		//PRIMERO: Verificar si existe en la base de datos
+		String buscar_fabrica = ""; 
+		if (fabrica.equals("PANDORA")) {
+			buscar_fabrica = "";
+			}
+		else {
+			buscar_fabrica = "+and+fabrica=" + fabrica;
+			}
 		HJira hxj = hxjRepo.findByJira(jira);
 		if (hxj == null) {
 			//Si NO existe, se creará un registro nuevo
@@ -279,7 +286,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 			hxj.setConsumido_prueba(BigDecimal.ZERO);
 		}
 		// Ya sea nuevo registro o no, se actualizan todos los campos	
-		List<JsoJira> respuestaAPI = jiraResRepo.busquedaJQL("key="+jira+"+and+fabrica="+fabrica +"&fields=key,summary,issuetype,customfield_14851,customfield_14850,customfield_11483,customfield_11640"); // Se consult al api
+		List<JsoJira> respuestaAPI = jiraResRepo.busquedaJQL("key="+jira+"+and+issuetype+in+standardIssueTypes()"+buscar_fabrica+"&fields=key,summary,issuetype,customfield_14851,customfield_14850,customfield_11483,customfield_11640"); // Se consult al api
 		if (respuestaAPI != null && respuestaAPI.size() == 1) {
 			JsoJira j = respuestaAPI.get(0); 
 			//Actualizar datos
@@ -323,15 +330,60 @@ public class RegistroHorasService implements IRegistroHorasService {
 	//primer registro
 	@Override
 	public String registrarHoras(Usuario u, RespGenerica respuesta) {
-
+		//Encontrar Periodo
+		String[] arreglostr_fecja = respuesta.getTexto2().split("-");
+		String periodo = arreglostr_fecja[0] + arreglostr_fecja[1];
+		Periodo p = periodoRepo.findByPeriodo(periodo);
+		if (p != null) {
 			Proveedor_Reg_Horas registro = new Proveedor_Reg_Horas();
+			// JIRA HISTORICO
+			HJira hjira = hxjRepo.findByJira(respuesta.getTexto1());
+			registro.setHjira(hjira);
+			// TIPO DE ACTIVIDAD (DESARROLLO Y MEJORA SON FACTURABLES)
+			registro.setTipoActividad(tipoActividadRepo.findById((int) respuesta.getNumero2()).orElse(null));
+			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1 ||  registro.getTipoActividad().getId() == 5) {
+				registro.setFlagfacturar(true);
+			}else {
+				registro.setFlagfacturar(false);
+			}
+			// NRO HORAS
+			registro.setNro_horas( BigDecimal.valueOf(respuesta.getNumero1()));
+			// VALIDAR si quedan horas: 
+			if (registro.isFlagfacturar()) {
+				if (hjira.getFabrica().getNombre().equals("GMD") && !hjira.getTipo().equals("Proyecto") && registro.getTipoActividad().getId() != 5) {
+					// FACTOR DE GESTIÓN DE DEMANDA
+					Usuario gestor = usuarioRepo.findByUsername("patricia.chocano");
+					if (gestor == null) {
+						return "No se encontró información sobre el Gestor de Demanda";
+					}
+					Horas_Gestion_Demanda hgd = hgDemandaRepo.buscarPorUsuarioYPeriodo(gestor.getId(), p.getId());
+					BigDecimal factor = hgd.getFactor();
+					if (quedanHorasConGesDemanda(hjira, registro, factor)) {
+						// GENERAR HORAS GESTION DEMANDA
+						registro.setNro_horas_gestion(registro.getNro_horas().multiply(factor));
+						//Las horas facturables se restan del pull de horas totales (DESARROLLO o PRUEBAS)
+						hjira.setConsumido_desarrollo(hjira.getConsumido_desarrollo().add(registro.getNro_horas()).add(registro.getNro_horas_gestion()));					
+						hxjRepo.save(hjira);
+					}else {
+						return "No quedan horas.";
+					}					
+				//Validar que quedan horas simple
+				}else if (registro.getNro_horas().compareTo(hjira.getHoras_desarrollo().subtract(hjira.getConsumido_desarrollo())) == 1) {
+					registro.setNro_horas_gestion(BigDecimal.ZERO);
+					//Las horas facturables se restan del pull de horas totales (DESARROLLO o PRUEBAS)
+					hjira.setConsumido_desarrollo(hjira.getConsumido_desarrollo().add(registro.getNro_horas()).add(registro.getNro_horas_gestion()));					
+					hxjRepo.save(hjira);
+				}else {
+					return "No quedan horas";
+				}
+			}
 			// USUARIO QUE REGISTRA
 			registro.setUsuario(u);
 			// ESTADO DE REGISTRO (CREADO)
 			registro.setEstado(estadoRepo.findById(3).orElse(null)); //ESTADO INICIAL: 3=CREADO
-			// FECHAS
-			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			// FECHAS			
 			try {
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 				Date date = format.parse(respuesta.getTexto2());
 				registro.setFecha_real_trabajo(date);
 				registro.setFecha_facturacion(date);	// FECHA DE FACTURACION POR DEFECTO: FECHA DE TRABAJO REAL
@@ -339,41 +391,25 @@ public class RegistroHorasService implements IRegistroHorasService {
 				e.printStackTrace();
 				return "Error con la fecha!";
 			}			
-			registro.setFecha_registro(new Date());
-			// JIRA HISTORICO
-			HJira hjira = hxjRepo.findByJira(respuesta.getTexto1());
-			registro.setHjira(hjira);
-			// NRO HORAS
-			registro.setNro_horas( BigDecimal.valueOf(respuesta.getNumero1()));
-			
-			// TIPO DE ACTIVIDAD (DESARROLLO Y MEJORA SON FACTURABLES)
-			registro.setTipoActividad(tipoActividadRepo.findById((int) respuesta.getNumero2()).orElse(null));
+			registro.setFecha_registro(new Date());						
 			// COMENTARIO (OPCIONAL)
-			registro.setComentario(respuesta.getTexto5());			
-			HJira hxj = registro.getHjira();
-			// NRO DE HORAS (TIPO 4:MEJORA Y 1:DESARROLLO SE RESTAN DEL TOTAL)
-			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1 ||  registro.getTipoActividad().getId() == 5) {	// Validar tipos
-				if((hxj.getHoras_desarrollo().subtract(hxj.getConsumido_desarrollo())).compareTo(registro.getNro_horas()) >= 0) {
-					registro.setFlagfacturar(true);
-					// NRO HORAS GESTION (10%) !!SOLO PARA GMD!!
-					if (hjira.getFabrica().getNombre().equals("GMD") && !hjira.getTipo().equals("Proyecto") && registro.getTipoActividad().getId() != 5) {
-						registro.setNro_horas_gestion(registro.getNro_horas().multiply(BigDecimal.valueOf(0.1)));
-					}else {
-						registro.setNro_horas_gestion(BigDecimal.ZERO);
-					}					
-					registro = regHorasRepo.save(registro);						
-					//Las horas facturables se restan del pull de horas totales (DESARROLLO)
-					hxj.setConsumido_desarrollo(hxj.getConsumido_desarrollo().add(registro.getNro_horas()).add(registro.getNro_horas_gestion()));					
-					hxjRepo.save(hxj);
-					return registro.getId().toString();	
-				}else {
-					return "No quedan horas";
-				}
-			}else {
-				registro.setFlagfacturar(false);
-				registro = regHorasRepo.save(registro);
-				return registro.getId().toString();	
-			}
+			registro.setComentario(respuesta.getTexto5());	
+			// RETORNAR REGISTRO
+			registro = regHorasRepo.save(registro);
+			return registro.getId().toString();
+		}else {
+			return "No se puede registrar actividades en el periodo seleccionado. Si crees que se trata de un error, comunícate con el administrador del sistema.";
+		}	
+	}
+	// AUXILIAR : QUEDAN HORAS
+	public boolean quedanHorasConGesDemanda(HJira hjira, Proveedor_Reg_Horas registro, BigDecimal factor ) {
+		BigDecimal horas_disponibles = (hjira.getHoras_desarrollo().subtract(hjira.getConsumido_desarrollo()));
+		if (horas_disponibles.compareTo(registro.getNro_horas().multiply(factor.add(BigDecimal.valueOf(1)))) == 1) {
+			return true;
+		}else {
+			return false;
+		}
+		
 	}
 	
 	// CAMBIAR ESTADOS
@@ -455,5 +491,87 @@ public class RegistroHorasService implements IRegistroHorasService {
 		hgestDem.setFactor(nuevo_factor);
 		hgDemandaRepo.save(hgestDem); // Se actualiza el total de GEST DEM y el FACTOR
 		return "El trabajo está hecho";
-	}	
+	}
+
+	@Override
+	public List<Proveedor_Reg_Horas> listarRegistrosPorFabricayEstado(int id_estado, int id_fabrica) {
+		return regHorasRepo.listarPorFabricaYEstado(id_fabrica, id_estado);
+	}
+
+	@Override
+	public String registrarHorasCertificacion(Usuario u, RespGenerica respuesta) {
+		Proveedor_Reg_Horas registro = new Proveedor_Reg_Horas();
+		// JIRA HISTORICO
+		HJira hjira = hxjRepo.findByJira(respuesta.getTexto1());
+		registro.setHjira(hjira);
+		// TIPO DE ACTIVIDAD (DESARROLLO, bloqueante Y MEJORA SON FACTURABLES)
+		registro.setTipoActividad(tipoActividadRepo.findById((int) respuesta.getNumero2()).orElse(null));
+		if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1 ||  registro.getTipoActividad().getId() == 5) {
+			registro.setFlagfacturar(true);
+		}else {
+			registro.setFlagfacturar(false);
+		}
+		// NRO HORAS
+		registro.setNro_horas( BigDecimal.valueOf(respuesta.getNumero1()));
+		// VALIDAR si quedan horas: 
+		if (registro.isFlagfacturar()) {			
+			if (registro.getNro_horas().compareTo(hjira.getHoras_prueba().subtract(hjira.getConsumido_prueba())) != 1) {
+				registro.setNro_horas_gestion(BigDecimal.ZERO);
+				//Las horas facturables se restan del pull de horas totales (DESARROLLO o PRUEBAS)
+				hjira.setConsumido_prueba(hjira.getConsumido_prueba().add(registro.getNro_horas()));					
+				hxjRepo.save(hjira);
+			}else {
+				return "No quedan suficientes horas disponibles.";
+			}
+		}
+		// USUARIO QUE REGISTRA
+		registro.setUsuario(u);
+		// ESTADO DE REGISTRO (CREADO)
+		registro.setEstado(estadoRepo.findById(3).orElse(null)); //ESTADO INICIAL: 3=CREADO
+		// FECHAS			
+		try {
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = format.parse(respuesta.getTexto2());
+			registro.setFecha_real_trabajo(date);
+			registro.setFecha_facturacion(date);	// FECHA DE FACTURACION POR DEFECTO: FECHA DE TRABAJO REAL
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return "Error con la fecha!";
+		}			
+		registro.setFecha_registro(new Date());						
+		// COMENTARIO (OPCIONAL)
+		registro.setComentario(respuesta.getTexto5());	
+		// RETORNAR REGISTRO
+		registro = regHorasRepo.save(registro);
+		return registro.getId().toString();
+	
+		}
+
+	@Override
+	public String eliminarHorasCertificacion(Usuario u, RespGenerica respuesta) {
+		Proveedor_Reg_Horas registro = regHorasRepo.findById((int)respuesta.getNumero1()).orElse(null);		
+		if (registro.getUsuario() == u) {
+			regHorasRepo.deleteById((int)respuesta.getNumero1());
+			HJira hxj = hxjRepo.findByJira(registro.getHjira().getJira());
+			// Si las horas son desarrollo, bloqueante o mejora, se restan de las horas CONSUMIDAS 
+			if (registro.getTipoActividad().getId() == 4 ||  registro.getTipoActividad().getId() == 1 || registro.getTipoActividad().getId() == 5) { //4- Mejora | 1- Desarrollo | 5- Bloqueante
+				hxj.setConsumido_prueba(hxj.getConsumido_prueba().subtract(registro.getNro_horas()));
+				hxjRepo.save(hxj);
+			}
+			return "Eliminado";			
+		}else {
+			return "Error, no puede eliminar registros de otras personas";
+		}
+	}
+
+	@Override
+	public List<Proveedor_Reg_Horas> listarRegistrosPorFabrica(int id_fabrica) {
+		return regHorasRepo.listarPorFabrica(id_fabrica);
+	}
+
+	@Override
+	public List<Proveedor_Reg_Horas> listarRegistrosPorFabricaEntrePeriodos(int id_fabrica, String fecha1,
+			String fecha2) {
+		return regHorasRepo.listarPorFabricaEntreFechas(id_fabrica, fecha1, fecha2);
+	}
 }

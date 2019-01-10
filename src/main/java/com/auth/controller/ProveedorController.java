@@ -33,6 +33,7 @@ public class ProveedorController {
 	@Autowired
 	IActaService actaService;
 
+
 // -------------- DESARROLLADOR	
 	@GetMapping("/desarrollo/historialregistros")
 	public String historialRegistros(Model model) {		
@@ -74,12 +75,35 @@ public class ProveedorController {
 		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
 		Horas_Gestion_Demanda hgd = regHorasService.buscarHGDemandaPorUsuario(usuario.getId(),regHorasService.periodoActual().getId());
 		
-		model.addAttribute("gestdem",hgd);
-		model.addAttribute("listaDesarrolladores",usuarioService.listarUsuarioPorRol(3));
+		model.addAttribute("fabrica",usuario.getFabrica());
+		model.addAttribute("listaDesarrolladores",usuarioService.listarUsuarioPorRolYEmpresa(3,usuario.getFabrica().getId()));// 3: DESARROLLADOR
 		model.addAttribute("listaPeriodos",regHorasService.listarPeriodos());
-		model.addAttribute("porcentaje",(hgd.getHoras_consumidas().divide(hgd.getTotal_horas(),4,RoundingMode.HALF_UP)).multiply(BigDecimal.valueOf(100)).toString().substring(0, 4) + "%");
+		
+		if (usuario.getFabrica().getId() == 21) {// 21: GMD 
+			model.addAttribute("gestdem",hgd);
+			model.addAttribute("porcentaje",(hgd.getHoras_consumidas().divide(hgd.getTotal_horas(),4,RoundingMode.HALF_UP)).multiply(BigDecimal.valueOf(100)).toString().substring(0, 4) + "%");
+		}
+		
 		return "proveedor/control_horas";
 	}
+	@GetMapping("/gestion/listaregistros")
+	public String listarRegistros(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
+		model.addAttribute("titulo","Registros aprobados");
+		model.addAttribute("listaRegistrosAprobados",regHorasService.listarRegistrosPorFabricayEstado(1, usuario.getFabrica().getId())); // 1: Aprobados
+		return "proveedor/registros_gestion";
+	}
+	
+	@GetMapping("/gestion/registropordesarrollador")
+	public String listarRegistrosPorDesarrollador(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
+		model.addAttribute("titulo","Registros por desarrollador");
+		model.addAttribute("listaRegistrosAprobados",regHorasService.listarRegistrosPorFabrica(usuario.getFabrica().getId()));
+		return "proveedor/registros_desarrollador";
+	}
+	
 	@PostMapping("/gestion/detalleacta")
 	public String detalleActa(Model model, @RequestParam(name="id_acta") int id) {
 		Acta acta = actaService.buscarActaPorID(id);
@@ -90,9 +114,14 @@ public class ProveedorController {
 	
 	@GetMapping("/gestion/listaactas")
 	public String listarActasEnviadas(Model model) {
-		model.addAttribute("listaActas",actaService.listarTodoActas());
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
+		
+		model.addAttribute("listaActas",actaService.listaActasPorFabrica(usuario.getFabrica()));
 		return "proveedor/historial_actas";
 	}
+	
+	
 	@GetMapping("/gestion/nuevaacta")
 	public String nuevaActa(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		

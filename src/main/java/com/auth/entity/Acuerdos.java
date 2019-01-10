@@ -48,20 +48,21 @@ public class Acuerdos {
 	
 	@Column(name="fecha_cierre")
 	private Date fecha_cierre;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
+
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_tipo_acuerdo")
 	private Tipo_Acuerdo tipo;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_usuario_responsable")
 	private Usuario responsable;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_estado_acuerdo")
 	private Estado_Acuerdo estado;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_area_solicitante")
 	private Area_Solicitante areaSolicitante;
 

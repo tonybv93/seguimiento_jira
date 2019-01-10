@@ -1,5 +1,6 @@
 package com.auth.rest;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,11 +22,20 @@ public class RespGenerica {
 	private String texto5;
 	private List<String> arregloStr = new ArrayList<>();
 	private List<Integer> arregloInt = new ArrayList<>();
+	private List<BigDecimal> arregloDecimal = new ArrayList<>();
 	
 	public RespGenerica() {
 		
 	}	
 	
+	public List<BigDecimal> getArregloDecimal() {
+		return arregloDecimal;
+	}
+
+	public void setArregloDecimal(List<BigDecimal> arregloDecimal) {
+		this.arregloDecimal = arregloDecimal;
+	}
+
 	public List<String> getArregloStr() {
 		return arregloStr;
 	}

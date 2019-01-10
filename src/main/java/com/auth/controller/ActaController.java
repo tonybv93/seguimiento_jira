@@ -30,5 +30,12 @@ public class ActaController {
 		model.addAttribute("listaDetalles",actaService.listarDetalle(acta));
 		return "/actadetalle";
 	}
+	@PostMapping("/actaimprimir")
+	public String detalleActaImprimir(Model model, @RequestParam(name="id_acta") int id_acta) {
+		Acta acta = actaService.buscarActaPorID(id_acta);
+		model.addAttribute("acta",acta);
+		model.addAttribute("listaDetalles",actaService.listarDetalle(acta));
+		return "/actaimprimir";
+	}
 	
 }

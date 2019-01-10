@@ -221,6 +221,7 @@ function cargarGraficoBarras(){
         method : 'post',
       	data : data,	 //La misma información del gráfico de barras
         success : function(rep){  
+        	console.log(rep);
         	var strfact;
         	var tabla = document.getElementById("detalle_registros");
         	limpiarTabla(tabla);
@@ -248,42 +249,11 @@ function cargarGraficoBarras(){
         	
         }
 	});
+	
 	//------------------------------ ACTUALIZAR LISTA 2
-	$.ajax({
-        url : '/provrest/registros/aprobados/desarrollador',  	        
-        contentType:'application/json',
-        method : 'post',
-      	data : data,	 //La misma información del gráfico de barras
-        success : function(rep){  
-        	var strfact;
-        	var tabla = document.getElementById("detalle_registros_aprobados");
-        	limpiarTabla(tabla);
-        	for (var i = 0; i < rep.length; i++) {        		
-        		var tr = document.createElement('tr');
-        		tr.appendChild(crearTDoculto(rep[i].id));        		
-        		tr.appendChild(crearTD(rep[i].tipoActividad.descripcion));
-        		if (rep[i].flagfacturar == true){
-        			strfact='Sí';
-        		}else{
-        			strfact='No';
-        		}        		
-        		tr.appendChild(crearTD(strfact));
-        		tr.appendChild(crearTD(rep[i].nro_horas));
-        		tr.appendChild(crearTD(rep[i].nro_horas_gestion));
-        		tr.appendChild(crearTD(rep[i].fecha_real_trabajo.substring(0, 10)));
-        		tr.appendChild(crearTD(rep[i].hjira.jira));  
-        		tr.appendChild(crearTD(rep[i].hjira.empresa.nombre));   
-        		tr.appendChild(crearTD(rep[i].hjira.indicador.indicador));
-        		tabla.appendChild(tr);        		
-			}
-        	
-        }
-	});
+
 }
 /*-----------------------------------------------------------*/
-function cargarGestionDemanda(){
-	
-}
 /*------------------------- AL CARGAR LA PÁGINA ------------------*/
 cargarGraficoBarras();
 /*---------------------------- AUXILIAR ------------------------*/

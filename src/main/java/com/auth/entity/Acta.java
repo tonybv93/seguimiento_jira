@@ -1,5 +1,6 @@
 package com.auth.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -32,10 +33,16 @@ public class Acta {
 	private String version;		
 	private String razon_social_proveedor;
 	private String descripcion_servicio;
-	private long total_horas;
-	private long tarifa;
-	private long monto_bruto;
-	private long monto_neto;
+	
+	//subtotales
+	private BigDecimal total_horas_desarrollo;
+	private BigDecimal total_horas_concepto1;
+	private BigDecimal total_horas_concepto2;	
+	//totales
+	private BigDecimal total_horas;
+	private BigDecimal tarifa;
+	private BigDecimal monto_bruto;
+	private BigDecimal monto_neto;
 	private Date fecha_registro;	
 	private Date fecha_aprobacion;	
 	private boolean flagactivo;
@@ -64,6 +71,30 @@ public class Acta {
 	public Acta() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	public BigDecimal getTotal_horas_desarrollo() {
+		return total_horas_desarrollo;
+	}
+
+	public void setTotal_horas_desarrollo(BigDecimal total_horas_desarrollo) {
+		this.total_horas_desarrollo = total_horas_desarrollo;
+	}
+
+	public BigDecimal getTotal_horas_concepto1() {
+		return total_horas_concepto1;
+	}
+
+	public void setTotal_horas_concepto1(BigDecimal total_horas_concepto1) {
+		this.total_horas_concepto1 = total_horas_concepto1;
+	}
+
+	public BigDecimal getTotal_horas_concepto2() {
+		return total_horas_concepto2;
+	}
+
+	public void setTotal_horas_concepto2(BigDecimal total_horas_concepto2) {
+		this.total_horas_concepto2 = total_horas_concepto2;
 	}
 
 	public Integer getId() {
@@ -106,35 +137,37 @@ public class Acta {
 		this.descripcion_servicio = descripcion_servicio;
 	}
 	
-	public long getTotal_horas() {
+	
+
+	public BigDecimal getTotal_horas() {
 		return total_horas;
 	}
 
-	public void setTotal_horas(long total_horas) {
+	public void setTotal_horas(BigDecimal total_horas) {
 		this.total_horas = total_horas;
 	}
 
-	public long getTarifa() {
+	public BigDecimal getTarifa() {
 		return tarifa;
 	}
 
-	public void setTarifa(long tarifa) {
+	public void setTarifa(BigDecimal tarifa) {
 		this.tarifa = tarifa;
 	}
 
-	public long getMonto_bruto() {
+	public BigDecimal getMonto_bruto() {
 		return monto_bruto;
 	}
 
-	public void setMonto_bruto(long monto_bruto) {
+	public void setMonto_bruto(BigDecimal monto_bruto) {
 		this.monto_bruto = monto_bruto;
 	}
 
-	public long getMonto_neto() {
+	public BigDecimal getMonto_neto() {
 		return monto_neto;
 	}
 
-	public void setMonto_neto(long monto_neto) {
+	public void setMonto_neto(BigDecimal monto_neto) {
 		this.monto_neto = monto_neto;
 	}
 

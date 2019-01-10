@@ -23,6 +23,10 @@ public interface IRegistroHorasService {
 	public List<Proveedor_Reg_Horas> listarRegistrosAprobadosPorDesarrollador(Usuario usuario);
 	public List<Proveedor_Reg_Horas> listarRegistrisPorJira(String jira);
 	public List<Proveedor_Reg_Horas> listarRegistrosPorEstado(Estado_Reg_Horas estado);
+	public List<Proveedor_Reg_Horas> listarRegistrosPorFabrica(int id_fabrica);
+	public List<Proveedor_Reg_Horas> listarRegistrosPorFabricaEntrePeriodos(int id_fabrica, String fecha1, String fecha2);
+	
+	public List<Proveedor_Reg_Horas> listarRegistrosPorFabricayEstado(int id_estado, int id_fabrica);
 	//----------------- PERIODO
 	public List<Periodo> listarPeriodos();
 	public Periodo periodoActual();
@@ -30,13 +34,17 @@ public interface IRegistroHorasService {
 	
 	//----------------- ESTADOS
 	public Estado_Reg_Horas buscarEstadoPorId(int id);
-	//----------------- ESPECIALES
-	public String registrarHoras(Usuario u, RespGenerica objeto);
-	public String eliminarHoras(Usuario u, RespGenerica objeto);
+	//----------------- ESPECIALES DESARROLLO
+	public String registrarHoras(Usuario u, RespGenerica objeto);	
+	public String eliminarHoras(Usuario u, RespGenerica objeto);	
 	public String cambiarEstadoRegistro(Proveedor_Reg_Horas registro,int id_estado, Usuario u);
 	public List<HorasPorSemana> listarDiasPorSemana(int id_usuario);
 	public List<HorasPorSemana> listarDiasdelMes(int id_usuario, String periodo);
 	public double horasTrabajadas(String jira);
+	
+	//----------------- ESPECIALES PRUEBAS
+	public String registrarHorasCertificacion(Usuario u, RespGenerica objeto);	
+	public String eliminarHorasCertificacion(Usuario u, RespGenerica objeto);	
 	
 
 	//------------------ HX JIRA	

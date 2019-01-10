@@ -115,10 +115,16 @@ public class ActaService implements IActaService {
 //------------------------ ESPECIALES
 	@Override
 	public List<DetalleActaPre> listarDetalleActaPRE(Usuario u, RespGenerica respuesta ) {
+		
+		//Validar que no exista un acta con los parámetros de búsqueda		
 		Periodo p = periodoRepo.findById((int)respuesta.getNumero1()).orElse(null);
 		Indicador_Contable indicador = indicadorRepo.findById((int)respuesta.getNumero2()).orElse(null);
 		Empresa e = empresaRepo.findById((int) respuesta.getNumero3()).orElse(null);
-		return actaRepo.listarDetalleActaPre(p.getInicio(), p.getFin(), u.getFabrica(),indicador,e);
+		// Si no existe el acta, se realiza la búsqueda de registros para dicho periodo  
+		if (actaRepo.verificarSiExistePrevia(u.getFabrica().getId(),p.getId(),e.getId(),indicador.getId()) == null) {
+			return actaRepo.listarDetalleActaPre(p.getInicio(), p.getFin(), u.getFabrica(),indicador,e);
+		}		
+		return null;
 	}
 	
 	@Override
@@ -145,39 +151,68 @@ public class ActaService implements IActaService {
 		acta.setFabrica(fabrica);				
 		acta = actaRepo.save(acta);
 
-			
-		BigDecimal total_horas_desarrollo = BigDecimal.ZERO;
-		BigDecimal total_horas_concepto1 = BigDecimal.ZERO;
-		
-		// SEPRAR LISTA DE JIRAS (APROBADOS Y PATEADOS
+		// Buscar detalle acta PRE y Validar cantidad
 		List<DetalleActaPre> listadetallePre = actaRepo.listarDetalleActaPre(periodo.getInicio(), periodo.getFin(), usuario.getFabrica(), tipo, empresa);
-		for (DetalleActaPre dpre: listadetallePre) {
-			total_horas_desarrollo = total_horas_desarrollo.add(dpre.getTotalHoras());
-			total_horas_concepto1 = total_horas_concepto1.add(dpre.getTotalHorasGesDem());
+		if (respuesta.getArregloStr().size() == listadetallePre.size()) {
+			
+			//Horas de desarrollo totales (Sin prorrateo)
+			BigDecimal total_horas_desarrollo = BigDecimal.ZERO;
+			BigDecimal total_horas_concepto1_pre = BigDecimal.ZERO;
+			BigDecimal total_horas_concepto1_final = BigDecimal.ZERO;
+			BigDecimal acta_montobruto = BigDecimal.ZERO;
+			for (DetalleActaPre dpre: listadetallePre) {
+				total_horas_desarrollo = total_horas_desarrollo.add(dpre.getTotalHoras());
+				total_horas_concepto1_pre = total_horas_concepto1_pre.add(dpre.getTotalHorasGesDem());
+			}		
+									
+			for (DetalleActaPre dpre: listadetallePre) {
+				HJira hjira = hjiraRepo.findByJira(dpre.getJira());
+				Acta_detalle detalle = new Acta_detalle();
+				detalle.setActa(acta);
+				detalle.setJira(hjira);
+				
+				detalle.setTarifa( respuesta.getArregloDecimal().get(indexStrEnArreglo(hjira.getJira(), respuesta.getArregloStr())));
+				detalle.setNro_horas_jira(dpre.getTotalHoras());
+				// GESTION DE DEMANDA
+				detalle.setNro_horas_concepto1(dpre.getTotalHorasGesDem().add( (BigDecimal.valueOf(respuesta.getNumero5()).divide(total_horas_desarrollo,8,RoundingMode.HALF_UP)).multiply(dpre.getTotalHoras()) ));
+				total_horas_concepto1_final = total_horas_concepto1_final.add(detalle.getNro_horas_concepto1());
+				//GESTION CONFIGURACION
+				detalle.setNro_horas_concepto2( (BigDecimal.valueOf(respuesta.getNumero6()).divide(total_horas_desarrollo,8,RoundingMode.HALF_UP)).multiply(dpre.getTotalHoras()) );
+				//Total de horas
+				detalle.setNro_total_horas(detalle.getNro_horas_jira().add(detalle.getNro_horas_concepto1().add(detalle.getNro_horas_concepto2())));
+				detalle.setCosto_total(detalle.getNro_total_horas().multiply(detalle.getTarifa()));			
+				actaDetalleRepo.save(detalle);	
+				acta_montobruto = acta_montobruto.add(detalle.getCosto_total());
+			}	
+			//TOTALES ACTA
+			acta.setCodigo("ACT-" + acta.getId());
+			acta.setTotal_horas_desarrollo(total_horas_desarrollo);
+			acta.setTotal_horas_concepto1(total_horas_concepto1_final);		
+			acta.setTotal_horas_concepto2(BigDecimal.valueOf(respuesta.getNumero6()));
+			acta.setTarifa(BigDecimal.valueOf(respuesta.getNumero7()));
+			
+			BigDecimal total_horas = acta.getTotal_horas_desarrollo().add(acta.getTotal_horas_concepto1().add(acta.getTotal_horas_concepto2()));
+			acta.setTotal_horas(total_horas);
+			acta.setMonto_bruto(acta_montobruto);
+			acta.setMonto_neto(acta_montobruto);
+			return actaRepo.save(acta);
+		}else {
+			return null;
 		}
-		// JIRAS APROBADOS
-		// --Horas totales		
-		for (DetalleActaPre dpre: listadetallePre) {
-			HJira hjira = hjiraRepo.findByJira(dpre.getJira());
-			Acta_detalle detalle = new Acta_detalle();
-			detalle.setActa(acta);
-			detalle.setJira(hjira);
-			detalle.setTarifa(BigDecimal.valueOf(respuesta.getNumero7()) );
-			detalle.setNro_horas_jira(dpre.getTotalHoras());
-			// GESTION DE DEMANDA
-			detalle.setNro_horas_concepto1(dpre.getTotalHorasGesDem().add( (BigDecimal.valueOf(respuesta.getNumero5()).divide(total_horas_desarrollo,2,RoundingMode.HALF_UP)).multiply(dpre.getTotalHoras()) ));
-			//GESTION CONFIGURACION
-			detalle.setNro_horas_concepto2( (BigDecimal.valueOf(respuesta.getNumero6()).divide(total_horas_desarrollo,2,RoundingMode.HALF_UP)).multiply(dpre.getTotalHoras()) );
-			//
-			detalle.setNro_total_horas(detalle.getNro_horas_jira().add(detalle.getNro_horas_concepto1().add(detalle.getNro_horas_concepto2())));
-			detalle.setCosto_total(detalle.getNro_total_horas().multiply(detalle.getTarifa()));			
-			actaDetalleRepo.save(detalle);			
-		}	
-		//Segundo guardado
-		acta.setCodigo("ACT-" + acta.getId());
-		return actaRepo.save(acta);
+		
+	}
+	private int indexStrEnArreglo(String s, List<String> arreglo) {
+		int i = 0;
+		for (String elemento: arreglo) {
+			if (elemento.equals(s)) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
 	}
 //--------------------------- FABRICA
+	
 	@Override
 	public List<Fabrica> listarFabricas() {
 		return (List<Fabrica>) fabricaRepo.findAll();
@@ -190,8 +225,12 @@ public class ActaService implements IActaService {
 //------------------------------------
 	@Override
 	public List<Acta> listaActasPorEmpresa(Empresa empresa) {
-		// TODO Auto-generated method stub
-		return null;
+		return actaRepo.findAllByEmpresa(empresa);
+	}
+	
+	@Override
+	public List<Acta> listaActasPorFabrica(Fabrica fab) {
+		return actaRepo.findAllByFabrica(fab);
 	}
 
 	@Override
