@@ -17,6 +17,7 @@ import com.auth.entity.Fabrica;
 import com.auth.entity.HJira;
 import com.auth.entity.Indicador_Contable;
 import com.auth.entity.Periodo;
+import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Usuario;
 import com.auth.repository.IActaDetalleRepository;
 import com.auth.repository.IActaEstadoRepository;
@@ -28,6 +29,7 @@ import com.auth.repository.IHJiraRepository;
 import com.auth.repository.IHorasGestionDemandaRepository;
 import com.auth.repository.IIndicadorContableRepository;
 import com.auth.repository.IPeriodoRepository;
+import com.auth.repository.IProveedorRegHorasRepository;
 import com.auth.rest.RespGenerica;
 
 @Service
@@ -53,6 +55,8 @@ public class ActaService implements IActaService {
 	IHorasGestionDemandaRepository gestionDemandRepo;
 	@Autowired
 	IActaEstadoRepository actaEstadoRepo;
+	@Autowired
+	IProveedorRegHorasRepository registrosRepo;
 	
 	@Override
 	public List<Acta> listarTodoActas() {
@@ -105,7 +109,7 @@ public class ActaService implements IActaService {
 //------------------------ PERIODO
 	@Override
 	public List<Empresa> listarEmpresas() {
-		return (List<Empresa>) empresaRepo.findAll();
+		return empresaRepo.findAllByOrderById();
 	}
 
 	@Override
@@ -153,6 +157,7 @@ public class ActaService implements IActaService {
 
 		// Buscar detalle acta PRE y Validar cantidad
 		List<DetalleActaPre> listadetallePre = actaRepo.listarDetalleActaPre(periodo.getInicio(), periodo.getFin(), usuario.getFabrica(), tipo, empresa);
+		List<Proveedor_Reg_Horas> listaRegistrosCompletos = registrosRepo.listarDetalleActaCompleto(usuario.getFabrica().getId(), periodo.getInicio(), periodo.getFin(), tipo.getId(), empresa.getId());
 		if (respuesta.getArregloStr().size() == listadetallePre.size()) {
 			
 			//Horas de desarrollo totales (Sin prorrateo)
@@ -163,14 +168,12 @@ public class ActaService implements IActaService {
 			for (DetalleActaPre dpre: listadetallePre) {
 				total_horas_desarrollo = total_horas_desarrollo.add(dpre.getTotalHoras());
 				total_horas_concepto1_pre = total_horas_concepto1_pre.add(dpre.getTotalHorasGesDem());
-			}		
-									
+			}						
 			for (DetalleActaPre dpre: listadetallePre) {
-				HJira hjira = hjiraRepo.findByJira(dpre.getJira());
+				HJira hjira = hjiraRepo.findByJira(dpre.getHjira().getJira());
 				Acta_detalle detalle = new Acta_detalle();
 				detalle.setActa(acta);
-				detalle.setJira(hjira);
-				
+				detalle.setJira(hjira);				
 				detalle.setTarifa( respuesta.getArregloDecimal().get(indexStrEnArreglo(hjira.getJira(), respuesta.getArregloStr())));
 				detalle.setNro_horas_jira(dpre.getTotalHoras());
 				// GESTION DE DEMANDA
@@ -195,6 +198,14 @@ public class ActaService implements IActaService {
 			acta.setTotal_horas(total_horas);
 			acta.setMonto_bruto(acta_montobruto);
 			acta.setMonto_neto(acta_montobruto);
+			
+			// REGISTROS: Setear el acta en los registros
+			for (Proveedor_Reg_Horas prh: listaRegistrosCompletos) {
+				prh.setActa(acta);
+				prh.setFlag_acta(true);
+				registrosRepo.save(prh);
+			}
+			
 			return actaRepo.save(acta);
 		}else {
 			return null;
@@ -280,6 +291,33 @@ public class ActaService implements IActaService {
 		acta.setEstado(estado);
 		actaRepo.save(acta);
 
+	}
+
+	@Override
+	public void eliminarActa(int id_acta) {
+		Acta acta = actaRepo.findById(id_acta).orElse(null);
+		if (acta.getEstado().getId() == 1 ||acta.getEstado().getId() == 4 ) {
+			// Eliminar DETALLE ACTA
+			List<Acta_detalle> listaDetalle = actaDetalleRepo.findAllByActa(acta);
+			for (Acta_detalle detalle:listaDetalle) {
+				actaDetalleRepo.delete(detalle);
+			}			
+			//Liberar REGISTROS DE HORAS
+			int id_fabrica = acta.getFabrica().getId();
+			String inicio = acta.getPeriodo().getInicio();
+			String fin = acta.getPeriodo().getFin();
+			int id_tipo = acta.getIndicador().getId();
+			int id_empresa = acta.getEmpresa().getId();	
+			List<Proveedor_Reg_Horas> listaRegistrosCompletos = registrosRepo.listarDetalleActaCompleto(id_fabrica, inicio, fin, id_tipo, id_empresa);
+
+			for (Proveedor_Reg_Horas prh: listaRegistrosCompletos) {
+				prh.setActa(null);
+				prh.setFlag_acta(false);
+				registrosRepo.save(prh);
+			}			
+			// Eliminar ACTA
+			actaRepo.delete(acta);
+		}		
 	}
 
 }

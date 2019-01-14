@@ -184,7 +184,6 @@ public class JRestController {
 	public List<Menu> hacerMenu(){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());
-		System.out.println(auth.getPrincipal().toString());
 		List<Menu> menus = menuService.listarMenuPorRol(usuario.getRoles().get(0).getId());		
 		return menus;
 	}

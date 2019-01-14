@@ -2,6 +2,7 @@ package com.auth.controller;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.auth.entity.Acta;
+import com.auth.entity.HJira;
 import com.auth.entity.Horas_Gestion_Demanda;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Usuario;
@@ -97,10 +99,7 @@ public class ProveedorController {
 	
 	@GetMapping("/gestion/registropordesarrollador")
 	public String listarRegistrosPorDesarrollador(Model model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
-		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());		
 		model.addAttribute("titulo","Registros por desarrollador");
-		model.addAttribute("listaRegistrosAprobados",regHorasService.listarRegistrosPorFabrica(usuario.getFabrica().getId()));
 		return "proveedor/registros_desarrollador";
 	}
 	
@@ -110,6 +109,12 @@ public class ProveedorController {
 		model.addAttribute("acta",acta);
 		model.addAttribute("listaDetalles",actaService.listarDetalle(acta));
 		return "proveedor/detalle_acta";
+	}
+	
+	@PostMapping("/gestion/eliminaracta")
+	public String eliminarActa(Model model, @RequestParam(name="id_acta") int id) {
+		actaService.eliminarActa(id);
+		return "redirect:/proveedor/gestion/listaactas";
 	}
 	
 	@GetMapping("/gestion/listaactas")
@@ -129,8 +134,20 @@ public class ProveedorController {
 		
 		model.addAttribute("listaPeriodos",regHorasService.listarPeriodos());
 		model.addAttribute("listaEmpresas",actaService.listarEmpresas());
-		model.addAttribute("listaTiposActa",actaService.listarIndicadorContable());
 		model.addAttribute("fabrica",usuario.getFabrica());
 		return "proveedor/nueva_acta";
+	}
+	//--------------- FECHAS
+	//LISTAR JIRAS POR FABRICA
+	@GetMapping("/gestion/fechajiras")
+	public String  fechasCavali(Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
+		System.out.println(">>>>>>>>>" + usuario.getFabrica().getId());
+		List<HJira> lstJiras = jiraService.buscarHjiraPorFabrica(usuario.getFabrica());
+		System.out.println(">>>>>>>>>" + lstJiras.size());
+		
+		model.addAttribute("lstJiras",lstJiras);
+		return "proveedor/prov_jiras_update";
 	}
 }

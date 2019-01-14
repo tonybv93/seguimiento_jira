@@ -51,8 +51,8 @@
 	              		<input id="fechafin" type="date" class="form-control form-control-sm border-primary">
 	              	</div>
 	              	<div class="col-4">
-	              		<button class="btn btn-primary mr-2" >Filtrar</button>
-	              		<button class="btn btn-info mr-2" onclick="exportarTabla()">Exportar</button>
+	              		<button class="btn btn-primary mr-2" onclick="filtrarTabla()">Filtrar</button>
+	              		<button class="btn btn-success mr-2" onclick="exportarTabla()"><span class="mdi mdi-file-excel"></span>Exportar</button>
 	              	</div>
 	            </div>
 	              <br>	                      
@@ -63,32 +63,29 @@
 	               				<th>Fecha de trabajo</th>
 	               				<th>Nro horas</th>	                      				
 	               				<th>Jira</th>
-	               				<th>Estado</th>	
-	               				<th>Descripción</th>	                      				
-	               				<th>Tipo</th>
+	               				<th>Descripción</th>	
+	               				<th>Tipo</th>	                      				
+	               				<th>Cliente</th>
 	               			</tr>
 	               		</thead>
 	               		<tbody id="detalle_registros">
-	               			<tr  th:each="registro:${listaRegistrosAprobados}">  
-	               				<td  th:text="${registro.usuario.descripcion}"></td>
-	               				<td  th:text="${#dates.format(registro.fecha_real_trabajo, 'dd-MM-yyyy')}"></td>
-	                  				<td  th:text="${registro.nro_horas}"></td>
-	                  				<td  th:text="${registro.hjira.jira}"></td>
-	                  				<td  th:text="${registro.estado.descripcion}"></td>
-	                  				<td  th:text="${registro.hjira.descripcion}"></td>	
-	               				
-	               				<td  th:text="${registro.tipoActividad.descripcion}"></td>
-	               			</tr>
 	               		</tbody>
 	                </table> 
 	              </div>
 	            </div>
 			</div>
+
 <!------------------------------------------------------------------------------------------------------------>
          </div> 
       </div>
    	</div>
  	</div>	
+ 	
+ 	<div id="domMessage" class="un_modal">
+		<div class="contenido_loader"> 
+    		<h6>Cargando...</h6> 
+    	</div>
+	</div> 
 <!------------------------------------------------------------------------------------------------------------>
 <!---------------------------------              SCRIPS                      --------------------------------->
 <!------------------------------------------------------------------------------------------------------------>
@@ -109,6 +106,19 @@
     <script th:src="@{/js/menus.js}"></script>    
     <script type="text/javascript">
     	cargar_menus();
+	</script>
+		<script type="text/javascript">
+
+    $( document ).ajaxStart(function() 
+    {
+    	$( "#domMessage" ).show();    	
+
+    }).ajaxStop(function() 
+    {
+    	$( "#domMessage" ).hide();    	
+
+    });
+
 	</script>
 </body>
 </html>

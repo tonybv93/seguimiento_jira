@@ -1,6 +1,5 @@
 var valor_actual="";
-var valor_nuevo="";
-    
+var valor_nuevo="";    
     function validar_fecha(txt){
     	var error = "";    	
     	

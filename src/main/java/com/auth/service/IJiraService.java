@@ -2,6 +2,7 @@ package com.auth.service;
 
 import java.util.List;
 
+import com.auth.entity.Fabrica;
 import com.auth.entity.HJira;
 import com.auth.entity.Jira;
 
@@ -16,10 +17,12 @@ public interface IJiraService {
 	public Jira buscarPorId(Integer id);	//BUSCAR 1 JIRA
 	public Jira guardar(Jira j);			//ACTUALIZAR FECHAS
 	
-	public void actualizarBD();
-	
-	public List<HJira> BuscadorPersonalizado(String str);
-	
+	public void actualizarBD();	
+	public List<HJira> BuscadorPersonalizado(String str);	
 	public List<HJira> buscarJiraPorFabrica(String str, String fabrica);
+	
+	// 	HJIRA
+	public List<HJira> buscarHjiraPorFabrica(Fabrica f);
+	
 	
 }

@@ -21,6 +21,7 @@ public interface IActaService {
 	public List<Acta> listaActasPorFabrica(Fabrica fabrica);
 	public List<Acta> listaActasPorIndicador(Indicador_Contable indicador);
 	public List<Acta> listaActasPorEstado(int id_estado);
+	public void eliminarActa(int id_acta);
 	public Acta buscarActaPorID(int id);
 	public Acta buscarActaPorCodigo(String codigo);
 	public Acta guardarActa(Acta a);

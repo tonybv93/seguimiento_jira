@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.auth.entity.Area_Solicitante;
+import com.auth.entity.Centro_Costo;
 import com.auth.entity.Empresa;
 import com.auth.entity.Estado_Jira;
 import com.auth.entity.Etiqueta;
@@ -23,6 +24,7 @@ import com.auth.entity.JsoJira;
 import com.auth.entity.JsoPersonalizado;
 import com.auth.entity.Tipo_Requerimiento;
 import com.auth.repository.IAreaSolicitanteRepository;
+import com.auth.repository.ICentroCostoRepository;
 import com.auth.repository.IEmpresaRepository;
 import com.auth.repository.IEstadoJiraRepository;
 import com.auth.repository.IEtiquetaRepository;
@@ -56,7 +58,9 @@ public class JiraService implements IJiraService {
 	@Autowired
 	IEmpresaRepository empresaRepo;
 	@Autowired
-	IHJiraRepository horasJiraRepo;
+	IHJiraRepository hJiraRepo;
+	@Autowired
+	ICentroCostoRepository ccRepo;
 
 	@Override
 	public Jira buscarPorId(Integer id) {
@@ -248,7 +252,7 @@ public class JiraService implements IJiraService {
 						
 			// GUARDAR y actualizar JIRA HISTÓRICO
 			HJira hxj;
-			hxj = horasJiraRepo.findByJira(bdJira.getJira());
+			hxj = hJiraRepo.findByJira(bdJira.getJira());
 			if(hxj == null) {
 				hxj = new HJira();
 				hxj.setConsumido_desarrollo(BigDecimal.ZERO);
@@ -262,9 +266,15 @@ public class JiraService implements IJiraService {
 			hxj.setEmpresa(bdJira.getEmpresa());
 			hxj.setFabrica(bdJira.getFabrica());
 			hxj.setIndicador(bdJira.getIndicador());
-			hxj.setCentro_costo(bdJira.getCentro_costo());
-
-			horasJiraRepo.save(hxj);
+			hxj.setEstado(bdJira.getEstadoJira());
+			hxj.setEtiqueta(bdJira.getEtiqueta());
+			hxj.setAreaSolicitante(bdJira.getAreaSolicitante());
+			hxj.setInformador(bdJira.getInformador());
+			hxj.setAsignado(bdJira.getAsignado());
+			hxj.setResponsable(bdJira.getResponsable());
+			Centro_Costo cc = ccRepo.findByCcjira(bdJira.getCentro_costo());
+			hxj.setCentro_costo(cc);
+			hJiraRepo.save(hxj);
 			id++;
 		}
 	}
@@ -705,5 +715,10 @@ public class JiraService implements IJiraService {
 		arreglo[4] = toIntExact(jiraRepo.contar_por_area(26));	//FACTRACK
 		arreglo[5] = toIntExact(jiraRepo.contar_por_area(24));	//OTROS		
 		return arreglo;
+	}
+
+	@Override
+	public List<HJira> buscarHjiraPorFabrica(Fabrica f) {		
+		return hJiraRepo.findAllByFabrica(f);
 	}
 }

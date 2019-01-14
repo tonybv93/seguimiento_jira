@@ -230,8 +230,7 @@ function agregar(){
 	var fechahoy = new Date();
 	var dd = fechajs.substring(8,10);
 	var mm = fechajs.substring(5,7);
-	var yyyy = fechajs.substring(0,4);
-	
+	var yyyy = fechajs.substring(0,4);	
 	var fechastr = dd+'-'+mm+'-'+yyyy
 	var nro_horas = document.getElementById("nro_horas").value;
 	var tr = document.createElement('tr');
@@ -241,8 +240,7 @@ function agregar(){
 	var alertajira = document.getElementById("alerta_jira");
 	var tipo_reg = document.getElementById("cbx_tipo_registro");
 	var comentario = document.getElementById("txa_comentario").value;
-	var resultado = document.getElementById("resultado");
-	
+	var resultado = document.getElementById("resultado");	
 	//Validar que el input de JIRA tenga un JIRA : [SALIR]
 	if (jira == '' || jira == null || resultado.innerHTML == 'No encontrado.'){
 		alertajira.innerHTML = "*Obligatorio";
@@ -265,8 +263,7 @@ function agregar(){
 					objjson.texto3 = data.tipo;	
 					objjson.texto4 = data.descripcion;	
 					objjson.texto5 = comentario;					
-					datajs = JSON.stringify(objjson);
-					
+					datajs = JSON.stringify(objjson);					
 					//Enviar el registro, se espera como respuesta el ID del registro creado en BD
 					$.ajax({
 					        url : '/provrest/registro/nuevo',  	        
@@ -277,6 +274,8 @@ function agregar(){
 					        	//Comrpobar que la respuesta sea númérica
 					        	if (!isNaN(respuesta)){
 					        		//Si la respuesta es correcta, crear la fila y agregarla a la tabla
+					        		tr.setAttribute('onmouseover','hovertabla(this)');
+					        		tr.setAttribute('onmouseout','outtabla(this)');
 						        	tr.appendChild(crearTDoculto(respuesta));
 						        	tr.appendChild(crearTD('<i class="mdi mdi-creation ico_creado"></i>'));
 									tr.appendChild(crearTD(jira));
@@ -287,8 +286,7 @@ function agregar(){
 									tr.appendChild(crearTD(fechastr));
 									tr.appendChild(crearTD(comentario));
 									tr.appendChild(crearBotonX());	
-									tabla.appendChild(tr);
-									
+									tabla.appendChild(tr);									
 									//Limpiar los campos (Reiniciar buscador)
 									document.getElementById("id_input").value = '';
 									document.getElementById("resultado").innerHTML = "";
@@ -296,8 +294,7 @@ function agregar(){
 						    		div_cont.innerHTML = "";	
 						    		document.getElementById("nro_horas").value = '';
 						    		document.getElementById("cbx_tipo_registro").value = 1;
-						    		document.getElementById("txa_comentario").value = '';						    		
-						    			
+						    		document.getElementById("txa_comentario").value = '';	
 					        	}else{
 					        		alert(respuesta);
 					        	}
@@ -307,8 +304,7 @@ function agregar(){
 					        	console.log(sm2);
 					            alert(sm1);
 					        }  	        
-					    });				
-							
+					    });	
 			});	
 		}
 	}

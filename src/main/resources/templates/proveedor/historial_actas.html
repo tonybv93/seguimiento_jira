@@ -60,16 +60,21 @@
 	                  				<td  th:text="${registro.indicador.indicador}"></td>
 	                  				<td  th:text="${registro.periodo.periodo}"></td>
 	                  				<td  th:text="${#dates.format(registro.fecha_registro, 'dd-MM-yyyy')}"></td>
-	                  				<td  th:text="${registro.total_horas}"></td>
-	                  				<td  th:text="${registro.monto_neto}"></td>
+	                  				<td  th:text="${#numbers.formatDecimal(registro.total_horas, 0, 'COMMA', 1, 'POINT')}"></td>
+	                  				<td  th:text="${'S/ ' + #numbers.formatDecimal(registro.monto_neto, 0, 'COMMA', 2, 'POINT')}"></td>
 	                  				<td> <span th:class="${registro.estado.css_clase}" th:text="${registro.estado.descripcion}"></span></td>
-	                  				<td> 
+	                  				<td class="d-flex"> 
 	                  					<form action="/proveedor/gestion/detalleacta" method="post">	                  					
 	                  						<input type="hidden" name="id_acta" th:value="${registro.id}">
-	                  						<button type="submit" title="Guardar" class="btn btn-icons btn-rounded btn-outline-success">
+	                  						<button type="submit" title="Ver detalle" class="btn btn-icons btn-rounded btn-outline-success">
 						                		<i class="mdi mdi-eye"></i>
 						                	</button>
 	                  					</form>
+	                  					
+                  						<button th:if="${registro.estado.id == 4 || registro.estado.id == 1 }"  type="submit" title="Eliminar Acta" class="btn btn-icons btn-rounded btn-outline-danger" onclick="modal_eliminar_acta(this)">
+					                		<span class="mdi mdi-delete"></span>
+					                	</button>
+	 
 	                  				</td>
 	                  			</tr>
 	                  		</tbody>
@@ -78,8 +83,36 @@
 	              </div>
 	            </div>
 			</div>
-<!----------------------------------------------------------------------- APROBADAS  ------------------------------------------------------->
-
+<!----------------------------------------------------------------------- MODAL  ------------------------------------------------------->
+		<div id="modal_eliminar" class="un_modal">			
+			<div class="contenido_modal">
+				<div class="card-body">  
+					<div class="row">
+					  	<div class="col-8 grid-margin">
+					  		<div class="modal_header">Eliminar acta</div>	
+					  	</div>				  
+					  	<div class="col-4 grid-margin">
+					  		<span class="close" onclick="cerrar_modal()">&times;</span>
+					  	</div>
+				  	</div>
+				  	<p>Está a punto de eliminar el acta:</p>
+				  	<ul>
+				  		<li><b>ID: </b><span id="spn_id"> 111</span></li>
+				  		<li><b>Periodo: </b><span  id="spn_periodo"> 111</span></li>
+				  		<li><b>Tipo: </b><span  id="spn_tipo"> 111</span></li>
+				  		<li><b>Cliente: </b><span  id="spn_cliente"> 111</span></li>
+				  	</ul>
+	    			<p>Una vez eliminada, todos los registros de horas asociados serán liberados y podrá generarse otra acta para este periodo. ¿Desea continuar?</p>
+	        	</div>
+	        	<div class="detalle_acta_botones d-flex">
+	        		<form action="/proveedor/gestion/eliminaracta" method="post">
+	        			<input type="hidden" name="id_acta" id="input_id">
+	        			<input type="submit" class="btn btn-danger mr-2" onclick="confirmar_envio()" value="Eliminar">
+	        		</form>	            	
+	            	<button class="btn secondary mr-2" onclick="cerrar_modal()">Cancelar</button>
+	            </div>
+			</div>
+		</div>
 <!------------------------------------------------------------------------------------------------------------>
          </div> 
       </div>
@@ -97,6 +130,7 @@
     <script th:src="@{/js/shared/settings.js}"></script>
     <script th:src="@{/js/shared/todolist.js}"></script>    
     <script th:src="@{/js/jquery/dist/jquery.min.js}"></script>
+    <script th:src="@{/js/prov_historial_acta.js}"></script> 
     
     <script th:src="@{/js/menus.js}"></script>    
     <script type="text/javascript">

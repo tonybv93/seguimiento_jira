@@ -126,13 +126,13 @@
                       			Tarifa
                       		</div>
                       		<div class="bdy_25_blanco">
-                      			<span th:text="${'S/ ' + acta.tarifa}"></span>
+                      			<span th:text="${'S/ ' + #numbers.formatDecimal(acta.tarifa, 0, 'COMMA', 2, 'POINT')}"></span>
                       		</div>
                       		<div class="bdy_25">
                       			Horas desarrollo
                       		</div>
                       		<div class="bdy_25_blanco">
-                      			<span th:text="${acta.total_horas_desarrollo + ' Hs'}"></span>
+                      			<span th:text="${#numbers.formatDecimal(acta.total_horas_desarrollo, 0, 'COMMA', 1, 'POINT') + ' Hs'}"></span>
                       		</div>
                       	</div>  
                       	<div class=cuerdo_detalle_acta>
@@ -140,13 +140,13 @@
                       			Total horas
                       		</div>
                       		<div class="bdy_25_blanco">
-                      			<span th:text="${acta.total_horas + ' Hs'}"></span>
+                      			<span th:text="${#numbers.formatDecimal(acta.total_horas, 0, 'COMMA', 1, 'POINT') + ' Hs'}"></span>
                       		</div>
                       		<div class="bdy_25">
                       			Horas Gest. Demanda
                       		</div>
                       		<div class="bdy_25_blanco">
-                      			<span th:text="${acta.total_horas_concepto1 + ' Hs'}"></span>
+                      			<span th:text="${#numbers.formatDecimal(acta.total_horas_concepto1, 0, 'COMMA', 1, 'POINT') + ' Hs'}"></span>
                       		</div>
                       	</div> 
                       	<div class=cuerdo_detalle_acta>
@@ -154,13 +154,13 @@
                       			Monto neto
                       		</div>
                       		<div class="bdy_25_blanco">
-                      			<span th:text="${'S/ ' + acta.monto_neto}"></span>
+                      			<span th:text="${'S/ ' + #numbers.formatDecimal(acta.monto_neto, 0, 'COMMA', 2, 'POINT')}"></span>
                       		</div>
                       		<div class="bdy_25">
                       			Horas Gest. Config.
                       		</div>
                       		<div class="bdy_25_blanco">
-                      			<span th:text="${acta.total_horas_concepto2 + ' Hs'}"></span>
+                      			<span th:text="${#numbers.formatDecimal(acta.total_horas_concepto2, 0, 'COMMA', 1, 'POINT') + ' Hs'}"></span>
                       		</div>
                       	</div> 
                       </div>   
@@ -175,16 +175,16 @@
                       	</div>
                      <div class="acta_datos_titulo">Descripción de entregables realizados en el periodo</div>  
                      <div class="acta_tabla_jiras">
-                     	<table class="table table-striped table-hover">
+                     	<table class="table">
                      		<thead>
                      			<tr>	                      				
-                     				<th class="th_wdt_90px">Reuqerimiento</th>
+                     				<th class="th_wdt_90px">Jira</th>
                      				<th class="th_wdt_90px">Tipo Req.</th>
                      				<th>Descripción</th>
                      				<th class="th_wdt_50px">H/H</th>
                      				<th class="th_wdt_50px">G/D</th>
                      				<th class="th_wdt_50px">G/C</th>
-                     				<th class="th_wdt_50px">Tarifa</th>
+                     				<th class="th_wdt_90px">Tarifa</th>
                      				<th class="th_wdt_90px">Total sin IGV.</th>
                      			</tr>
                      		</thead>
@@ -193,11 +193,21 @@
                      				<td th:text="${detalle.jira.jira}"></td>
                      				<td th:text="${detalle.jira.tipo}"></td>
                      				<td th:text="${detalle.jira.descripcion}"></td>
-                     				<td th:text="${detalle.nro_horas_jira}"></td>
-                     				<td th:text="${detalle.nro_horas_concepto1}"></td>
-                     				<td th:text="${detalle.nro_horas_concepto2}"></td>
-                     				<td th:text="${'S/ ' +  detalle.tarifa}"></td>
-                     				<td th:text="${'S/ ' + detalle.costo_total}"></td>
+                     				<td class="alineacion_derecha" th:text="${#numbers.formatDecimal(detalle.nro_horas_jira, 0, 'COMMA', 1, 'POINT') + 'h'}"></td>
+                     				<td class="alineacion_derecha" th:text="${#numbers.formatDecimal(detalle.nro_horas_concepto1, 0, 'COMMA', 1, 'POINT') + 'h'}"></td>
+                     				<td class="alineacion_derecha" th:text="${#numbers.formatDecimal(detalle.nro_horas_concepto2, 0, 'COMMA', 1, 'POINT') + 'h'}"></td>
+                     				<td class="alineacion_derecha" th:text="${'S/ ' + #numbers.formatDecimal(detalle.tarifa, 0, 'COMMA', 2, 'POINT')}"></td>
+                     				<td class="alineacion_derecha" th:text="${'S/ ' + #numbers.formatDecimal(detalle.costo_total, 0, 'COMMA', 2, 'POINT')}"></td>
+                     			</tr>
+                     			<tr class="tr_totales">
+                     				<td></td>
+                     				<td></td>
+                     				<td>TOTAL</td>
+                     				<td class="alineacion_derecha" th:text="${#numbers.formatDecimal(acta.total_horas_desarrollo, 0, 'COMMA', 1, 'POINT') + 'h'}"></td>
+                     				<td class="alineacion_derecha" th:text="${#numbers.formatDecimal(acta.total_horas_concepto1, 0, 'COMMA', 1, 'POINT') + 'h'}"></td>
+                     				<td class="alineacion_derecha" th:text="${#numbers.formatDecimal(acta.total_horas_concepto2, 0, 'COMMA', 1, 'POINT') + 'h'}"></td>
+                     				<td></td>
+                     				<td class="alineacion_derecha" th:text="${'S/ ' + #numbers.formatDecimal(acta.monto_neto, 0, 'COMMA', 2, 'POINT')}"></td>
                      			</tr>
                      		</tbody>
                      	</table>

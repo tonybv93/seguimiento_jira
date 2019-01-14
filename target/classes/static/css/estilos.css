@@ -7,6 +7,10 @@
 	margin: 0;
 	padding: 0;
 }
+.spn_avance{
+	color: #2196f3;
+	font-weight: 400;
+}
 .icono_modal_bien{
 	font-size: 60px;
 	line-height: 60px;
@@ -40,9 +44,15 @@
 	margin: 1px;
 	font-size: 11px;
 	padding: 12px;
-	border: solid 1px #eee;
+	border: none;
+	background-color: rgba(9,45,66,.08);
 	border-radius: 3px;
+	color: #6b808c;
 	
+}
+.text_area_actadetalle:focus{
+	border: solid 2px #0080ff;
+	background-color: #fff;
 }
 .titulo_subsec{
 	width: 100%;
@@ -336,6 +346,9 @@
 .texto_derecha{
 	text-align: right;
 	float: right;
+}
+.alineacion_derecha{
+	text-align: right !important;
 }
 .div_derecha{
 	width: 100%;
@@ -840,4 +853,7 @@ textarea
 }
 .tr_totales td{
 	height: 20px;
+}
+.btn-icons span{
+	font-size: 18px;
 }

@@ -86,8 +86,7 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 	
 	
 	// ------------------------------- ACTA
-	@Query(value ="(SELECT prh.ID, prh.FECHA_REGISTRO, prh.FECHA_REAL_TRABAJO, prh.NRO_HORAS, prh.ID_ESTADO_REG_HORAS, prh.FLAGFACTURAR,  " +
-			" prh.ID_TIPO_ACTIVIDAD_PROV, prh.COMENTARIO, prh.ID_USUARIO, prh.ID_HJIRA, prh.FECHA_FACTURACION,prh.NRO_HORAS_GESTION "+
+	@Query(value ="(SELECT prh.*" +
 			" FROM BVLSEGDB.PROVEEDOR_REG_HORAS prh "+
 			" JOIN BVLSEGDB.USUARIO us ON prh.ID_USUARIO = us.ID "+
 			" JOIN BVLSEGDB.FABRICA fab ON us.ID_FABRICA = fab.ID"+
@@ -99,6 +98,6 @@ public interface IProveedorRegHorasRepository extends CrudRepository<Proveedor_R
 			" AND hj.id_empresa = ?5"+
 			" AND prh.flagfacturar = 1)"+			
 			" ORDER BY FECHA_REAL_TRABAJO",nativeQuery = true)
-	public List<Proveedor_Reg_Horas> listarDetalleActaCompleto( int fab, String fecha1, String fecha2, int indicador, int e);	
+	public List<Proveedor_Reg_Horas> listarDetalleActaCompleto( int id_fabrica, String fecha1, String fecha2, int id_indicador, int id_empresa);	
 	
 }

@@ -36,6 +36,7 @@ public class Proveedor_Reg_Horas {
 	private BigDecimal nro_horas;
 	private BigDecimal nro_horas_gestion;
 	private boolean flagfacturar;
+	private boolean flag_acta;	
 	private String comentario;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -55,6 +56,10 @@ public class Proveedor_Reg_Horas {
 	@JoinColumn(name="id_estado_reg_horas")
 	private Estado_Reg_Horas estado;
 	
+	@JsonIgnore
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_acta")
+	private Acta acta;
 	
 	public Date getFecha_facturacion() {
 		return fecha_facturacion;
@@ -62,6 +67,22 @@ public class Proveedor_Reg_Horas {
 
 	public void setFecha_facturacion(Date fecha_facturacion) {
 		this.fecha_facturacion = fecha_facturacion;
+	}
+	
+	public boolean isFlag_acta() {
+		return flag_acta;
+	}
+
+	public void setFlag_acta(boolean flag_acta) {
+		this.flag_acta = flag_acta;
+	}
+
+	public Acta getActa() {
+		return acta;
+	}
+
+	public void setActa(Acta acta) {
+		this.acta = acta;
 	}
 
 	public Integer getId() {

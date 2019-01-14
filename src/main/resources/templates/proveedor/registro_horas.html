@@ -107,7 +107,7 @@
 	                            </div>
 	                            <label class="col-sm-3 col-form-label texto_derecha">Nro Horas:</label>
 	                            <div class="col-sm-2">
-	                               <input onblur="clear_alert('alerta_horas',this)" type="number" class="form-control" id="nro_horas">
+	                               <input placeholder="##" min="0" onblur="clear_alert('alerta_horas',this)" type="number" class="form-control" id="nro_horas">
 	                               <span id="alerta_horas" class="alerta_forms"></span>
 	                            </div>
 	                          </div>
@@ -118,7 +118,7 @@
 	                          <div class="form-group row">
 	                            <label class="col-sm-3 col-form-label texto_derecha">Resumen:</label>
 	                            <div class="col-sm-9">
-	                               <textarea id="txa_comentario" class="form-control"></textarea>
+	                               <textarea placeholder="Describe los detalles..." id="txa_comentario" class="form-control"></textarea>
 	                            </div>	
 	                          </div>
 	                        </div>

@@ -1,7 +1,6 @@
 /*--------------------  BLOCK ----------------------------*/
 var barrita_xc = document.getElementById('barrita_porcentaje').innerHTML;
 var barrita_graf = document.getElementById('barrita_graf'); 
-console.log(barrita_xc);
 barrita_graf.style.width=barrita_xc;
 
 /*--------------------  MODAL ----------------------------*/
@@ -80,7 +79,6 @@ function cambiar_estado(id,id_nuevo_estado,index_fila){
 	        method : 'post',
 	      	data : data,
 	        success : function(respuesta){
-	        	console.log(respuesta);
 	        	location.reload();
 	        },
 	        error: function(error,sm1,sm2){
@@ -221,7 +219,6 @@ function cargarGraficoBarras(){
         method : 'post',
       	data : data,	 //La misma información del gráfico de barras
         success : function(rep){  
-        	console.log(rep);
         	var strfact;
         	var tabla = document.getElementById("detalle_registros");
         	limpiarTabla(tabla);

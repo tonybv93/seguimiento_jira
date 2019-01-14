@@ -1,0 +1,115 @@
+	<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GSO Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/vendors/iconfonts/puse-icons-feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.addons.css}">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" th:href="@{/css/shared/style.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{/css/demo_1/style.css}">
+    <!-- End Layout styles -->
+    <link rel="shortcut icon" th:href="@{/images/favicon.png}" /> </head>
+<body class="sidebar-toggle-display sidebar-hidden">
+	<div class="container-scroller">	
+	<nav th:replace="fragments/shared :: header"></nav>
+      <div class="container-fluid page-body-wrapper">
+      	<nav th:replace="fragments/shared :: sidebar"></nav>
+      	<div class="main-panel">
+          <div class="content-wrapper">
+<!-----------------------------------------------------------------------INICIO  ------------------------------------------------------->
+			<div class="card">
+				<div class="card-body">
+				<div class="row">
+					<div class="col-sm-12 col-md-12">
+						<h4>JIRAS ASIGNADOS</h4>	
+					</div> 				
+				</div>		
+				<div class="contenedor_tabla">
+					<table  id="order-listing" class="table table-striped table-hover">	
+						<thead>
+					  		<tr>	
+					  			<th>Etiqueta</th>	
+					  			<th>Jira</th>					  			
+					  			<th>Indicador</th>
+					  			<th>Área</th>					  			
+					  			<th>Descripcón</th>	
+					  			<th>Estado</th>
+					  			<th>Asignado a</th>	
+								<th>Responsable</th>
+					  			<th>Avance</th>
+					  			<th>Fecha entrega</th>											
+								<th></th>						
+					  		</tr>					  		
+					  	</thead>				
+					  	<tbody>
+					  		<tr th:each="jira:${lstJiras}">					  			
+					  			<td  th:class="${jira.etiqueta != null ? jira.etiqueta.css_class : ''}" th:text="${jira.etiqueta != null ? jira.etiqueta.nombre : 'ND'}"> </td>
+					  			<td><a th:href="'https://jira.cavali.com.pe:8443/browse/' +${jira.jira}" target=”_blank” th:text="${jira.jira}"></a></td>					  						  			
+					  			<td><span th:if="${jira.indicador!=null}" th:class="${jira.indicador.css_class}"><i th:class="${jira.indicador.icon_ind_contable}"></i></span></td>
+					  			<td>
+					  				<span th:text="${jira.empresa != null} ? ${jira.empresa.nombre} : ''"></span>
+					  				<span th:text="${jira.areaSolicitante != null} ? ' - ' + ${jira.areaSolicitante.nombre} : ''"></span>
+					  			</td>	
+					  			<td th:text="${jira.descripcion}"></td>	 
+					  			<td class="centrado"><span th:if="${jira.estado != null && jira.estado.grupoEstado != null}" th:class="${jira.estado.grupoEstado.css_class}" th:text="${jira.estado.grupoEstado.grupoEstado}"></span></td> 	
+					  			<td th:text="${jira.asignado}"></td> 	
+					  			<td th:text="${jira.responsable}"></td>	
+					  			<td>
+					  				<span class="spn_avance" th:text="${jira.horas_desarrollo != 0 && jira.consumido_desarrollo != 0  ? (jira.consumido_desarrollo/jira.horas_desarrollo)*100 + '%' : 'NA'}"></span>
+					  			</td>
+					  			<td>
+					  				<input onclick="val_act(this)" onblur="val_new(this)" th:value="${#dates.format(jira.fecha_entrega, 'dd-MM-yyyy')}" type="text" th:class="${jira.fecha_entrega != null ? 'input_fecha_azul' : 'input_sinfecha'}	" placeholder="dd-mm-yyyy" autocomplete="off">
+					  			</td>					  								  								  			
+								<td>
+									<div class="d-flex">
+										<button onclick="guardar_fecha(this)" title="Guardar" class="btn btn-icons btn-rounded btn-outline-success">
+						                	<i class="mdi mdi-content-save"></i>
+						                </button>									
+									</div>																	
+								</td>						
+					  		</tr>
+					  	</tbody>
+				  	</table>				  	
+			  	</div>			  	
+		  	</div>
+<!----------------------------------------------------------------------- 	FIN	 ------------------------------------------------------->
+          </div>      
+        </div>
+      </div>
+   	</div>
+   	</div>
+<!----------------------------------------------------------------------- 	MODALES	 ------------------------------------------------------->
+
+<!------------------------------------------------------------------------------------------------------------>
+<!---------------------------------              SCRIPS                      --------------------------------->
+<!------------------------------------------------------------------------------------------------------------>
+    <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{/vendors/js/vendor.bundle.addons.js}"></script>
+    <script th:src="@{/js/shared/off-canvas.js}"></script>
+    <script th:src="@{/js/shared/hoverable-collapse.js}"></script>
+    <script th:src="@{/js/shared/misc.js}"></script>
+    <script th:src="@{/js/shared/settings.js}"></script>
+    <script th:src="@{/js/shared/todolist.js}"></script>    
+    <script th:src="@{/js/prov_fechas.js}"></script>   
+    <script th:src="@{/js/menus.js}"></script>    
+    <script type="text/javascript">
+    	cargar_menus();
+	</script>
+	<!-- DATTABL --->	<script th:src="@{/js/dtable/jquery.dataTables.js}"></script>
+  	<!-- DATTABL --->	<script th:src="@{/js/dtable/dataTables.bootstrap4.js}"></script>
+  	<!-- DATTABL --->	<script th:src="@{/js/dtable/data-table.js}"></script>
+    
+</body>
+</html>

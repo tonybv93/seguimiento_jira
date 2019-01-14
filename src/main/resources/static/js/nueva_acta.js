@@ -18,8 +18,7 @@ function enviar_acta(){
 		objjson.numero4 = document.getElementById("acta_fabrica_id").value;	//FABRICA ID	
 		objjson.numero5 = document.getElementById("inp_dem").value;			//GEST. DEMANDA (hs)
 		objjson.numero6 = document.getElementById("inp_conf").value;		//GEST. CONFIG (hs)
-		objjson.numero7 = document.getElementById("inp_tarifa").value;		//TARIFA (S/)
-		
+		objjson.numero7 = document.getElementById("inp_tarifa").value;		//TARIFA (S/)		
 		//Lista de Jiras
 		var tabla = document.getElementById("cuerpo_tabla");
 		detalle_jiras = [];
@@ -141,12 +140,14 @@ function recalcular_fila(input_tarifa){
 	for (var i = 0; i < tabla_body.rows.length - 1; i++) {
 		total_tarifas = total_tarifas + (tabla_body.rows[i].children[8].firstChild.value*1)*(tabla_body.rows[i].children[7].innerHTML*1);
 		j = i;
-	}
-	
+	}	
 	var tarifa_final = total_tarifas/(tabla_body.rows[j+1].children[7].innerHTML*1);
 	tabla_body.rows[j+1].children[8].innerHTML = tarifa_final.toFixed(2);
 	var total_importe = (tarifa_final*(tabla_body.rows[j+1].children[7].innerHTML*1)).toFixed(2);
 	tabla_body.rows[j+1].children[9].innerHTML = 'S/ ' + total_importe;
+	// MOSTAR CAMBIOS EN EL TOTAL GENERAL
+	document.getElementById("resumen_total_monto").innerHTML ='S/ ' + total_importe;
+	document.getElementById("resumen_tarifa").innerHTML = 'S/ ' + tarifa_final.toFixed(2) ;
 }
 function cambiovalor(){
 	document.getElementById("btns_enviar_acta").style.display = "none";
@@ -154,15 +155,14 @@ function cambiovalor(){
 // ------------------ BUSCAR JIRAS PRE PARA EL DETALLE
 function buscarJiras(){	
 	//Reiniciando el lienzo
+	document.getElementById('id_mensaje_cc').classList.add('dis_hiden');
 	calculado = false;
 	document.getElementById("resumen_total_horas").innerHTML = '0';
 	document.getElementById("resumen_total_monto").innerHTML ='S/ 0.00';
-	document.getElementById("resumen_tarifa").innerHTML = 'S/ 0.00';
-	
+	document.getElementById("resumen_tarifa").innerHTML = 'S/ 0.00';	
 	document.getElementById("inp_dem").value = '';
 	document.getElementById("inp_conf").value ='';
-	document.getElementById("inp_tarifa").value = '';
-	
+	document.getElementById("inp_tarifa").value = '';	
 	document.getElementById("btns_enviar_acta").style.display = "none";
 	//Funcion calcular
 	var mensaje =  document.getElementById("mensaje_resultado");
@@ -179,39 +179,42 @@ function buscarJiras(){
 	        method : 'post',
 	      	data : data,
 	        success : function(respuesta){	
+	        	console.log(respuesta);
 	        	if (respuesta.length != 0){	        		
 	        		limpiarTablaBusqueda();	
-	        		mensaje.innerHTML='';
+	        		mensaje.innerHTML='';	        		
 		        	for (var i = 0; i < respuesta.length; i++) {
 		        		var tr = document.createElement('tr');
-		        		tr.appendChild(crearTD(respuesta[i].jira));
-			        	tr.appendChild(crearTD(respuesta[i].resumen.substring(0,40)+'...'));
-			        	tr.appendChild(crearTD(respuesta[i].tipoJira));
-			        	var c_c;
-			        	if (respuesta[i].centrocosto == '' || respuesta[i].centrocosto == null){
-			        		c_c = 'No definido.';
-			        		document.getElementById('id_mensaje_cc').classList.remove('dis_hiden');
+		        		var c_c;
+		        		tr.appendChild(crearTD(respuesta[i].hjira.jira));
+			        	tr.appendChild(crearTD(respuesta[i].hjira.descripcion.substring(0,30)+'...'));
+			        	tr.appendChild(crearTD(respuesta[i].hjira.indicador.indicador));			        	
+			        	
+			        	if (respuesta[i].hjira.centro_costo == null){
+			        		c_c = 'No definido.';			        		
 			        		todos_cc = false;
 			        	}else{
-			        		c_c = respuesta[i].centrocosto;
+			        		c_c = respuesta[i].hjira.centro_costo.codigo;			        		
 			        	}
 			        	tr.appendChild(crearTD(c_c));
 			        	tr.appendChild(crearTD(respuesta[i].totalHoras));
 			        	tr.appendChild(crearTD(respuesta[i].totalHorasGesDem));
 			        	tr.appendChild(crearTD("0"));
-			        	tr.appendChild(crearTD("0"));
-			        	
+			        	tr.appendChild(crearTD("0"));			        	
 			        	tr.appendChild(crearInput());
 			        	tr.appendChild(crearTD("0"));	
 			        	cuerpo_tabla.appendChild(tr);				        	
-			        	//Mostrar calculador si es que todos los Jiras tiene Centro de Costo
 			        	
-
-
-			        	if (todos_cc){
-				        	var calculador = document.getElementById('calculador');
+			        	todos_cc = true;
+			        	
+			        	//Mostrar calculador si es que todos los Jiras tiene Centro de Costo
+			        	var calculador = document.getElementById('calculador');
+			        	if (todos_cc){				        	
 				        	calculador.style.display = "flex";
-			        	}
+			        	}else{
+			        		calculador.style.display = "none";
+			        		document.getElementById('id_mensaje_cc').classList.remove('dis_hiden');
+			        	}			        	
 					}
 	        	}else{
 	        		limpiarTablaBusqueda();	
@@ -270,8 +273,7 @@ function crearSelector(valor){
 	td.appendChild(div);
 	return td;
 }
-function limpiarTablaBusqueda(){
-	
+function limpiarTablaBusqueda(){	
 	a = document.getElementById("cuerpo_tabla");
 	while(a.hasChildNodes())
 		a.removeChild(a.firstChild);
