@@ -1,4 +1,47 @@
 @charset "ISO-8859-1";
+/* -------------- FECHAS JIRA ----------------  */
+.boton_guardar_tabla{
+	border: none;
+	color: #fff;
+	background-color: #19d895;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	font-size: 14px;
+	line-height: px;
+	transition: 0.5s;
+	width: 25px;
+}
+.boton_guardar_tabla:hover{
+	background-color: #094f88;
+	cursor: pointer;
+}
+.boton_guardar_tabla_off{
+	border: none;
+	color: #fff;
+	background-color: #d7d9db;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	font-size: 14px;
+	line-height: px;
+	transition: 0.5s;
+	width: 25px;
+}
+
+.d_felx{
+	display: flex;
+}
+.guardar_tabla_div{
+	border: solid #c0c0c0 1px;
+	border-radius: 5px;
+	width: 127px;
+	margin: auto;
+}
+.input_fecha_tabla{
+	border: none;
+	width: 100px;
+	padding:6px;
+	border-radius: 5px;
+}
 /* -------------- acta ----------------  */
 .icono_modal_alerta{
 	font-size: 60px;

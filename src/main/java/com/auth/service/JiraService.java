@@ -66,6 +66,105 @@ public class JiraService implements IJiraService {
 	public Jira buscarPorId(Integer id) {
 		return jiraRepo.findById(id).orElse(null);
 	}
+		
+	@Override
+	public HJira buscarHXJiraXFab(String jira, String fabrica) {
+		//PRIMERO: Verificar si existe en la base de datos
+		String buscar_fabrica = ""; 
+		if (fabrica.equals("PANDORA")) {
+			buscar_fabrica = "";
+		}else {
+			buscar_fabrica = "+and+fabrica=" + fabrica;
+		}
+		List<JsoJira> respuestaAPI = apiJira.busquedaJQL("key="+jira+"+and+issuetype+in+standardIssueTypes()"+buscar_fabrica+"&fields=key,summary,issuetype,customfield_14851,customfield_14850,customfield_11483,customfield_11640,status,labels,customfield_10800,customfield_11236,assignee,reporter,customfield_11016"); // Se consult al api
+		JsoJira jsonJira = respuestaAPI.get(0);	// JIRA JSON
+		if (respuestaAPI != null && respuestaAPI.size() == 1) {
+			HJira hxj = hJiraRepo.findByJira(jira);
+			jsonJira = reconocerHijosUnJira(jsonJira);
+			jsonJira = cambiaEstado(jsonJira);
+			if (hxj == null) {
+				//SI ES NUEVO, SE CREA EL REGISTRO
+				jsonJira = actualizarTipo(jsonJira);			//tipo
+				jsonJira = indicadorContableSCP(jsonJira);		//IC (En caso SCP)
+				jsonJira = cambiarAreaSolicitante(jsonJira);	//Area Solicitante	
+				hxj = new HJira();						
+				hxj.setConsumido_desarrollo(BigDecimal.ZERO);
+				hxj.setConsumido_prueba(BigDecimal.ZERO);
+				hxj.setReserva_desarrollo(BigDecimal.ZERO);	
+				// JIRA
+				hxj.setJira(jsonJira.getKey());
+				// RESUMEN
+				hxj.setDescripcion(jsonJira.getFields().getSummary());
+				// INFORMADOR
+				if (jsonJira.getFields().getReporter() != null) {
+					hxj.setInformador(jsonJira.getFields().getReporter().getDisplayName());	
+				}
+				// FÁBRICA 	
+				if (jsonJira.getFields().getCustomfield_11016() != null) {
+					Fabrica f = fabricaExisteOnuevo(jsonJira.getFields().getCustomfield_11016().getValue());				
+					hxj.setFabrica(f);				
+				}
+				// AREA SOLICITANTE
+				if (noEsNuloOVacio(jsonJira.getFields().getCustomfield_10800() )) {
+					Area_Solicitante area = areaExisteOnuevo(jsonJira.getFields().getCustomfield_10800().getValue());
+					hxj.setAreaSolicitante(area);
+				}
+				// EMPRESA
+				if (noEsNuloOVacio(jsonJira.getFields().getEmpresa() )) {
+					Empresa empresa = empresaExisteOnuevo(jsonJira.getFields().getEmpresa());
+					hxj.setEmpresa(empresa);
+				}
+				// TIPO DE REQUERIMIENTO
+				if (noEsNuloOVacio(jsonJira.getFields().getIssuetype())) {
+					hxj.setTipo(jsonJira.getFields().getIssuetype().getName());
+				}
+			}else {				
+				//SI NO ES NUEVO, SE ACTUALZIA LA INFORMACIÓN IMPORTANTE
+				// ASIGNADO
+				if (jsonJira.getFields().getAssignee() != null) {
+					hxj.setAsignado(jsonJira.getFields().getAssignee().getDisplayName());
+				}
+				// RESPONSABLE
+				if (jsonJira.getFields().getCustomfield_11236() != null) {
+					hxj.setResponsable(jsonJira.getFields().getCustomfield_11236().getDisplayName());
+				}
+				// HORAS  CERT Y DESA
+				hxj.setHoras_desarrollo(BigDecimal.valueOf(jsonJira.getFields().getCustomfield_14850()));
+				hxj.setHoras_prueba(BigDecimal.valueOf(jsonJira.getFields().getCustomfield_14851()));			
+				if (!noEsNuloOVacio(hxj.getHoras_prueba()) || !noEsNuloOVacio(hxj.getHoras_desarrollo())) {
+					BigDecimal horaCert = BigDecimal.ZERO;
+					BigDecimal horasDes= BigDecimal.ZERO;
+					List<JsoJira> subTareas = jsonJira.getFields().getSubTareas();						
+					for (JsoJira jhijo: subTareas) {
+						horaCert = horaCert.add(BigDecimal.valueOf(jhijo.getFields().getCustomfield_14851()));
+						horasDes = horasDes.add(BigDecimal.valueOf(jhijo.getFields().getCustomfield_14850()));
+					}
+					if (hxj.getHoras_prueba().compareTo(BigDecimal.ZERO) == 0)
+						hxj.setHoras_prueba(horaCert);				
+					if (hxj.getHoras_desarrollo().compareTo(BigDecimal.ZERO) == 0)
+						hxj.setHoras_desarrollo(horasDes);				
+				}
+				// ETIQUETAS
+				Etiqueta etiqueta = etiquetaExisteOnuevo(jsonJira.getFields().getEtiqueta());
+				hxj.setEtiqueta(etiqueta);
+				// INDICADOR CONTABLE
+				if (noEsNuloOVacio(jsonJira.getFields().getCustomfield_11483())) {
+					Indicador_Contable indicador =   indicadorExisteOnuevo(jsonJira.getFields().getCustomfield_11483().getValue());
+					hxj.setIndicador(indicador);
+				}
+				// CENTRO DE COSTO
+				// ESTADO JIRA
+				if (noEsNuloOVacio(jsonJira.getFields().getNuevoEstado())) {
+					Estado_Jira estado = estadoExistenteOnuevo(jsonJira.getFields().getNuevoEstado());
+					hxj.setEstado(estado);	
+				}		
+			}
+			hxj = hJiraRepo.save(hxj);			
+			return hxj;			
+		}else {
+			return null;
+		}
+	}
 
 	@Override
 	public Jira guardar(Jira j) {
@@ -162,14 +261,17 @@ public class JiraService implements IJiraService {
 			// RESUMEN
 			bdJira.setResumen(jsonJira.getFields().getSummary());
 			// INFORMADOR
-			if (jsonJira.getFields().getReporter() != null)
-				bdJira.setInformador(jsonJira.getFields().getReporter().getDisplayName());						
+			if (jsonJira.getFields().getReporter() != null) {
+				bdJira.setInformador(jsonJira.getFields().getReporter().getDisplayName());	
+			}
 			// ASIGNADO
-			if (jsonJira.getFields().getAssignee() != null)
-				bdJira.setAsignado(jsonJira.getFields().getAssignee().getDisplayName());						
+			if (jsonJira.getFields().getAssignee() != null) {
+				bdJira.setAsignado(jsonJira.getFields().getAssignee().getDisplayName());
+			}
 			// RESPONSABLE
-			if (jsonJira.getFields().getCustomfield_11236() != null)
+			if (jsonJira.getFields().getCustomfield_11236() != null) {
 				bdJira.setResponsable(jsonJira.getFields().getCustomfield_11236().getDisplayName());
+			}
 			// HORAS  CERT Y DESA
 			bdJira.setHoras_des(BigDecimal.valueOf(jsonJira.getFields().getCustomfield_14850()));
 			bdJira.setHoras_cert(BigDecimal.valueOf(jsonJira.getFields().getCustomfield_14851()));			
@@ -192,18 +294,18 @@ public class JiraService implements IJiraService {
 				bdJira.setFabrica(fabrica);				
 			}
 				
-			if (bdJira.getHoras_des().compareTo(BigDecimal.ZERO) != 0 && bdJira.getFabrica() != null )
+			if (bdJira.getHoras_des().compareTo(BigDecimal.ZERO) != 0 && bdJira.getFabrica() != null ) {
 				bdJira.setMonto_des(bdJira.getHoras_des().multiply(BigDecimal.valueOf(bdJira.getFabrica().getTarifa())));
-			else 
+			}else {
 				bdJira.setMonto_des(BigDecimal.ZERO);
-			
+			}
 			Fabrica fab = fabricaRepo.findById(22).orElse(null);
 			
-			if (bdJira.getHoras_cert().compareTo(BigDecimal.ZERO) != 0)
+			if (bdJira.getHoras_cert().compareTo(BigDecimal.ZERO) != 0) {
 				bdJira.setMonto_cert(bdJira.getHoras_cert().multiply(BigDecimal.valueOf(fab.getTarifa())));
-			else
+			}else {
 				bdJira.setMonto_cert(BigDecimal.ZERO);
-			
+			}
 			bdJira.setMonto_total(bdJira.getMonto_cert().add(bdJira.getMonto_des()));
 			
 			// FECHAS*/
@@ -214,8 +316,7 @@ public class JiraService implements IJiraService {
 			if (detalle_jira != null) {
 				bdJira.setFecha_pruebas(detalle_jira.getFecha_pr_usuario());
 				bdJira.setFecha_produccion(detalle_jira.getFecha_produccion());
-			}
-			
+			}			
 			// ETIQUETAS
 			Etiqueta etiqueta = etiquetaExisteOnuevo(jsonJira.getFields().getEtiqueta());
 			bdJira.setEtiqueta(etiqueta);
@@ -257,6 +358,7 @@ public class JiraService implements IJiraService {
 				hxj = new HJira();
 				hxj.setConsumido_desarrollo(BigDecimal.ZERO);
 				hxj.setConsumido_prueba(BigDecimal.ZERO);
+				hxj.setReserva_desarrollo(BigDecimal.ZERO);
 			}
 			hxj.setJira(bdJira.getJira());
 			hxj.setDescripcion(bdJira.getResumen());
@@ -278,7 +380,6 @@ public class JiraService implements IJiraService {
 			id++;
 		}
 	}
-
 	// PROCEDIMIENTOS COMPLEMENTARIOS
 
 	// CONSUME SERVICIO REST DE JIRA Y ACTUALIZA LOS CAMPOS
@@ -325,6 +426,18 @@ public class JiraService implements IJiraService {
 			}
 		}
 		return jiras;
+	}
+	private JsoJira reconocerHijosUnJira(JsoJira jira) {		
+		//Se crea el texto para consultar al API y se realiza la consulta
+		//Primeros 1000 resupuestas
+		String filtro = "parent+in+(" + jira.getKey() + ")+and+status+not+in+(Anulado,Creado,\"No+Aplica\",Pendiente,Cancelado,Resuelto)+and+issuetype+not+in+(\"Funcionalidad+Adjunta\")&maxResults=1000&fields=key,issuetype,parent,status,assignee,updated,customfield_14851,customfield_14850";		
+		//De 1000 a 2000 ...
+		String filtro2 = filtro + "&startAt=1000";		
+		List<JsoJira> lstSubTareas = apiJira.busquedaJQL(filtro);				
+		lstSubTareas.addAll(apiJira.busquedaJQL(filtro2));		
+		//Se asignan todas las sub tareas a los padres
+		jira.getFields().setSubTareas(lstSubTareas);
+		return jira;
 	}
 	//Elegir una etiqueta de la lista
 	private JsoJira actualizarTipo(JsoJira j) {
@@ -718,7 +831,15 @@ public class JiraService implements IJiraService {
 	}
 
 	@Override
-	public List<HJira> buscarHjiraPorFabrica(Fabrica f) {		
-		return hJiraRepo.findAllByFabrica(f);
+	public List<HJira> buscarHjiraPorFabrica(Fabrica f) {	
+		List<HJira> lista = new ArrayList<>();
+		if (f.getId() != 22) {	// 22: pandora
+			lista = hJiraRepo.findAllByFabrica(f);
+		}else {
+			lista = (List<HJira>) hJiraRepo.findAll();
+		}	
+		lista = lista.stream().filter(e -> e.getEstado() 	!= null).collect(Collectors.toList());
+		lista = lista.stream().filter(e -> e.getEstado().getGrupoEstado().getOrden() < 7).collect(Collectors.toList());
+		return lista;
 	}
 }

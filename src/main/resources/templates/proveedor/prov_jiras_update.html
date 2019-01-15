@@ -47,14 +47,13 @@
 					  			<th>Descripcón</th>	
 					  			<th>Estado</th>
 					  			<th>Asignado a</th>	
-								<th>Responsable</th>
-					  			<th>Avance</th>
-					  			<th>Fecha entrega</th>											
-								<th></th>						
+								<th>Responsable</th>					  			
+					  			<th th:if="${flag_pandora == 1}">Fecha entrega Des</th>		
+					  			<th>Fecha entrega</th>						  																
 					  		</tr>					  		
 					  	</thead>				
 					  	<tbody>
-					  		<tr th:each="jira:${lstJiras}">					  			
+					  		<tr th:each="jira:${lstJiras}">
 					  			<td  th:class="${jira.etiqueta != null ? jira.etiqueta.css_class : ''}" th:text="${jira.etiqueta != null ? jira.etiqueta.nombre : 'ND'}"> </td>
 					  			<td><a th:href="'https://jira.cavali.com.pe:8443/browse/' +${jira.jira}" target=”_blank” th:text="${jira.jira}"></a></td>					  						  			
 					  			<td><span th:if="${jira.indicador!=null}" th:class="${jira.indicador.css_class}"><i th:class="${jira.indicador.icon_ind_contable}"></i></span></td>
@@ -65,20 +64,19 @@
 					  			<td th:text="${jira.descripcion}"></td>	 
 					  			<td class="centrado"><span th:if="${jira.estado != null && jira.estado.grupoEstado != null}" th:class="${jira.estado.grupoEstado.css_class}" th:text="${jira.estado.grupoEstado.grupoEstado}"></span></td> 	
 					  			<td th:text="${jira.asignado}"></td> 	
-					  			<td th:text="${jira.responsable}"></td>	
+					  			<td th:text="${jira.responsable}"></td>
+					  			<td th:if="${flag_pandora == 1}">
+					  				<span th:text="${#dates.format(jira.fecha_entrega_desarrollo, 'dd-MM-yyyy')}"></span>
+					  			</td>	
 					  			<td>
-					  				<span class="spn_avance" th:text="${jira.horas_desarrollo != 0 && jira.consumido_desarrollo != 0  ? (jira.consumido_desarrollo/jira.horas_desarrollo)*100 + '%' : 'NA'}"></span>
-					  			</td>
-					  			<td>
-					  				<input onclick="val_act(this)" onblur="val_new(this)" th:value="${#dates.format(jira.fecha_entrega, 'dd-MM-yyyy')}" type="text" th:class="${jira.fecha_entrega != null ? 'input_fecha_azul' : 'input_sinfecha'}	" placeholder="dd-mm-yyyy" autocomplete="off">
-					  			</td>					  								  								  			
-								<td>
-									<div class="d-flex">
-										<button onclick="guardar_fecha(this)" title="Guardar" class="btn btn-icons btn-rounded btn-outline-success">
-						                	<i class="mdi mdi-content-save"></i>
-						                </button>									
-									</div>																	
-								</td>						
+						  			<div class="d_felx guardar_tabla_div">
+						  				<input onchange="val_new(this)" th:value="${flag_pandora == 1 ? #dates.format(jira.fecha_entrega_certificacion, 'dd-MM-yyyy') : #dates.format(jira.fecha_entrega_desarrollo, 'dd-MM-yyyy')}" type="text" class="input_fecha_tabla" placeholder="dd-mm-yyyy" autocomplete="off">
+						  				<button class="boton_guardar_tabla_off">
+						                	<i class="mdi mdi-check"></i>
+						                </button>	
+						  			</div>
+					  			</td>					  				
+										
 					  		</tr>
 					  	</tbody>
 				  	</table>				  	
@@ -104,12 +102,12 @@
     <script th:src="@{/js/shared/todolist.js}"></script>    
     <script th:src="@{/js/prov_fechas.js}"></script>   
     <script th:src="@{/js/menus.js}"></script>    
-    <script type="text/javascript">
-    	cargar_menus();
-	</script>
+    
 	<!-- DATTABL --->	<script th:src="@{/js/dtable/jquery.dataTables.js}"></script>
   	<!-- DATTABL --->	<script th:src="@{/js/dtable/dataTables.bootstrap4.js}"></script>
   	<!-- DATTABL --->	<script th:src="@{/js/dtable/data-table.js}"></script>
-    
+    <script type="text/javascript">
+    	cargar_menus();
+	</script>
 </body>
 </html>

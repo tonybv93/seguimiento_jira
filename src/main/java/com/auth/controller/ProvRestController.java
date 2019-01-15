@@ -168,9 +168,9 @@ public class ProvRestController {
 		@ResponseBody
 		public HJira buscarHXJiraXFab(@PathVariable(name="jira") String jira){
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
-			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());
+			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());			
 			String fabrica = usuario.getFabrica().getNombre(); 
-			return registroService.buscarHXJiraXFab(jira,fabrica);
+			return jiraService.buscarHXJiraXFab(jira,fabrica);
 		}
 		
 		//BUSCAR JIRAS PARA ACTA
@@ -192,7 +192,14 @@ public class ProvRestController {
 			return registroService.listarRegistrosAprobadosPorDesarrollador(u);
 		}
 		
-		
+		// -------------------------------------------------- GRÁFICAS DE HORAS ----------------------------
+		@PostMapping("/jiras/fechas")
+		@ResponseBody
+		public String fechaJirasProveedor(@RequestBody RespGenerica respuesta){
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+			Usuario usuario = usuarioService.buscarPorUsername(auth.getName());
+			return registroService.actualizarFechaEntrega(usuario, respuesta);
+		}
 
 
 }

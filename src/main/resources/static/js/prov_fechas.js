@@ -1,5 +1,38 @@
 var valor_actual="";
 var valor_nuevo="";
+
+	// GUARDAR
+ function guardar_fecha(btn){
+	 var jira = btn.parentNode.parentNode.parentNode.children[1].children[0].innerHTML;
+	 var inp_fecha = btn.parentNode.parentNode.parentNode.children[9].children[0];
+	 var brn_guardar = btn.parentNode.parentNode.parentNode.children[10].children[0].children[0];
+	 var fecha = inp_fecha.value;
+	 var objeto = {};
+	 objeto.texto2 = jira;
+	 objeto.texto1 = fecha;	 
+	 data = JSON.stringify(objeto);
+	 $.ajax({
+	        url : '/provrest/jiras/fechas',  	        
+	        contentType:'application/json',
+	        method : 'post',
+	      	data : data,
+	        success : function(respuesta){
+	        	inp_fecha.style="";
+	        	if (fecha == '' || fecha == null){
+	        		inp_fecha.setAttribute('class','input_sinfecha');
+	        	}else{
+	        		inp_fecha.setAttribute('class','input_fecha_azul');
+	        	}	        	
+	        	brn_guardar.classList.add('btn-outline-light');
+        		brn_guardar.classList.remove('btn-outline-success');
+	        },
+	        error: function(error,sm1,sm2){
+	        	alert("Se prodjo un error");
+	        	console.log(sm2);
+	            alert(sm1);
+	        }  	        
+	    });
+ }
     // validación
     function validar_fecha(txt){
     	var error = "";    	
@@ -32,11 +65,8 @@ var valor_nuevo="";
     	} 	    	  		
     	return error;
     }    
-    // on click
-    function val_act(inp){
-    	valor_actual = inp.value;
-    }    
-    // on blur
+  
+    // on change
     function val_new(inp){
     	var txt_corregido="";
     	var valor_nuevo = inp.value;     	
@@ -58,13 +88,15 @@ var valor_nuevo="";
         	}    		
     		inp.value = txt_corregido;
     		console.log(txt_corregido, "=",valor_actual);
+    		
     		// CAMBIAR COLOR DE LETRA SI SE AGREGÓ NUEVO CONTENIDO    		
-    		if ((valor_actual === txt_corregido)){
-        	}else{
-        		inp.style.backgroundColor = "transparent";
-        		inp.style.border = "solid 1px #ff9900";
-        		inp.style.color = "#ff9900";
-        	}    		
+    		
+    		var brn_guardar = inp.parentNode.children[1];
+    		var div_guardar = inp.parentNode;
+    		brn_guardar.classList.remove('boton_guardar_tabla_off');
+    		brn_guardar.classList.add('boton_guardar_tabla');
+    		brn_guardar.setAttribute('onclick','guardar_fecha(this)');
+        	   		
     	}
     	valor_actual ="";
     }

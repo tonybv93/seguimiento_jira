@@ -38,7 +38,10 @@ public class HJira {
 	private BigDecimal consumido_prueba;
 	private BigDecimal consumido_desarrollo;
 	private BigDecimal reserva_desarrollo;
-	private Date fecha_entrega;
+	private Date fecha_entrega_desarrollo;
+	private Date fecha_entrega_certificacion;
+	private Date fecha_pruebas_usuario;
+	private Date fecha_pase_produccion;
 	
 	@JsonIgnore
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -112,12 +115,30 @@ public class HJira {
 	}
 	public void setEstado(Estado_Jira estado) {
 		this.estado = estado;
+	}	
+	public Date getFecha_entrega_desarrollo() {
+		return fecha_entrega_desarrollo;
 	}
-	public Date getFecha_entrega() {
-		return fecha_entrega;
+	public void setFecha_entrega_desarrollo(Date fecha_entrega_desarrollo) {
+		this.fecha_entrega_desarrollo = fecha_entrega_desarrollo;
 	}
-	public void setFecha_entrega(Date fecha_entrega) {
-		this.fecha_entrega = fecha_entrega;
+	public Date getFecha_entrega_certificacion() {
+		return fecha_entrega_certificacion;
+	}
+	public void setFecha_entrega_certificacion(Date fecha_entrega_certificacion) {
+		this.fecha_entrega_certificacion = fecha_entrega_certificacion;
+	}
+	public Date getFecha_pruebas_usuario() {
+		return fecha_pruebas_usuario;
+	}
+	public void setFecha_pruebas_usuario(Date fecha_pruebas_usuario) {
+		this.fecha_pruebas_usuario = fecha_pruebas_usuario;
+	}
+	public Date getFecha_pase_produccion() {
+		return fecha_pase_produccion;
+	}
+	public void setFecha_pase_produccion(Date fecha_pase_produccion) {
+		this.fecha_pase_produccion = fecha_pase_produccion;
 	}
 	public BigDecimal getReserva_desarrollo() {
 		return reserva_desarrollo;

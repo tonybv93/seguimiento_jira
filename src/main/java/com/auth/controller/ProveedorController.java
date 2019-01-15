@@ -143,10 +143,14 @@ public class ProveedorController {
 	public String  fechasCavali(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 		Usuario usuario = usuarioService.buscarPorUsername(auth.getName());	
-		System.out.println(">>>>>>>>>" + usuario.getFabrica().getId());
 		List<HJira> lstJiras = jiraService.buscarHjiraPorFabrica(usuario.getFabrica());
-		System.out.println(">>>>>>>>>" + lstJiras.size());
-		
+		int fla_fab = 0;
+		if (usuario.getFabrica().getId() == 22) {//22 = pandora
+			fla_fab = 1;
+		}else {
+			fla_fab = -1;
+		}		
+		model.addAttribute("flag_pandora",fla_fab);
 		model.addAttribute("lstJiras",lstJiras);
 		return "proveedor/prov_jiras_update";
 	}

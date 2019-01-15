@@ -11,6 +11,14 @@ public class Grupo_Estado {
 	private int id;
 	private String grupoEstado;
 	private String css_class;
+	private int orden;
+	
+	public int getOrden() {
+		return orden;
+	}
+	public void setOrden(int orden) {
+		this.orden = orden;
+	}
 	public int getId() {
 		return id;
 	}

@@ -14,13 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.auth.auxiliar.HorasPorSemana;
-import com.auth.entity.Empresa;
 import com.auth.entity.Estado_Reg_Horas;
-import com.auth.entity.Fabrica;
 import com.auth.entity.HJira;
 import com.auth.entity.Horas_Gestion_Demanda;
-import com.auth.entity.Indicador_Contable;
-import com.auth.entity.JsoJira;
 import com.auth.entity.Periodo;
 import com.auth.entity.Proveedor_Reg_Horas;
 import com.auth.entity.Tipo_Actividad_Proveedor;
@@ -36,7 +32,6 @@ import com.auth.repository.IPeriodoRepository;
 import com.auth.repository.IProveedorRegHorasRepository;
 import com.auth.repository.ITipoActividadProveedor;
 import com.auth.repository.IUsuarioRepository;
-import com.auth.repository.JiraApiRepository;
 import com.auth.rest.RespGenerica;
 
 @Service
@@ -52,9 +47,7 @@ public class RegistroHorasService implements IRegistroHorasService {
 	@Autowired
 	IEstadoRegHorasRepository estadoRepo;
 	@Autowired
-	IHJiraRepository hxjRepo;
-	@Autowired
-	JiraApiRepository jiraResRepo;
+	IHJiraRepository hxjRepo;	
 	@Autowired
 	ITipoActividadProveedor tipoActividadRepo;
 	@Autowired
@@ -267,54 +260,6 @@ public class RegistroHorasService implements IRegistroHorasService {
 	public double horasTrabajadas(String jira) {
 		return regHorasRepo.horasTrabajadas(jira);
 	}
-
-	@Override
-	public HJira buscarHXJiraXFab(String jira, String fabrica) {
-		//PRIMERO: Verificar si existe en la base de datos
-		String buscar_fabrica = ""; 
-		if (fabrica.equals("PANDORA")) {
-			buscar_fabrica = "";
-			}
-		else {
-			buscar_fabrica = "+and+fabrica=" + fabrica;
-			}
-		HJira hxj = hxjRepo.findByJira(jira);
-		if (hxj == null) {
-			//Si NO existe, se creará un registro nuevo
-			hxj = new HJira();		
-			hxj.setConsumido_desarrollo(BigDecimal.ZERO);
-			hxj.setConsumido_prueba(BigDecimal.ZERO);
-		}
-		// Ya sea nuevo registro o no, se actualizan todos los campos	
-		List<JsoJira> respuestaAPI = jiraResRepo.busquedaJQL("key="+jira+"+and+issuetype+in+standardIssueTypes()"+buscar_fabrica+"&fields=key,summary,issuetype,customfield_14851,customfield_14850,customfield_11483,customfield_11640"); // Se consult al api
-		if (respuestaAPI != null && respuestaAPI.size() == 1) {
-			JsoJira j = respuestaAPI.get(0); 
-			//Actualizar datos
-			hxj.setJira(j.getKey());
-			hxj.setDescripcion(j.getFields().getSummary());
-			hxj.setTipo(j.getFields().getIssuetype().getName());
-			hxj.setHoras_desarrollo(BigDecimal.valueOf(j.getFields().getCustomfield_14850()));
-			hxj.setHoras_prueba(BigDecimal.valueOf(j.getFields().getCustomfield_14851()));
-			//Fabrica
-			Fabrica f = fabricaRepo.findByNombre(fabrica);
-			hxj.setFabrica(f);
-			//Indicador contable
-			if (j.getFields().getCustomfield_11483() != null) {
-				Indicador_Contable ic = indicadorRepo.findByIndicador(j.getFields().getCustomfield_11483().getValue());
-				hxj.setIndicador(ic);
-			}				
-			//Empresa
-			if (j.getFields().getCustomfield_11640() != null) {
-				Empresa emp = empresaRepo.findByNombre(j.getFields().getCustomfield_11640().getValue());		
-				hxj.setEmpresa(emp);
-			}			
-			hxj = hxjRepo.save(hxj);			
-			return hxj;			
-		}else {
-			return null;
-		}
-	}
-	
 
 	@Override
 	public List<Tipo_Actividad_Proveedor> listarTiposActividad() {
@@ -573,5 +518,43 @@ public class RegistroHorasService implements IRegistroHorasService {
 	public List<Proveedor_Reg_Horas> listarRegistrosPorFabricaEntrePeriodos(int id_fabrica, String fecha1,
 			String fecha2) {
 		return regHorasRepo.listarPorFabricaEntreFechas(id_fabrica, fecha1, fecha2);
+	}
+
+	@Override
+	public String actualizarFechaEntrega(Usuario u, RespGenerica objeto) {
+		HJira hjira = hxjRepo.findByJira(objeto.getTexto2());
+		SimpleDateFormat formatoLargo = new SimpleDateFormat("dd-MM-yyyy");	
+		
+		if (u.getFabrica().getId() != 22) { // 22 = pandora
+			if (objeto.getTexto1().equals("") ) {
+				hjira.setFecha_entrega_desarrollo(null);
+				hxjRepo.save(hjira);
+			}else {
+				try {
+					Date fecha = formatoLargo.parse(objeto.getTexto1());
+					hjira.setFecha_entrega_desarrollo(fecha);
+					hxjRepo.save(hjira);
+					
+				} catch (ParseException e) {
+					return "error";
+				}
+			}
+		}else {
+			if (objeto.getTexto1().equals("") ) {
+				hjira.setFecha_entrega_certificacion(null);
+				hxjRepo.save(hjira);
+			}else {
+				try {
+					Date fecha = formatoLargo.parse(objeto.getTexto1());
+					hjira.setFecha_entrega_certificacion(fecha);
+					hxjRepo.save(hjira);
+					
+				} catch (ParseException e) {
+					return "error";
+				}
+			}
+		}		
+		
+		return "exito";
 	}
 }

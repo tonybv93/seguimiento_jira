@@ -23,6 +23,7 @@ public interface IJiraService {
 	
 	// 	HJIRA
 	public List<HJira> buscarHjiraPorFabrica(Fabrica f);
-	
+	//------------------ JIRA para PIE	
+	public HJira buscarHXJiraXFab(String jira, String fabrica);
 	
 }

@@ -17,12 +17,11 @@ public class Estado_Jira {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ESTADO_JIRA_seq")
 	@SequenceGenerator(sequenceName="ESTADO_JIRA_seq", allocationSize=1, name="ESTADO_JIRA_seq")
 	private int id;
-	@Column(name="estado")
 	private String estado;
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="id_grupo_estado")
 	private Grupo_Estado grupoEstado;
-	
+
 	public int getId() {
 		return id;
 	}
